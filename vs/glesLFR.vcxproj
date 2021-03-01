@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\AOS.cpp" />
     <ClCompile Include="..\src\glad.c" />
+    <ClCompile Include="..\src\image.cpp" />
     <ClCompile Include="..\src\LFGenerator.cpp" />
     <ClCompile Include="..\src\glesLFR.cpp" />
     <ClCompile Include="..\src\stb_image.cpp" />
@@ -33,6 +35,17 @@
     <None Include="..\project_image.vs.glsl" />
     <None Include="..\show_fbo.fs.glsl" />
     <None Include="..\show_fbo.vs.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\AOS.h" />
+    <ClInclude Include="..\include\image.h" />
+    <ClInclude Include="..\include\learnopengl\camera.h" />
+    <ClInclude Include="..\include\learnopengl\filesystem.h" />
+    <ClInclude Include="..\include\learnopengl\mesh.h" />
+    <ClInclude Include="..\include\learnopengl\model.h" />
+    <ClInclude Include="..\include\learnopengl\shader.h" />
+    <ClInclude Include="..\include\learnopengl\shader_m.h" />
+    <ClInclude Include="..\include\learnopengl\shader_s.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
