@@ -19,6 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\include\imgui\imgui.cpp" />
+    <ClCompile Include="..\include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\include\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\src\AOS.cpp" />
     <ClCompile Include="..\src\AOSGenerator.cpp" />
     <ClCompile Include="..\src\glad.c" />
@@ -32,13 +37,11 @@
     <ClInclude Include="..\include\AOSGenerator.h" />
     <ClInclude Include="..\include\gl_utils.h" />
     <ClInclude Include="..\include\image.h" />
+    <ClInclude Include="..\include\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="..\include\learnopengl\camera.h" />
-    <ClInclude Include="..\include\learnopengl\filesystem.h" />
     <ClInclude Include="..\include\learnopengl\mesh.h" />
     <ClInclude Include="..\include\learnopengl\model.h" />
     <ClInclude Include="..\include\learnopengl\shader.h" />
-    <ClInclude Include="..\include\learnopengl\shader_m.h" />
-    <ClInclude Include="..\include\learnopengl\shader_s.h" />
     <ClInclude Include="..\include\utils.h" />
   </ItemGroup>
   <ItemGroup>

@@ -51,13 +51,18 @@ public:
 	void loadDEM(std::string obj_file);
 	void addView(Image img, glm::mat4 pose, std::string name = "");
 	//Image getImage(unsigned int idx);
-	glm::mat4 getPose(unsigned int idx) { return ogl_imgs[idx].pose; }
+	glm::mat4 getPose(unsigned int idx) const { return ogl_imgs[idx].pose; }
+	const glm::vec3 getPosition(const unsigned int index) const { return glm::vec3(glm::inverse(getPose(index))[3]); }
+	const glm::vec3 getUp(const unsigned int index) const { return glm::vec3(glm::inverse(getPose(index))[1]); }
+	const glm::vec3 getForward(const unsigned int index) const { return glm::vec3(glm::inverse(getPose(index))[2]); }
+	std::string getName(unsigned int idx) const { return ogl_imgs[idx].name; }
 	void removeView(unsigned int idx);
 	void replaceView(unsigned int idx, Image img, glm::mat4 pose, std::string name = "");
 
 	Image render(const glm::mat4 virtual_pose, const float virtual_fovDegree, const std::vector<unsigned int> ids = {});
 	Image getXYZ(glm::vec4 virtual_pose);
 	void display(bool normalize = true);
+	//void display(int display_width, int display_height,  bool normalize = true);
 
 	//void loadViews(std::string json_file, std::string imgs_path = "") {};
 	auto getViews() { return ogl_imgs.size(); }

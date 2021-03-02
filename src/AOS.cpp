@@ -52,6 +52,7 @@ AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int prealloca
 
 Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, const std::vector<unsigned int> ids)
 {
+	glViewport(0, 0, render_width, render_height);
 	gBufferShader->use();
 	auto projection = glm::perspective(glm::radians(virtualFovDegrees), (float)render_width / (float)render_height, near_plane, far_plane);
 	// set uniforms that do no change
@@ -146,8 +147,8 @@ void AOS::removeView(unsigned int idx)
 
 void AOS::display(bool normalize)
 {
-	glViewport(0, 0, render_width, render_height);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glViewport(0, 0, render_width, render_height);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// display framebuffer
 	// ---------------------------------------------

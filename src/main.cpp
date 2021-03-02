@@ -8,10 +8,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <learnopengl/filesystem.h>
 #include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
+#include <util/window.h>
 
 #include "AOSGenerator.h"
 #include "AOS.h"
@@ -23,23 +23,26 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
-unsigned int loadImageSTBI(const std::string path, const bool flip_vertically); // extern 
-void renderScene(const Shader &shader);
-void renderCube();
-void renderQuad();
+void boolArrayToIdx(const std::vector<bool>& selected, std::vector<unsigned int>& render_ids);
+void idxToBoolArray(const std::vector<unsigned int>& render_ids, std::vector<bool>& selected, unsigned int array_size);
+void fillIdx(std::vector<unsigned int>& render_ids, unsigned int array_size);
 
 // settings
-const unsigned int SCR_WIDTH = 512;
-const unsigned int SCR_HEIGHT = 512;
+int SCR_WIDTH = 512;
+int SCR_HEIGHT = 512;
 const char APP_NAME[] = "LFR";
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, -30.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90);
-float lastX = (float)SCR_WIDTH / 2.0;
-float lastY = (float)SCR_HEIGHT / 2.0;
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCR_WIDTH / 2.0;
+float lastY = SCR_HEIGHT / 2.0;
 bool firstMouse = true;
+bool leftButtonDown = false;
+bool middleButtonDown = false;
+bool rightButtonDown = false;
 
 
 // timing
@@ -54,32 +57,8 @@ unsigned int planeVAO;
 AOS *lf;
 
 // current view
-unsigned int currView = 0;
+int currView = 0;
 
-
-// loop through all pixels of the fbo and compute the minimum/maximum 
-unsigned int GetMinMaxFromFBO(glm::vec4 *fboData, const unsigned int fboSize, unsigned int &count, glm::vec4 &minRGBA, glm::vec4 &maxRGBA )
-{
-	minRGBA.r = minRGBA.g = minRGBA.b = minRGBA.a = numeric_limits<float>::max();
-	maxRGBA.r = maxRGBA.g = maxRGBA.b = maxRGBA.a = numeric_limits<float>::min();
-	count = 0;
-
-	for (int i = 0; i < fboSize; i++)
-	{
-		auto px = fboData[i];
-
-		if (px.a > 0)
-		{
-			px.r /= px.a; px.g /= px.a; px.b /= px.a;
-			minRGBA = glm::min(minRGBA, px);
-			maxRGBA = glm::max(maxRGBA, px);
-			count++;
-		}
-	}
-
-	return count;
-
-}
 
 // fps related variables:
 float fpsDelta = 0.0f;
@@ -106,51 +85,21 @@ void showFPS(GLFWwindow *pWindow)
 
 int main()
 {
+    int display_w = SCR_WIDTH, display_h = SCR_HEIGHT;
 
 
-
-    // glfw: initialize and configure
-    // ------------------------------
-    if(!glfwInit()){
-        std::cout << "Failed to init GLFW" << std::endl;
-        return -1;
-    }
-        
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-	std::stringstream ss;
-	ss << APP_NAME << " [loading...]";
-
-    // glfw window creation
-    // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, ss.str().c_str(), NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    InitWindowAndGUI(display_w, display_h, APP_NAME);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    if (!gladLoadGLES2Loader((GLADloadproc) glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
+
+    SetCursorPosCallback(mouse_callback);
+    SetMouseButtonCallback(mouse_button_callback);
+    SetScrollCallback(scroll_callback);
+    SetFramebufferSizeCallback(framebuffer_size_callback);
+
+
 
 	int texture_units;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
@@ -159,38 +108,6 @@ int main()
 
     lf = new AOS(SCR_WIDTH, SCR_HEIGHT);
 	CHECK_GL_ERROR
-
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float planeVertices[] = {
-        // positions            // normals         // texcoords
-         50.0f,  50.0f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f,  0.0f,
-        -50.0f,  50.0f, 0.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
-        -50.0f, -50.0f, 0.0f,  0.0f, 1.0f, 0.0f,   0.0f,  1.0f,
-
-         50.0f,  50.0f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f,  0.0f,
-        -50.0f, -50.0f, 0.0f,  0.0f, 1.0f, 0.0f,   0.0f,  1.0f,
-         50.0f, -50.0f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f,  1.0f
-    };
-    // plane VAO
-    unsigned int planeVBO;
-    glGenVertexArrays(1, &planeVAO);
-    glGenBuffers(1, &planeVBO);
-    glBindVertexArray(planeVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glBindVertexArray(0);
-
-    // load textures
-    // -------------
-    //unsigned int woodTexture = loadTexture(FileSystem::getPath("wood.png").c_str());
-	//unsigned int woodTexture = loadTexture(FileSystem::getPath("data/Hellmonsoedt_ldr_r512/20191004_091652.png").c_str());
 
 	// load the DEM 
 	// -----------------------
@@ -204,30 +121,19 @@ int main()
 	// load the light field (matrices, textures, names ...)
 	// -----------------------
 	AOSGenerator generator;
-	generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
+	//generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
 	// faster, because less images: 	
-	//generator.Generate( lf, "../data/Hellmonsoedt_pose_corr_30.json", "../data/Hellmonsoedt_ldr_r512/");
+	generator.Generate( lf, "../data/Hellmonsoedt_pose_corr_30.json", "../data/Hellmonsoedt_ldr_r512/");
 	CHECK_GL_ERROR
 
 
 
-  
-
  
 
-    // lighting info
-    // -------------
-    glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
-
-    // Timings
-    GLint64 startTime, stopTime;
-    unsigned int query;
-    // generate two queries
-    glGenQueries(1, &query);
-
-    std::vector<unsigned int> all_ids;
+    // start with full aperture
+    std::vector<unsigned int> render_ids;
     for (unsigned int i = 0; i < lf->getSize(); i++)
-            all_ids.push_back(i);
+            render_ids.push_back(i);
 
     // render loop
     // -----------
@@ -244,140 +150,120 @@ int main()
         // input
         // -----
         processInput(window);
+        // GUI
+        // ---------------------------------------------------
+        if (gui) {
+            // Start the Dear ImGui frame
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
-        // change light position over time
-        //lightPos.x = sin(glfwGetTime()) * 3.0f;
-        //lightPos.z = cos(glfwGetTime()) * 2.0f;
-        //lightPos.y = 5.0 + cos(glfwGetTime()) * 1.0f;
+            // some settings
+            static bool pinholeActive = false;
 
-        lf->render(camera.GetViewMatrix(), camera.Zoom, all_ids);
+            // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+            {   char buffer[512];
+                sprintf_s(buffer, 512, "%s (fps: %.1f)", APP_NAME, ImGui::GetIO().Framerate);
+                ImGui::Begin(APP_NAME);
+                ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+                //ImGui::SliderFloat("gamma", &gamma, 0.1f, 5.0f);   // Edit 1 float using a slider from 0.0f to 1.0f
+
+                if (ImGui::TreeNode("Virtual Camera"))
+                {
+                    ImGui::InputFloat3("Position", &(camera.Position.x));
+                    ImGui::InputFloat3("Forward", &(camera.Front.x));
+                    ImGui::InputFloat3("Up", &(camera.Up.x));
+                    auto fovRad = glm::radians(camera.Zoom);
+                    ImGui::SliderAngle("FOV", &fovRad, 1, 180);
+                    camera.Zoom = glm::degrees(fovRad);
+                    
+                    auto prevView = currView;
+                    ImGui::InputInt("Jump to", &currView);
+                    if (prevView != currView) {
+                        if (currView < 0) currView = 0;
+                        if (currView >= lf->getSize()) currView = lf->getSize() - 1;
+                        // jump to view!
+                        camera.Position = lf->getPosition(currView);
+                        camera.Front = lf->getForward(currView);
+                        camera.Up = lf->getUp(currView);
+                        camera.updateYawPitch();
+                    }
+
+
+                    
+                    ImGui::TreePop();
+                }
+                
+                if (ImGui::TreeNode("Views"))
+                {
+                    ImGui::Text("aperture: ");  ImGui::SameLine(); 
+                    sprintf_s(buffer, 512, "[%c] pinhole", pinholeActive ? 'x' : ' ');
+                    if (ImGui::Button(buffer))
+                        pinholeActive = !pinholeActive;
+                        
+                    // keep current view as pinhole
+                    if (pinholeActive) {
+                        render_ids.clear();
+                        render_ids.push_back(currView);
+                    }
+                    
+                    ImGui::SameLine(); 
+                    if (ImGui::Button("open")) {
+                        pinholeActive = false;
+                        fillIdx(render_ids, lf->getSize());
+                    }
+                    std::vector<bool> selected;
+                    idxToBoolArray(render_ids, selected, lf->getSize());
+                    ImGui::BeginChild("Views scrolling");
+                    for (int n = 0; n < lf->getSize(); n++) {
+                        sprintf_s( buffer, 512, "[%c] %04d: %s ", selected[n]?'x':' ', n, lf->getName(n).c_str() );
+                        bool sel = selected[n];
+                        ImGui::Selectable(buffer, &sel );
+                        selected[n] = sel;
+                    }
+                    ImGui::EndChild();
+                    ImGui::TreePop();
+                    boolArrayToIdx(selected, render_ids);
+                }              
+
+                ImGui::End();
+            }
+
+            ImGui::Render();
+        }
+
+        // LFR Render
+        // ----------
+        lf->render(camera.GetViewMatrix(), camera.Zoom, render_ids);
+
+        // ----- render results
+        int display_w, display_h;
+        glfwGetFramebufferSize(window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         lf->display();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
+        if (gui) ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
 
         // TIMINGs
         auto end_loop = std::chrono::steady_clock::now();
         std::chrono::duration<double> duration_loop = end_loop - start_loop; // duration
-        printf("TIMINGS (sec) - entire loop %.6f\n", duration_loop.count() );
+        // printf("TIMINGS (sec) - entire loop %.6f\n", duration_loop.count() );
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &planeVAO);
-    glDeleteBuffers(1, &planeVBO);
+    // -------------------------------------------------------------------------------
 
     glfwTerminate();
     return 0;
 }
 
-// renders the 3D scene
-// --------------------
-void renderScene(const Shader &shader)
-{
-    // plane
-    glm::mat4 model = glm::mat4(1.0f);
-    shader.setMat4("model", model);
-    glBindVertexArray(planeVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-	/*
-    // cubes
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.0));
-    model = glm::scale(model, glm::vec3(0.5f));
-    shader.setMat4("model", model);
-    renderCube();
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(2.0f, 0.0f, 1.0));
-    model = glm::scale(model, glm::vec3(0.5f));
-    shader.setMat4("model", model);
-    renderCube();
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 2.0));
-    model = glm::rotate(model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
-    model = glm::scale(model, glm::vec3(0.25));
-    shader.setMat4("model", model);
-    renderCube();
-	*/
-}
-
-
-// renderCube() renders a 1x1 3D cube in NDC.
-// -------------------------------------------------
-unsigned int cubeVAO = 0;
-unsigned int cubeVBO = 0;
-void renderCube()
-{
-    // initialize (if necessary)
-    if (cubeVAO == 0)
-    {
-        float vertices[] = {
-            // back face
-            -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-             1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-             1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
-             1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-            -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-            -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
-            // front face
-            -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-             1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
-             1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-             1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-            -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
-            -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-            // left face
-            -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-            -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
-            -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-            -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-            -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-            -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-            // right face
-             1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-             1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-             1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
-             1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-             1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-             1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
-            // bottom face
-            -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-             1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
-             1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-             1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-            -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-            -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-            // top face
-            -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-             1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-             1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
-             1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-            -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-            -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
-        };
-        glGenVertexArrays(1, &cubeVAO);
-        glGenBuffers(1, &cubeVBO);
-        // fill buffer
-        glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        // link vertex attributes
-        glBindVertexArray(cubeVAO);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-    }
-    // render Cube
-    glBindVertexArray(cubeVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
-}
 
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -397,17 +283,22 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		currView = glm::max( (int)currView - 1, 0);
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		currView = glm::min( currView + 1, (unsigned int) lf->getViews()-1 );
+		currView = glm::min( currView + 1, (int) lf->getViews()-1 );
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+/// glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
+    if (width > 0 && height > 0)
+    {
+        glViewport(0, 0, width, height);
+        SCR_WIDTH = width; SCR_HEIGHT = height;
+    }
 }
+
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
@@ -426,7 +317,24 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    if (leftButtonDown)
+        camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever any mouse button is pressed, this callback is called
+// ----------------------------------------------------------------------
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (action == GLFW_PRESS) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT)   leftButtonDown = true;
+        if (button == GLFW_MOUSE_BUTTON_MIDDLE) middleButtonDown = true;
+        if (button == GLFW_MOUSE_BUTTON_RIGHT)  rightButtonDown = true;
+    }
+    else if (action == GLFW_RELEASE) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT)   leftButtonDown = false;
+        if (button == GLFW_MOUSE_BUTTON_MIDDLE) middleButtonDown = false;
+        if (button == GLFW_MOUSE_BUTTON_RIGHT)  rightButtonDown = false;
+    }
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -435,6 +343,38 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
 }
+
+
+void boolArrayToIdx(const std::vector<bool> &selected, std::vector<unsigned int>& render_ids)
+{
+    render_ids.clear();
+    for (unsigned int i = 0; i < selected.size(); i++)
+    {
+        if(selected[i])
+            render_ids.push_back(i);
+    }
+}
+
+
+void idxToBoolArray(const std::vector<unsigned int>& render_ids, std::vector<bool>& selected, unsigned int array_size)
+{
+    selected = std::vector<bool>(array_size);
+
+    std::fill(selected.begin(), selected.end(), false);
+
+    for (auto idx : render_ids)
+        selected[idx] = true;
+}
+
+void fillIdx(std::vector<unsigned int>& render_ids, unsigned int array_size)
+{
+    render_ids.clear();
+    for (unsigned int i = 0; i < array_size; i++)
+    {
+        render_ids.push_back(i);
+    }
+}
+
 
 
 /* Look into:

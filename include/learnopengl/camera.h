@@ -112,7 +112,7 @@ public:
             Zoom = 90.0f; 
     }
 
-private:
+//private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()
     {
@@ -123,8 +123,31 @@ private:
         front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
         Front = glm::normalize(front);
         // also re-calculate the Right and Up vector
-        Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+        Right = glm::normalize(glm::cross(Front, Up));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
         Up    = glm::normalize(glm::cross(Right, Front));
+    }
+
+    // calculates the Euler Angles from the updated Front vector
+    void updateYawPitch()
+    {
+        Front = glm::normalize(Front);
+
+        Pitch = glm::degrees(asin(Front.y));
+        auto yaw1 = acos(Front.x / cos(glm::radians(Pitch)));
+        auto yaw2 = asin(Front.z / cos(glm::radians(Pitch)));
+        Yaw = glm::degrees((yaw1 + yaw2) / 2.0f); // average the 2 calculations
+        // Todo: verify this works well!
+
+
+        // calculate the new Front vector
+        glm::vec3 front;
+        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        front.y = sin(glm::radians(Pitch));
+        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        Front = glm::normalize(front);
+        // also re-calculate the Right and Up vector
+        Right = glm::normalize(glm::cross(Front, Up));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+        Up = glm::normalize(glm::cross(Right, Front));
     }
 };
 #endif
