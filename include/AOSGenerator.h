@@ -7,7 +7,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-
+/*
 class Lightfield
 {
 private:
@@ -32,18 +32,21 @@ public:
 	const unsigned int GetSize() { return poses.size(); }
 
 
-friend class LFGenerator;
+friend class AOSGenerator;
 };
+*/
 
+// predeclaration
+class AOS;
 
-class LFGenerator // Universal & Unstructured LF Generator: takes care of loading the light field
+class AOSGenerator // Universal & Unstructured LF Generator: takes care of loading the light field
 {
 private:
 
 public:
-	LFGenerator(void);
-	virtual ~LFGenerator(void);
-	Lightfield *Generate( const std::string &jsonPoseFile, const std::string &imgFilePath = "" );
+	AOSGenerator(void);
+	virtual ~AOSGenerator(void);
+	void Generate( AOS *aos, const std::string &jsonPoseFile, const std::string &imgFilePath = "" );
 };
 
 

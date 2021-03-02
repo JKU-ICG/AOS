@@ -18,16 +18,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\stb_image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\LFGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\glesLFR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\AOS.cpp">
@@ -36,32 +27,18 @@
     <ClCompile Include="..\src\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\project_image.fs.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\project_image.vs.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\show_fbo.fs.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\show_fbo.vs.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\g_buffer.fs.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\g_buffer.vs.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\deferred_project_image.fs.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\deferred_project_image.vs.glsl">
-      <Filter>Shader</Filter>
-    </None>
+    <ClCompile Include="..\src\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AOSGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gl_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\AOS.h">
@@ -91,5 +68,43 @@
     <ClInclude Include="..\include\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\gl_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AOSGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shader\deferred_project_image.fs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\deferred_project_image.vs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\g_buffer.fs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\g_buffer.vs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\project_image.fs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\project_image.vs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\show_fbo.fs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\show_fbo.vs.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\shader\world_pos.fs.glsl">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

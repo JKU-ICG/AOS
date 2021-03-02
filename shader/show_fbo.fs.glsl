@@ -9,7 +9,7 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D depthMap;
+uniform sampler2D fboTexture;
 uniform float near_plane;
 uniform float far_plane;
 
@@ -22,9 +22,9 @@ void main()
 	vec2 uv = TexCoords.xy;
 
 
-    vec4 color = texture(depthMap, uv);
+    vec4 color = texture(fboTexture, uv);
     // FragColor = vec4(vec3(LinearizeDepth(depthValue) / far_plane), 1.0); // perspective
-	if( false ) //color.a > 0.0f )
+	if( color.a > 0.0f )
 	{
 		color.rgb /= color.a; // normalize & avoid division by zero!
 		// tonemap:

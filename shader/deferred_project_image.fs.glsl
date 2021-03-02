@@ -13,7 +13,7 @@ uniform sampler2D gPosition;
 uniform sampler2D imageTexture;
 //uniform sampler2D shadowMap;
 
-uniform mat4 lightSpaceMatrix;
+uniform mat4 projViewMatrix;
 
 
 vec4 ProjectImage(vec4 fragPosLightSpace)
@@ -25,8 +25,9 @@ vec4 ProjectImage(vec4 fragPosLightSpace)
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
 	if (projCoords.x>=0.0f && projCoords.x <= 1.0f && projCoords.y >= 0.0f && projCoords.y <= 1.0f)
 	{
-		// for some reason the images need to be flipped!
+		// the images need to be flipped!
 		return vec4(texture(imageTexture, vec2(1.0f-projCoords.x,1.0f-projCoords.y)).rrr, 1.0f);
+		//return vec4( vec3( 1.0f / 400.0f, 1.0f, 0.5f ), 1.0f );
 	}
 	else
 	{
@@ -41,7 +42,7 @@ void main()
     vec4 FragPos = texture(gPosition, TexCoords).rgba;
 	if( FragPos.a < 1.0 ) discard; // outside of DEM!
 
-    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos.xyz, 1.0);
+    vec4 FragPosLightSpace = projViewMatrix * vec4(FragPos.xyz, 1.0);
     
     FragColor = vec4(ProjectImage(FragPosLightSpace));
 }

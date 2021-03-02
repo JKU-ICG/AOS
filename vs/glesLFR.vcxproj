@@ -20,24 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AOS.cpp" />
+    <ClCompile Include="..\src\AOSGenerator.cpp" />
     <ClCompile Include="..\src\glad.c" />
+    <ClCompile Include="..\src\gl_utils.cpp" />
     <ClCompile Include="..\src\image.cpp" />
-    <ClCompile Include="..\src\LFGenerator.cpp" />
-    <ClCompile Include="..\src\glesLFR.cpp" />
-    <ClCompile Include="..\src\stb_image.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\deferred_project_image.fs.glsl" />
-    <None Include="..\deferred_project_image.vs.glsl" />
-    <None Include="..\g_buffer.fs.glsl" />
-    <None Include="..\g_buffer.vs.glsl" />
-    <None Include="..\project_image.fs.glsl" />
-    <None Include="..\project_image.vs.glsl" />
-    <None Include="..\show_fbo.fs.glsl" />
-    <None Include="..\show_fbo.vs.glsl" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\AOS.h" />
+    <ClInclude Include="..\include\AOSGenerator.h" />
+    <ClInclude Include="..\include\gl_utils.h" />
     <ClInclude Include="..\include\image.h" />
     <ClInclude Include="..\include\learnopengl\camera.h" />
     <ClInclude Include="..\include\learnopengl\filesystem.h" />
@@ -46,6 +39,18 @@
     <ClInclude Include="..\include\learnopengl\shader.h" />
     <ClInclude Include="..\include\learnopengl\shader_m.h" />
     <ClInclude Include="..\include\learnopengl\shader_s.h" />
+    <ClInclude Include="..\include\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shader\deferred_project_image.fs.glsl" />
+    <None Include="..\shader\deferred_project_image.vs.glsl" />
+    <None Include="..\shader\g_buffer.fs.glsl" />
+    <None Include="..\shader\g_buffer.vs.glsl" />
+    <None Include="..\shader\project_image.fs.glsl" />
+    <None Include="..\shader\project_image.vs.glsl" />
+    <None Include="..\shader\show_fbo.fs.glsl" />
+    <None Include="..\shader\show_fbo.vs.glsl" />
+    <None Include="..\shader\world_pos.fs.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
