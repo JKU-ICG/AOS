@@ -85,7 +85,7 @@ void showFPS(GLFWwindow *pWindow)
 
 int main()
 {
-    int display_w = SCR_WIDTH, display_h = SCR_HEIGHT;
+    int display_w = 1024, display_h = 1024;
 
 
     InitWindowAndGUI(display_w, display_h, APP_NAME);
@@ -121,9 +121,9 @@ int main()
 	// load the light field (matrices, textures, names ...)
 	// -----------------------
 	AOSGenerator generator;
-	//generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
+	generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
 	// faster, because less images: 	
-	generator.Generate( lf, "../data/Hellmonsoedt_pose_corr_30.json", "../data/Hellmonsoedt_ldr_r512/");
+	//generator.Generate( lf, "../data/Hellmonsoedt_pose_corr_30.json", "../data/Hellmonsoedt_ldr_r512/");
 	CHECK_GL_ERROR
 
 
@@ -186,32 +186,30 @@ int main()
                         camera.Position = lf->getPosition(currView);
                         camera.Front = lf->getForward(currView);
                         camera.Up = lf->getUp(currView);
-                        camera.updateYawPitch();
+                        //camera.updateYawPitch();
                     }
+                    sprintf_s(buffer, 512, "[%c] pinhole", pinholeActive ? 'x' : ' ');
+                    if (ImGui::Button(buffer))
+                        pinholeActive = !pinholeActive;
+                    ImGui::SameLine();
+                    if (ImGui::Button("open")) {
+                        pinholeActive = false;
+                        fillIdx(render_ids, lf->getSize());
+                    }
+                    ImGui::SameLine();  ImGui::Text("aperture");
 
 
                     
                     ImGui::TreePop();
                 }
+                // keep current view as pinhole
+                if (pinholeActive) {
+                    render_ids.clear();
+                    render_ids.push_back(currView);
+                }
                 
-                if (ImGui::TreeNode("Views"))
+                if (ImGui::TreeNode("Single Images"))
                 {
-                    ImGui::Text("aperture: ");  ImGui::SameLine(); 
-                    sprintf_s(buffer, 512, "[%c] pinhole", pinholeActive ? 'x' : ' ');
-                    if (ImGui::Button(buffer))
-                        pinholeActive = !pinholeActive;
-                        
-                    // keep current view as pinhole
-                    if (pinholeActive) {
-                        render_ids.clear();
-                        render_ids.push_back(currView);
-                    }
-                    
-                    ImGui::SameLine(); 
-                    if (ImGui::Button("open")) {
-                        pinholeActive = false;
-                        fillIdx(render_ids, lf->getSize());
-                    }
                     std::vector<bool> selected;
                     idxToBoolArray(render_ids, selected, lf->getSize());
                     ImGui::BeginChild("Views scrolling");

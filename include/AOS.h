@@ -38,6 +38,7 @@ private:
 	unsigned int fboGBuffer, gPosition; // fbo and texture for deferred shading
 	unsigned int fboCount = 0; glm::vec4 fboMin; glm::vec4 fboMax;
 	Image fboImg;
+	Image gBufImg;
 
 	// shaders
 	Shader* showFboShader; // ("../show_fbo.vs.glsl", "../show_fbo.fs.glsl");
@@ -52,6 +53,7 @@ public:
 	void addView(Image img, glm::mat4 pose, std::string name = "");
 	//Image getImage(unsigned int idx);
 	glm::mat4 getPose(unsigned int idx) const { return ogl_imgs[idx].pose; }
+	glm::mat4 setPose(unsigned int idx, const glm::mat4 pose) { ogl_imgs[idx].pose = pose; return pose; }
 	const glm::vec3 getPosition(const unsigned int index) const { return glm::vec3(glm::inverse(getPose(index))[3]); }
 	const glm::vec3 getUp(const unsigned int index) const { return glm::vec3(glm::inverse(getPose(index))[1]); }
 	const glm::vec3 getForward(const unsigned int index) const { return glm::vec3(glm::inverse(getPose(index))[2]); }
@@ -60,7 +62,7 @@ public:
 	void replaceView(unsigned int idx, Image img, glm::mat4 pose, std::string name = "");
 
 	Image render(const glm::mat4 virtual_pose, const float virtual_fovDegree, const std::vector<unsigned int> ids = {});
-	Image getXYZ(glm::vec4 virtual_pose);
+	Image getXYZ();
 	void display(bool normalize = true);
 	//void display(int display_width, int display_height,  bool normalize = true);
 

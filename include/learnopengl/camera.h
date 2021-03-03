@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include <vector>
 
@@ -19,7 +20,7 @@ enum Camera_Movement {
 const float YAW         = -90.0f;
 const float PITCH       =  0.0f;
 const float SPEED       =  2.5f;
-const float SENSITIVITY =  0.1f;
+const float SENSITIVITY =  0.001f;
 const float ZOOM        =  45.0f;
 
 
@@ -86,20 +87,16 @@ public:
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
 
-        Yaw   += xoffset;
-        Pitch += yoffset;
+        //Yaw   += xoffset;
+        //Pitch += yoffset;
 
-        // make sure that when pitch is out of bounds, screen doesn't get flipped
-        if (constrainPitch)
-        {
-            if (Pitch > 89.0f)
-                Pitch = 89.0f;
-            if (Pitch < -89.0f)
-                Pitch = -89.0f;
-        }
+        Front = glm::rotate(Front, xoffset, Up);
+        updateYawPitch();
+        Front = glm::rotate(Front, -yoffset, Right);
+        updateYawPitch();
+        
 
-        // update Front, Right and Up Vectors using the updated Euler angles
-        updateCameraVectors();
+
     }
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
@@ -112,7 +109,7 @@ public:
             Zoom = 90.0f; 
     }
 
-//private:
+private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()
     {
@@ -131,23 +128,15 @@ public:
     void updateYawPitch()
     {
         Front = glm::normalize(Front);
+        // also re-calculate the Right and Up vector
+        Right = glm::normalize(glm::cross(Front, Up));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+        Up = glm::normalize(glm::cross(Right, Front));
 
         Pitch = glm::degrees(asin(Front.y));
         auto yaw1 = acos(Front.x / cos(glm::radians(Pitch)));
         auto yaw2 = asin(Front.z / cos(glm::radians(Pitch)));
         Yaw = glm::degrees((yaw1 + yaw2) / 2.0f); // average the 2 calculations
-        // Todo: verify this works well!
-
-
-        // calculate the new Front vector
-        glm::vec3 front;
-        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        front.y = sin(glm::radians(Pitch));
-        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        Front = glm::normalize(front);
-        // also re-calculate the Right and Up vector
-        Right = glm::normalize(glm::cross(Front, Up));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-        Up = glm::normalize(glm::cross(Right, Front));
+        // Yaw and Pitch are not really used anymore!
     }
 };
 #endif

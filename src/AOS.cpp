@@ -9,10 +9,15 @@ void renderQuad();
 
 
 AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int preallocate_images)
-	:render_width(width), render_height(height)
+	:render_width(width), render_height(height), dem_model(NULL)
 {
 	// ToDo: init GL
 	// find a way to init GL only if no other OpenGL context exists!
+
+	auto gl_version = glGetString(GL_VERSION);
+	if (gl_version == 0)
+		throw "Error: No OpenGL context!";
+
 
 	// build and compile shaders
 	// -------------------------
@@ -44,7 +49,9 @@ AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int prealloca
 	// Setup Framebuffers and Textures
 	initFrameBufferTexture(&fboIntegral, &tIntegral);
 	initFrameBufferTexture(&fboGBuffer, &gPosition);
-	fboImg = make_image(render_width, render_height, 4); // used to extract fbo
+	fboImg  = make_image(render_width, render_height, 4); // needed to extract fbo
+	gBufImg = make_image(render_width, render_height, 4); // needed to extract fbo
+
 	CHECK_GL_ERROR
 
 	glViewport(0, 0, render_width, render_height);
@@ -124,10 +131,19 @@ AOS::~AOS()
 		delete dem_model;
 		dem_model = NULL;
 	}
+	delete showFboShader;
+	delete projectShader;
+	delete demShader;
+	delete gBufferShader;
+
+	free_image(gBufImg);
+	free_image(fboImg);
 }
 
 void AOS::loadDEM(std::string obj_file)
 {
+	if (dem_model)
+		delete dem_model;
 	dem_model = new Model(obj_file);
 }
 
@@ -135,14 +151,25 @@ void AOS::addView(Image img, glm::mat4 pose, std::string name)
 {
 	View view;
 	view.pose = pose;
-	view.name = name;
+	view.name = name.empty() ? std::to_string(ogl_imgs.size()) : name;
 	view.ogl_id = generateOGLTexture(img);
 	ogl_imgs.push_back(view);
 }
 
 void AOS::removeView(unsigned int idx)
 {
-	// ToDo
+	View v = ogl_imgs[idx];
+	deleteOGLTexture(v.ogl_id);
+	ogl_imgs.erase(ogl_imgs.begin() + idx);
+}
+
+void AOS::replaceView(unsigned int idx, Image img, glm::mat4 pose, std::string name)
+{
+	View v = ogl_imgs[idx];
+	v.pose = pose;
+	v.name = name.empty() ? std::to_string(idx) : name;
+	uploadOGLTexture(v.ogl_id, img);
+	ogl_imgs[idx] = v; // update in vector
 }
 
 void AOS::display(bool normalize)
@@ -166,6 +193,20 @@ void AOS::display(bool normalize)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tIntegral);
 	renderQuad();
+}
+
+Image AOS::getXYZ()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, fboGBuffer);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// read framebuffer to CPU
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
+	glReadPixels(0, 0, render_width, render_height, GL_RGBA, GL_FLOAT, gBufImg.data);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return gBufImg;
 }
 
 unsigned int AOS::generateOGLTexture(Image img)
@@ -228,14 +269,6 @@ void AOS::initFrameBufferTexture(unsigned int* fbo, unsigned int* texture)
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-
-void AOS::replaceView(unsigned int idx, Image img, glm::mat4 pose, std::string name)
-{
-	ogl_imgs[idx].pose = pose;
-	ogl_imgs[idx].name = name;
-
-}
-
 
 
 // loop through all pixels of the fbo and compute the minimum/maximum 
