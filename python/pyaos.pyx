@@ -35,15 +35,10 @@ def Py_PrintPyLightFieldInstanceInfo(PyLightfieldClass PyLF):
 '''
 
 cdef extern from "../include/glm/glm.hpp" namespace "glm":
-    ctypedef struct mat:
-        pass
     ctypedef struct mat4:
         pass
     ctypedef struct vec3:
-        pass
-cdef extern from "../include/glm/gtc/type_ptr.hpp":
-    mat4 make_mat4(const float  *ptr)
-    
+        pass   
 
 cdef extern from "../include/GLFW/glfw3.h":
     ctypedef struct GLFWwindow :
@@ -80,6 +75,10 @@ cdef extern from *:
     ctypedef struct Image:
         pass
 
+cdef extern from "../src/glm_utils.cpp":
+    mat4 make_mat4_from_float(char *pdata)
+    vec3 make_vec3_from_float(char* pdata)
+
 cdef extern from "../src/image.cpp":
     # ToDo -> this here definitlely is wrong right now.
     Image make_image(int w, int h, int c)
@@ -114,10 +113,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         copy_image_from_float(pyImage , readimage.tobytes()) ### TODO maybe use memcopy here
         free_image(pyImage)
         
-        #cdef float *data
-        FlattenPoseArray = camerapose.flatten()
-        TempPoseArray = np.asarray(FlattenPoseArray, dtype = np.float32, order="C")
-        pyPose =  make_mat4(&TempPoseArray[0])
+        pyPose =  make_mat4_from_float(camerapose.tobytes())
         #memcpy(data, &Temp1Pose[0], sizeof(float) * 16) ## Not Sure how this would work
         #self.addView(self.pyImage, self.pyPose, pyImagename.encode())
         
