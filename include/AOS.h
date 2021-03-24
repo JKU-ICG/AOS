@@ -67,8 +67,8 @@ public:
 	//void display(int display_width, int display_height,  bool normalize = true);
 
 	//void loadViews(std::string json_file, std::string imgs_path = "") {};
-	auto getViews() { return ogl_imgs.size(); }
-	auto getSize() { return getViews(); } // legacy
+	unsigned int getViews() { return ogl_imgs.size(); }
+	unsigned int getSize() { return getViews(); } // legacy
 
 private:
 	unsigned int getOGLid(unsigned int idx) { return ogl_imgs[idx].ogl_id; }
