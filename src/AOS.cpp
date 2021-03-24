@@ -11,11 +11,14 @@ void renderQuad();
 AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int preallocate_images)
 	:render_width(width), render_height(height), dem_model(NULL)
 {
+
+	printf("Entering C++ AOS constructor");
 	// ToDo: init GL
 	// find a way to init GL only if no other OpenGL context exists!
 
 	auto gl_version = glGetString(GL_VERSION);
 	if (gl_version == 0)
+		printf("ERROR: no Opengl!");
 		throw "Error: No OpenGL context!";
 
 

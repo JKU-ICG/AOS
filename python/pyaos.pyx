@@ -38,6 +38,13 @@ cdef extern from "../include/glm/glm.hpp" namespace "glm":
     cdef cppclass vec3:
         pass
 
+cdef extern from "../src/gl_utils.cpp":
+    # ToDo -> this here definitlely is wrong right now.
+    cdef cppfunction pointer InitGlfwWindow(const int width, const int height, const char* appname):
+        pass
+    cdef void DestroyGlfwWindow(GLFWwindow* window):
+        pass
+
 cdef extern from "../include/AOS.h": # defines the source C++ file
     cdef cppclass AOS:
         AOS(unsigned int width, unsigned int height, float fovDegree, int preallocate_images) except +
@@ -69,3 +76,11 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         self.thisptr = new AOS(width, height, fovDegree, preallocate_images) # creates an instance of the C++ class and puts allocates the pointer to this
     def __dealloc__(self): # defines the python wrapper class' deallocation function (python destructor)
         del self.thisptr # destroys the reference to the C++ instance (which calls the C++ class destructor
+
+cdef class GlfwWindow:
+    cdef void* windowPointer
+    def __cinit__(self, const int width, const int height, const char* appname):
+        self.windowPointer = InitGlfwWindow(width, height, appname)
+    def __dealloc__(self): # defines the python wrapper class' deallocation function (python destructor)
+        DestroyGlfwWindow(self.windowPointer)
+        del self.windowPointer # destroys the reference to the C++ instance (which calls the C++ class destructor
