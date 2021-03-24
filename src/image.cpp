@@ -1422,6 +1422,26 @@ void copy_image_from_bytes(Image im, char *pdata)
     }
 }
 
+// Fast copy data from a contiguous byte array into the Image.
+void copy_image_from_float(Image im, float *pdata)
+{
+    float *data = (float *)pdata;
+    int i, k, j;
+    int w = im.w;
+    int h = im.h;
+    int c = im.c;
+    for (k = 0; k < c; ++k) {
+        for (j = 0; j < h; ++j) {
+            for (i = 0; i < w; ++i) {
+                int dst_index = i + w * j + w * h*k;
+                int src_index = k + c * i + c * w*j;
+                im.data[dst_index] = (float)data[src_index];
+            }
+        }
+    }
+}
+
+
 bool is_empty_image(Image img) 
 { 
     return img.c == 0 || img.w == 0 || img.h == 0 || img.data == NULL; 

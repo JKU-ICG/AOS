@@ -16,12 +16,12 @@ AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int prealloca
 	// ToDo: init GL
 	// find a way to init GL only if no other OpenGL context exists!
 
-	auto gl_version = glGetString(GL_VERSION);
-	if (gl_version == 0) 
-	{
-		printf("ERROR: no Opengl!");
-		throw "Error: No OpenGL context!";
-	}
+	//auto gl_version = glGetString(GL_VERSION);
+	//if (gl_version == 0) 
+	//{
+	//	printf("ERROR: no Opengl!");
+	//	throw "Error: No OpenGL context!";
+	//}
 
 
 	// build and compile shaders

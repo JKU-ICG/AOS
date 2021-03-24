@@ -2,13 +2,13 @@ import pyaos
 import cv2
 import os
 
-import OpenGL
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
+#import OpenGL
+#from OpenGL.GL import *
+#from OpenGL.GLUT import *
+#from OpenGL.GLU import *
 
-def showScreen():
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # Remove everything from screen (i.e. displays all white)
+#def showScreen():
+#    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # Remove everything from screen (i.e. displays all white)
 
 
 #glutInit() # Initialize a glut instance which will allow us to customize our window
@@ -20,7 +20,7 @@ def showScreen():
 #glutIdleFunc(showScreen)     # Draw any graphics or shapes in the showScreen function at all times
 #glutMainLoop()  # Keeps the window created above displaying/running in a loop
 
-window = GlfwWindow(512,512,"AOS") # make sure there is an OpenGL context
+window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
 
 
 
@@ -51,5 +51,5 @@ nimg = nimg / nimg.max()
 cv2.imshow('image',img / img.max() )
 cv2.waitKey(0)
 
-del window
+#del window
 

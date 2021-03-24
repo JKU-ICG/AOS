@@ -1,5 +1,7 @@
 from libcpp.vector cimport vector
 from libcpp.string cimport string
+from libc.stdlib cimport malloc , free
+from libc.string cimport memcpy 
 from libcpp cimport bool
 import numpy as np
 cimport numpy as np
@@ -37,13 +39,17 @@ cdef extern from "../include/glm/glm.hpp" namespace "glm":
         pass
     cdef cppclass vec3:
         pass
+    
+
+cdef extern from "../include/GLFW/glfw3.h":
+    ctypedef struct GLFWwindow :
+        pass
+    
 
 cdef extern from "../src/gl_utils.cpp":
     # ToDo -> this here definitlely is wrong right now.
-    cdef cppfunction pointer InitGlfwWindow(const int width, const int height, const char* appname):
-        pass
-    cdef void DestroyGlfwWindow(GLFWwindow* window):
-        pass
+    GLFWwindow* InitGlfwWindow(const int width, const int height, const char* appname)
+    void DestroyGlfwWindow(GLFWwindow* window)
 
 cdef extern from "../include/AOS.h": # defines the source C++ file
     cdef cppclass AOS:
@@ -67,20 +73,60 @@ cdef extern from "../include/AOS.h": # defines the source C++ file
         unsigned int getSize()
     
 cdef extern from *:
-    struct Image:
+    ctypedef struct Image:
         pass
+
+cdef extern from "../src/image.cpp":
+    # ToDo -> this here definitlely is wrong right now.
+    Image make_image(int w, int h, int c)
+    void copy_image_from_bytes(Image im, char *pdata)
+    void copy_image_from_float(Image im, float *pdata)
 
 cdef class PyAOS: # defines a python wrapper to the C++ class
     cdef AOS* thisptr # thisptr is a pointer that will hold to the instance of the C++ class
+    cdef Image pyImage
+    cdef mat4 pyPose
+    cdef float *pyfloatarray
+    #cdef np.ndarray[float, ndim=2, mode="c"] cinputimage
     def __cinit__(self, unsigned int width, unsigned int height, float fovDegree, int preallocate_images): # defines the python wrapper class' init function
         self.thisptr = new AOS(width, height, fovDegree, preallocate_images) # creates an instance of the C++ class and puts allocates the pointer to this
     def __dealloc__(self): # defines the python wrapper class' deallocation function (python destructor)
         del self.thisptr # destroys the reference to the C++ instance (which calls the C++ class destructor
+    def pyloadDEM(self, objmodelpath):
+        self.thisptr.loadDEM(objmodelpath.encode())
+    def pyaddView(self, readimage, camerapose, pyImagename):
+        cdef np.ndarray[float, ndim=3, mode='c'] Temp3ChannelImage
+        cdef np.ndarray[float, ndim=2, mode='c'] Temp1ChannelImage
+        cdef np.ndarray[float, ndim=1, mode='c'] Temp1Pose
+        #TempRenderedImage = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
+        height = readimage.shape[0]
+        width = readimage.shape[1]
+        if len(readimage.shape) == 2 :
+            channels = 1
+        else :
+            channels = readimage.shape[2]
+        #TODO Create an Image struct in C
+        self.pyImage  = make_image(width, height,channels)
+        #TODO First deliniete numpy array to Contiguous C array and than copy --- Define Input Vector
+        if channels  ==  1:
+            Temp1ChannelImage = np.asarray(readimage, dtype = np.float32, order="C")
+            copy_image_from_float(self.pyImage, &Temp1ChannelImage[0,0]) ### TODO maybe use memcopy here
+        else :
+            Temp3ChannelImage = np.asarray(readimage, dtype = np.float32, order="C")
+            copy_image_from_float(self.pyImage, readimage.tobytes()) ### TODO maybe use memcopy here
+        #FlattenPoseArray = camerapose.flatten()
+        #Temp1Pose = np.asarray(FlattenPoseArray, dtype = np.float32, order="C")
+        #memcpy(self.pyPose.data, &Temp1Pose[0], sizeof(float) * 16) ## Not Sure how this would work
+        #self.addView(self.pyImage, self.pyPose, pyImagename.encode())
+        
 
-cdef class GlfwWindow:
-    cdef void* windowPointer
-    def __cinit__(self, const int width, const int height, const char* appname):
-        self.windowPointer = InitGlfwWindow(width, height, appname)
+
+
+
+cdef class PyGlfwWindow:
+    cdef GLFWwindow* windowPointer
+    def __cinit__(self, const int width, const int height, appname):
+        self.windowPointer = InitGlfwWindow(width, height, appname.encode())
     def __dealloc__(self): # defines the python wrapper class' deallocation function (python destructor)
         DestroyGlfwWindow(self.windowPointer)
-        del self.windowPointer # destroys the reference to the C++ instance (which calls the C++ class destructor
+#        del self.windowPointer # destroys the reference to the C++ instance (which calls the C++ class destructor
