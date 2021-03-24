@@ -1423,7 +1423,7 @@ void copy_image_from_bytes(Image im, char *pdata)
 }
 
 // Fast copy data from a contiguous byte array into the Image.
-void copy_image_from_float(Image im, float *pdata)
+void copy_image_from_float(Image im, char *pdata)
 {
     float *data = (float *)pdata;
     int i, k, j;

@@ -35,10 +35,14 @@ def Py_PrintPyLightFieldInstanceInfo(PyLightfieldClass PyLF):
 '''
 
 cdef extern from "../include/glm/glm.hpp" namespace "glm":
-    cdef cppclass mat4:
+    ctypedef struct mat:
         pass
-    cdef cppclass vec3:
+    ctypedef struct mat4:
         pass
+    ctypedef struct vec3:
+        pass
+cdef extern from "../include/glm/gtc/type_ptr.hpp":
+    mat4 make_mat4(const float  *ptr)
     
 
 cdef extern from "../include/GLFW/glfw3.h":
@@ -80,12 +84,11 @@ cdef extern from "../src/image.cpp":
     # ToDo -> this here definitlely is wrong right now.
     Image make_image(int w, int h, int c)
     void copy_image_from_bytes(Image im, char *pdata)
-    void copy_image_from_float(Image im, float *pdata)
+    void copy_image_from_float(Image im, char *pdata)
+    void free_image(Image m)
 
 cdef class PyAOS: # defines a python wrapper to the C++ class
     cdef AOS* thisptr # thisptr is a pointer that will hold to the instance of the C++ class
-    cdef Image pyImage
-    cdef mat4 pyPose
     cdef float *pyfloatarray
     #cdef np.ndarray[float, ndim=2, mode="c"] cinputimage
     def __cinit__(self, unsigned int width, unsigned int height, float fovDegree, int preallocate_images): # defines the python wrapper class' init function
@@ -95,9 +98,9 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
     def pyloadDEM(self, objmodelpath):
         self.thisptr.loadDEM(objmodelpath.encode())
     def pyaddView(self, readimage, camerapose, pyImagename):
-        cdef np.ndarray[float, ndim=3, mode='c'] Temp3ChannelImage
-        cdef np.ndarray[float, ndim=2, mode='c'] Temp1ChannelImage
-        cdef np.ndarray[float, ndim=1, mode='c'] Temp1Pose
+        cdef Image pyImage
+        cdef mat4 pyPose
+        cdef np.ndarray[float, ndim=1, mode='c'] TempPoseArray
         #TempRenderedImage = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
         height = readimage.shape[0]
         width = readimage.shape[1]
@@ -106,17 +109,16 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         else :
             channels = readimage.shape[2]
         #TODO Create an Image struct in C
-        self.pyImage  = make_image(width, height,channels)
+        pyImage  = make_image(width, height,channels)
         #TODO First deliniete numpy array to Contiguous C array and than copy --- Define Input Vector
-        if channels  ==  1:
-            Temp1ChannelImage = np.asarray(readimage, dtype = np.float32, order="C")
-            copy_image_from_float(self.pyImage, &Temp1ChannelImage[0,0]) ### TODO maybe use memcopy here
-        else :
-            Temp3ChannelImage = np.asarray(readimage, dtype = np.float32, order="C")
-            copy_image_from_float(self.pyImage, readimage.tobytes()) ### TODO maybe use memcopy here
-        #FlattenPoseArray = camerapose.flatten()
-        #Temp1Pose = np.asarray(FlattenPoseArray, dtype = np.float32, order="C")
-        #memcpy(self.pyPose.data, &Temp1Pose[0], sizeof(float) * 16) ## Not Sure how this would work
+        copy_image_from_float(pyImage , readimage.tobytes()) ### TODO maybe use memcopy here
+        free_image(pyImage)
+        
+        #cdef float *data
+        FlattenPoseArray = camerapose.flatten()
+        TempPoseArray = np.asarray(FlattenPoseArray, dtype = np.float32, order="C")
+        pyPose =  make_mat4(&TempPoseArray[0])
+        #memcpy(data, &Temp1Pose[0], sizeof(float) * 16) ## Not Sure how this would work
         #self.addView(self.pyImage, self.pyPose, pyImagename.encode())
         
 
