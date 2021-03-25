@@ -32,7 +32,7 @@ float get_color(int c, int x, int max)
     return r;
 }
 
-static float get_pixel(Image m, int x, int y, int c)
+float get_pixel(Image m, int x, int y, int c)
 {
     assert(x < m.w && y < m.h && c < m.c);
     return m.data[c*m.h*m.w + y*m.w + x];

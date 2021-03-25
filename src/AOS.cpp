@@ -73,6 +73,9 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 	gBufferShader->setMat4("projection", projection);
 	gBufferShader->setMat4("view", virtual_pose);
 
+		std::cout << "RENDER: view matrix " << glm::to_string(virtual_pose).c_str() << std::endl;
+
+
 	// 1. geometry pass: render scene's geometry/color data into gbuffer
 	// -----------------------------------------------------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, fboGBuffer);
@@ -102,6 +105,7 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 		_ids= std::vector<unsigned int>(ids);
 
 
+	unsigned int counter = 0;
 	for (unsigned int idx : _ids)
 	{
 		auto projViewMatrix = projection_imgs * ogl_imgs[idx].pose;
@@ -110,7 +114,11 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 		glBindTexture(GL_TEXTURE_2D, ogl_imgs[idx].ogl_id);
 		
 		renderQuad(); //render quad
+
+		counter ++;
 	}
+
+	std::cout << "RENDER: projected " << counter << " images " << std::endl;
 
 
 
@@ -163,8 +171,8 @@ void AOS::addView(Image img, glm::mat4 pose, std::string name)
 	//int c = 1;
 	//int x = 1;
 	//int y = 10;
-	//float pixelvalue = img.data[c*img.h*img.w + y*img.w + x];
-	//std::cout << "Image Value Loaded " << pixelvalue << " image properties "<< img.h << img.w << img.c <<std::endl;
+	float pixelvalue = get_pixel(img,1,1,0);
+	std::cout << "Image Value Loaded " << pixelvalue << " image properties "<< img.h << img.w << img.c <<std::endl;
 	save_image_png(img, "Image"); //for checking if image is loaded
 	view.ogl_id = generateOGLTexture(img);
 	ogl_imgs.push_back(view);

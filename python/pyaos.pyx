@@ -121,7 +121,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         #cdef np.ndarray[float, ndim=1, mode='c'] TempPose
         #TempPose = np.asarray(camerapose.flatten(), dtype=np.float32, order='c')
         #pyPose =  make_mat4_from_floatarr(&TempPose[0])
-        pyPose =  make_mat4_from_float(camerapose.tobytes())
+        pyPose =  make_mat4_from_float(camerapose.astype(np.float32).tobytes())
         self.thisptr.addView(pyImage, pyPose, pyImagename.encode())
         py_free_image(pyImage)
     
@@ -181,11 +181,10 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         cdef np.ndarray[unsigned int, ndim=1, mode="c"] InputVector
         InputVector = np.asarray(cameraids, dtype = np.uintc, order="C")
         cdef vector[unsigned int] ids = InputVector
-        cdef np.ndarray[float, ndim=1, mode='c'] TempPose
-        TempPose = np.asarray(virtualcamerapose.flatten(), dtype=np.float32, order='c')
-        pyvirtualPose =  make_mat4_from_floatarr(&TempPose[0])
-        #pyvirtualPose =  make_mat4_from_float(virtualcamerapose.tobytes())
+
+        pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
         pyrenderedImage = self.thisptr.render(pyvirtualPose, virtualcamerafieldofview, ids)
+        
         cdef np.ndarray[float, ndim=3, mode='c'] TempRenderedImage
         TempRenderedImage = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
         py_copy_image_to_float(pyrenderedImage, &TempRenderedImage[0,0,0])

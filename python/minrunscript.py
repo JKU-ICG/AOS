@@ -7,7 +7,7 @@ from PIL import Image
 import time
 import pyaos
 print('pyaos Import')
-virtualcamerapose = np.zeros((4,4),dtype=float)
+virtualcamerapose = np.zeros((4,4),dtype=np.float32)
 def ReadJsonPosesFiles(PyClassObject,PosesFilePath,ImageLocation):
     with open(PosesFilePath) as PoseFile:
         PoseFileData = json.load(PoseFile)
@@ -21,29 +21,25 @@ def ReadJsonPosesFiles(PyClassObject,PosesFilePath,ImageLocation):
                 LoadImageName = ImageName.replace('.tiff','.png')
                 #Convert List of List to Np array
                 PoseMatrix = PoseFileImagesData[i]['M3x4']
-                PoseMatrixNumpyArray = np.array([], dtype=np.double)
+                PoseMatrixNumpyArray = np.array([], dtype=np.float32)
                 for k in range(0,len(PoseMatrix)):
-                    PoseMatrixNumpyArray = np.append(PoseMatrixNumpyArray, np.asarray(PoseMatrix[k],dtype=np.double))
-                PoseMatrixNumpyArray = np.append(PoseMatrixNumpyArray, np.asarray([0.0,0.0,0.0,1.0],dtype=np.double))
-                ViewMatrixArray = PoseMatrixNumpyArray
-                ViewMatrixArrayfrompy = ViewMatrixArray
-                ViewMatrixArrayfrompy = np.reshape(ViewMatrixArrayfrompy,(4,4))
-                #ViewMatrixArrayfrompy = np.reshape(ViewMatrixArrayfrompy,(3,4))
-                #ViewMatrixArrayfrompy = np.vstack((ViewMatrixArrayfrompy, np.array([0.0,0.0,0.0,1.0])))
-                InverseViewMatrix = np.linalg.inv(ViewMatrixArrayfrompy)
+                    PoseMatrixNumpyArray = np.append(PoseMatrixNumpyArray, np.asarray(PoseMatrix[k],dtype=np.float32))
+                PoseMatrixNumpyArray = np.append(PoseMatrixNumpyArray, np.asarray([0.0,0.0,0.0,1.0],dtype=np.float32))
+                PoseMatrixNumpyArray = PoseMatrixNumpyArray.reshape(4,4)
+                PoseMatrixNumpyArray = PoseMatrixNumpyArray.transpose()
                 #print('InverseViewMatrix',InverseViewMatrix[0][3],InverseViewMatrix[1][3],InverseViewMatrix[2][3])
                 #print('ViewMatrixArrayfrompy Shape',ViewMatrixArrayfrompy.shape)
-                print('ViewMatrixArray',ViewMatrixArray)
+                print('ViewMatrixArray',PoseMatrixNumpyArray)
                 #print('len(PoseFileData[images]',)
                 print('LoadImageName', LoadImageName)
                 #PILImage = Image.open(os.path.join(ImageLocation,LoadImageName))
                 PILImage = cv2.imread(os.path.join(ImageLocation,LoadImageName))
                 CopiedImage = np.array(PILImage)
-                OpencvImage = CopiedImage.astype(np.float32)
+                OpencvImage = CopiedImage.astype(np.float32) / 255.0
                 print('Image Data Loading')
                 if ( i == HalfValue):
                     print('AddingCameraValue')
-                    virtualcamerapose = ViewMatrixArray.copy()
+                    virtualcamerapose = PoseMatrixNumpyArray.copy()
                     print('virtualcamerapose when copy',virtualcamerapose)
                     #UPPosx.append(0.0)
                     #UPPosy.append(1.0)
@@ -53,7 +49,7 @@ def ReadJsonPosesFiles(PyClassObject,PosesFilePath,ImageLocation):
                 #print(PoseMatrixNumpyArray.dtype)
                 #print(type(PoseMatrixNumpyArray))
                 PyClassObject.pyaddView(OpencvImage, PoseMatrixNumpyArray, ImageName)
-    return NoofPoses, virtualcamerapose
+    return NoofPoses, np.linalg.inv(virtualcamerapose)
 CameraPosx = []
 CameraPosy = []
 CameraPosz = []
@@ -79,14 +75,14 @@ NoofPosesread , virtualcamerapose = ReadJsonPosesFiles(PyLFClass,PosesFilePath,I
 print('virtualcamerapose returned',virtualcamerapose)
 NoofPoses = PyLFClass.pygetViews()
 print('NoofPoses',NoofPoses)
-ImageReturned2 = PyLFClass.pygetXYZ()
-cv2.imwrite('DEMImage.png', ImageReturned2)
 cameraids = np.array([],dtype=np.uintc)
 print('virtualcamerapose',virtualcamerapose)
 ImageReturned1 = PyLFClass.pyrenderwithpose(virtualcamerapose, FocalLength, cameraids)
 PyLFClass.pydisplay(True)
 cv2.imwrite('Image1InMainApp.png', ImageReturned1)
 print('PY LightFieldClass generated')
+ImageReturned2 = PyLFClass.pygetXYZ()
+cv2.imwrite('DEMImage.png', ImageReturned2)
 '''
 #Process for Generating and Running LFR from Py
 #1) create a Python Light Field Class which in turns generate C++ Light Field Class
