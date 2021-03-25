@@ -1441,6 +1441,24 @@ void copy_image_from_float(Image im, char *pdata)
     }
 }
 
+void copy_image_to_float(Image im, float *pdata)
+{
+    float *data = (float *)pdata;
+    int i, k, j;
+    int w = im.w;
+    int h = im.h;
+    int c = im.c;
+    for (k = 0; k < c; ++k) {
+        for (j = 0; j < h; ++j) {
+            for (i = 0; i < w; ++i) {
+                int dst_index = i + w * j + w * h*k;
+                int src_index = k + c * i + c * w*j;
+                data[src_index] = (float)im.data[dst_index];
+            }
+        }
+    }
+}
+
 
 bool is_empty_image(Image img) 
 { 
