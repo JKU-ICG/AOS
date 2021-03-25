@@ -70,12 +70,17 @@ cdef extern from "../include/AOS.h": # defines the source C++ file
     
 cdef extern from *:
     ctypedef struct Image:
-        pass
+        int w #// width
+        int h #// heigth
+        int c; #// number of channels
+        float *data; #// data
 
 cdef extern from "../src/glm_utils.cpp":
     mat4 make_mat4_from_float(char *pdata)
     mat4 make_mat4_from_floatarr(float* pdata)
     vec3 make_vec3_from_float(char* pdata)
+    float* get_float_ptr(mat4* m)
+    float* get_float_ptr(vec3* m)
 
 cdef extern from "../src/py_utils.cpp":
     # ToDo -> this here definitlely is wrong right now.
@@ -125,10 +130,12 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         self.thisptr.addView(pyImage, pyPose, pyImagename.encode())
         py_free_image(pyImage)
     
-    def pygetPose(self, poseindex):
+    def getPose(self, poseindex):
         cdef mat4 pyPose
         pyPose = self.thisptr.getPose(poseindex)
         #ToDo Return float array which should be converted to numpyarray
+        cdef float[::1] arr = <float [:16]> get_float_ptr(&pyPose) # see https://stackoverflow.com/questions/24764048/get-the-value-of-a-cython-pointer
+        return np.asarray( arr ).reshape(4,4)
     
     def pysetPose(self, poseindex, camerapose):
         cdef mat4 pyPose
@@ -137,10 +144,13 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         returnedpyPose = self.thisptr.setPose(poseindex, pyPose)
         #ToDo Return float array which should be converted to numpyarray
     
-    def pygetPosition(self, cameraindex):
+    def getPosition(self, cameraindex):
         cdef vec3 pyPosition
         pyPosition = self.thisptr.getPosition(cameraindex)
         #ToDO Return float array from vec3 which should be converted to numpyarray
+
+        cdef float[::1] arr = <float [:3]> get_float_ptr(&pyPosition) # see https://stackoverflow.com/questions/24764048/get-the-value-of-a-cython-pointer
+        return np.asarray( arr ).reshape(3,1)
     
     def pygetUp(self, cameraindex):
         cdef vec3 pyUp
@@ -176,22 +186,12 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         py_free_image(pyImage)
     
     def pyrenderwithpose(self, virtualcamerapose, virtualcamerafieldofview, cameraids):
-        cdef Image pyrenderedImage
-        cdef mat4 pyvirtualPose
-        cdef np.ndarray[unsigned int, ndim=1, mode="c"] InputVector
-        InputVector = np.asarray(cameraids, dtype = np.uintc, order="C")
-        cdef vector[unsigned int] ids = InputVector
+        cdef vector[unsigned int] ids = np.asarray(cameraids, dtype = np.uintc, order="C")
 
-        pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
-        pyrenderedImage = self.thisptr.render(pyvirtualPose, virtualcamerafieldofview, ids)
-        
-        cdef np.ndarray[float, ndim=3, mode='c'] TempRenderedImage
-        TempRenderedImage = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
-        py_copy_image_to_float(pyrenderedImage, &TempRenderedImage[0,0,0])
-        RedChannelAfterToneMapped = TempRenderedImage[:,:,0:3]
-        ImageConverted = cv2.normalize(RedChannelAfterToneMapped, None, 0,255, cv2.NORM_MINMAX, cv2.CV_8UC3)
-        py_free_image(pyrenderedImage)
-        return ImageConverted
+        cdef mat4 pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
+        img = self.thisptr.render(pyvirtualPose, virtualcamerafieldofview, ids)
+
+        return np.asarray( <float [:(img.w*img.h*img.c)]>img.data ).reshape(img.w,img.h,img.c)  # see https://stackoverflow.com/questions/59666307/convert-c-vector-to-numpy-array-in-cython-without-copying
     
     def pygetXYZ(self):
         cdef Image pyrenderedDEMImage

@@ -75,12 +75,19 @@ NoofPosesread , virtualcamerapose = ReadJsonPosesFiles(PyLFClass,PosesFilePath,I
 print('virtualcamerapose returned',virtualcamerapose)
 NoofPoses = PyLFClass.pygetViews()
 print('NoofPoses',NoofPoses)
+HalfValue = int(round(NoofPoses)/2)
 cameraids = np.array([],dtype=np.uintc)
 print('virtualcamerapose',virtualcamerapose)
 ImageReturned1 = PyLFClass.pyrenderwithpose(virtualcamerapose, FocalLength, cameraids)
+cv2.imwrite('Image1InMainApp.png', (ImageReturned1[:,:,0] / ImageReturned1[:,:,3] * 255).astype(np.uint8))
 PyLFClass.pydisplay(True)
-cv2.imwrite('Image1InMainApp.png', ImageReturned1)
-print('PY LightFieldClass generated')
+
+vP = PyLFClass.getPose(0)
+print('virtualcamerapose with getPose: ', repr(vP) )
+
+vP = PyLFClass.getPosition(0)
+print('virtual camera Poition with getPosition: ', repr(vP) )
+
 ImageReturned2 = PyLFClass.pygetXYZ()
 cv2.imwrite('DEMImage.png', ImageReturned2)
 '''

@@ -30,3 +30,15 @@ glm::mat4 make_mat4_from_floatarr(float* pdata)
     return glmMat;
     //return glm::make_mat4((float*)pdata);
 }
+
+float* get_float_ptr(glm::mat4* m)
+{
+    return &((*m)[0][0]); // adress of float with index 0
+}
+
+
+float* get_float_ptr(glm::vec3* v)
+{
+    return &(v->x); // adress of float with index 0
+}
+
