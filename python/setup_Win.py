@@ -10,7 +10,7 @@ import numpy
 
 #setup(name="glesLFR", ext_modules = cythonize([ext]),cmdclass = {'build_ext': build_ext})
 ext_modules = [Extension("pyaos", 
-              sources=["pyaos.pyx","../src/AOS.cpp","../src/glad.c","../src/utils.cpp"],
+              sources=["pyaos.pyx","../src/AOS.cpp","../src/glad.c","../src/image.cpp","../src/utils.cpp","../src/gl_utils.cpp"],
               libraries=["glfw3","assimp-vc141-mt","opengl32","kernel32","user32","shell32","gdi32","vcruntime","msvcrt","python37"],
               include_dirs=[numpy.get_include(),"../include"],
               library_dirs=["../lib"],

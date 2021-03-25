@@ -6,8 +6,8 @@ import cv2
 from PIL import Image
 import time
 import pyaos
-print('glesLFR Import')
-
+print('pyaos Import')
+virtualcamerapose = np.zeros((4,4),dtype=float)
 def ReadJsonPosesFiles(PyClassObject,PosesFilePath,ImageLocation):
     with open(PosesFilePath) as PoseFile:
         PoseFileData = json.load(PoseFile)
@@ -18,25 +18,33 @@ def ReadJsonPosesFiles(PyClassObject,PosesFilePath,ImageLocation):
         if len(PoseFileData['images']) > 0:
             for i in range (0,len(PoseFileData['images'])):
                 ImageName = PoseFileImagesData[i]['imagefile']
+                LoadImageName = ImageName.replace('.tiff','.png')
                 #Convert List of List to Np array
                 PoseMatrix = PoseFileImagesData[i]['M3x4']
                 PoseMatrixNumpyArray = np.array([], dtype=np.double)
                 for k in range(0,len(PoseMatrix)):
                     PoseMatrixNumpyArray = np.append(PoseMatrixNumpyArray, np.asarray(PoseMatrix[k],dtype=np.double))
+                PoseMatrixNumpyArray = np.append(PoseMatrixNumpyArray, np.asarray([0.0,0.0,0.0,1.0],dtype=np.double))
                 ViewMatrixArray = PoseMatrixNumpyArray
                 ViewMatrixArrayfrompy = ViewMatrixArray
-                ViewMatrixArrayfrompy = np.reshape(ViewMatrixArrayfrompy,(3,4))
-                ViewMatrixArrayfrompy = np.vstack((ViewMatrixArrayfrompy, np.array([0.0,0.0,0.0,1.0])))
+                ViewMatrixArrayfrompy = np.reshape(ViewMatrixArrayfrompy,(4,4))
+                #ViewMatrixArrayfrompy = np.reshape(ViewMatrixArrayfrompy,(3,4))
+                #ViewMatrixArrayfrompy = np.vstack((ViewMatrixArrayfrompy, np.array([0.0,0.0,0.0,1.0])))
                 InverseViewMatrix = np.linalg.inv(ViewMatrixArrayfrompy)
                 #print('InverseViewMatrix',InverseViewMatrix[0][3],InverseViewMatrix[1][3],InverseViewMatrix[2][3])
                 #print('ViewMatrixArrayfrompy Shape',ViewMatrixArrayfrompy.shape)
+                print('ViewMatrixArray',ViewMatrixArray)
                 #print('len(PoseFileData[images]',)
-                PILImage = Image.open(os.path.join(ImageLocation,ImageName))
+                print('LoadImageName', LoadImageName)
+                #PILImage = Image.open(os.path.join(ImageLocation,LoadImageName))
+                PILImage = cv2.imread(os.path.join(ImageLocation,LoadImageName))
                 CopiedImage = np.array(PILImage)
                 OpencvImage = CopiedImage.astype(np.float32)
+                print('Image Data Loading')
                 if ( i == HalfValue):
                     print('AddingCameraValue')
-                    virtualcamerapose = ViewMatrixArrayfrompy
+                    virtualcamerapose = ViewMatrixArray.copy()
+                    print('virtualcamerapose when copy',virtualcamerapose)
                     #UPPosx.append(0.0)
                     #UPPosy.append(1.0)
                     #UPPosz.append(1.0)
@@ -44,15 +52,15 @@ def ReadJsonPosesFiles(PyClassObject,PosesFilePath,ImageLocation):
                 #print(PoseMatrixNumpyArray.shape)
                 #print(PoseMatrixNumpyArray.dtype)
                 #print(type(PoseMatrixNumpyArray))
-                PyClassObject.pyaddView(OpencvImage, ViewMatrixArrayfrompy, ImageName)
-    return NoofPoses
+                PyClassObject.pyaddView(OpencvImage, PoseMatrixNumpyArray, ImageName)
+    return NoofPoses, virtualcamerapose
 CameraPosx = []
 CameraPosy = []
 CameraPosz = []
 UPPosx = []
 UPPosy = []
 UPPosz = []
-virtualcamerapose = np.zeros((4,4),dtype=float)
+
 PosesFilePath = '../data/Hellmonsoedt_pose_corr_30.json'
 ImageLocation = '../data/Hellmonsoedt_ldr_r512'
 ObjModelPath = '../data/dem.obj'
@@ -64,14 +72,19 @@ ObjModelPath = '../data/dem.obj'
 #CheckImageRead = cv2.imread('/home/pi/PyCLFR_AutoDrone/glesLFR/data/T20200207F2/thermal_hdr512/20200207_124519.tiff',0)
 #print('CheckImageRead',type(CheckImageRead))
 FocalLength = 50.815436217896945
-pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
+window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
 PyLFClass = pyaos.PyAOS(512,512,FocalLength,10)
 PyLFClass.pyloadDEM(ObjModelPath)
-ReadJsonPosesFiles(PyLFClass,PosesFilePath,ImageLocation)
+NoofPosesread , virtualcamerapose = ReadJsonPosesFiles(PyLFClass,PosesFilePath,ImageLocation)
+print('virtualcamerapose returned',virtualcamerapose)
 NoofPoses = PyLFClass.pygetViews()
 print('NoofPoses',NoofPoses)
-cameraids = np.array([])
+ImageReturned2 = PyLFClass.pygetXYZ()
+cv2.imwrite('DEMImage.png', ImageReturned2)
+cameraids = np.array([],dtype=np.uintc)
+print('virtualcamerapose',virtualcamerapose)
 ImageReturned1 = PyLFClass.pyrenderwithpose(virtualcamerapose, FocalLength, cameraids)
+PyLFClass.pydisplay(True)
 cv2.imwrite('Image1InMainApp.png', ImageReturned1)
 print('PY LightFieldClass generated')
 '''

@@ -45,10 +45,7 @@ cdef extern from "../include/GLFW/glfw3.h":
         pass
     
 
-cdef extern from "../src/gl_utils.cpp":
-    # ToDo -> this here definitlely is wrong right now.
-    GLFWwindow* InitGlfwWindow(const int width, const int height, const char* appname)
-    void DestroyGlfwWindow(GLFWwindow* window)
+
 
 cdef extern from "../include/AOS.h": # defines the source C++ file
     cdef cppclass AOS:
@@ -77,15 +74,20 @@ cdef extern from *:
 
 cdef extern from "../src/glm_utils.cpp":
     mat4 make_mat4_from_float(char *pdata)
+    mat4 make_mat4_from_floatarr(float* pdata)
     vec3 make_vec3_from_float(char* pdata)
 
-cdef extern from "../src/image.cpp":
+cdef extern from "../src/py_utils.cpp":
     # ToDo -> this here definitlely is wrong right now.
-    Image make_image(int w, int h, int c)
-    void copy_image_from_bytes(Image im, char *pdata)
-    void copy_image_from_float(Image im, char *pdata)
-    void copy_image_to_float(Image im, float *pdata)
-    void free_image(Image m)
+    GLFWwindow* InitGlfwWindow(const int width, const int height, const char* appname)
+    void DestroyGlfwWindow(GLFWwindow* window)
+    Image py_make_image(int w, int h, int c)
+    void py_copy_image_from_bytes(Image im, char *pdata)
+    void py_copy_image_from_float(Image im, char *pdata)
+    void py_copy_image_to_float(Image im, float *pdata)
+    void py_free_image(Image m)
+    Image py_float_to_image(int w, int h, int c, float *data)
+    
 
 cdef class PyAOS: # defines a python wrapper to the C++ class
     cdef AOS* thisptr # thisptr is a pointer that will hold to the instance of the C++ class
@@ -101,6 +103,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
     def pyloadDEM(self, objmodelpath):
         self.thisptr.loadDEM(objmodelpath.encode())
     def pyaddView(self, readimage, camerapose, pyImagename):
+        print('Add New Image')
         cdef Image pyImage
         cdef mat4 pyPose
         height = readimage.shape[0]
@@ -109,11 +112,18 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
             channels = 1
         else :
             channels = readimage.shape[2]
-        pyImage  = make_image(width, height,channels)
-        copy_image_from_float(pyImage , readimage.tobytes()) 
+        pyImage  = py_make_image(width, height,channels)
+        py_copy_image_from_float(pyImage , readimage.tobytes())
+        #cdef np.ndarray[float, ndim=3, mode='c'] TempImage
+        #TempImage = np.asarray(readimage, dtype=np.float32, order='c')
+        #pyImage = py_float_to_image(width, height, channels, &TempImage[0,0,0])
+        print('camerapose', camerapose)
+        #cdef np.ndarray[float, ndim=1, mode='c'] TempPose
+        #TempPose = np.asarray(camerapose.flatten(), dtype=np.float32, order='c')
+        #pyPose =  make_mat4_from_floatarr(&TempPose[0])
         pyPose =  make_mat4_from_float(camerapose.tobytes())
         self.thisptr.addView(pyImage, pyPose, pyImagename.encode())
-        free_image(pyImage)
+        py_free_image(pyImage)
     
     def pygetPose(self, poseindex):
         cdef mat4 pyPose
@@ -159,24 +169,29 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
             channels = 1
         else :
             channels = replacingimage.shape[2]
-        pyImage  = make_image(width, height,channels)
-        copy_image_from_float(pyImage , replacingimage.tobytes()) 
+        pyImage  = py_make_image(width, height,channels)
+        py_copy_image_from_float(pyImage , replacingimage.tobytes()) 
         pyPose =  make_mat4_from_float(replacingpose.tobytes())
         self.thisptr.replaceView(cameraindex, pyImage, pyPose, replacename.encode())
+        py_free_image(pyImage)
     
     def pyrenderwithpose(self, virtualcamerapose, virtualcamerafieldofview, cameraids):
         cdef Image pyrenderedImage
         cdef mat4 pyvirtualPose
-        cdef np.ndarray[double, ndim=1, mode="c"] InputVector
+        cdef np.ndarray[unsigned int, ndim=1, mode="c"] InputVector
         InputVector = np.asarray(cameraids, dtype = np.uintc, order="C")
         cdef vector[unsigned int] ids = InputVector
-        pyvirtualPose =  make_mat4_from_float(virtualcamerapose.tobytes())
+        cdef np.ndarray[float, ndim=1, mode='c'] TempPose
+        TempPose = np.asarray(virtualcamerapose.flatten(), dtype=np.float32, order='c')
+        pyvirtualPose =  make_mat4_from_floatarr(&TempPose[0])
+        #pyvirtualPose =  make_mat4_from_float(virtualcamerapose.tobytes())
         pyrenderedImage = self.thisptr.render(pyvirtualPose, virtualcamerafieldofview, ids)
         cdef np.ndarray[float, ndim=3, mode='c'] TempRenderedImage
         TempRenderedImage = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
-        copy_image_to_float(pyrenderedImage, &TempRenderedImage[0,0,0])
+        py_copy_image_to_float(pyrenderedImage, &TempRenderedImage[0,0,0])
         RedChannelAfterToneMapped = TempRenderedImage[:,:,0:3]
         ImageConverted = cv2.normalize(RedChannelAfterToneMapped, None, 0,255, cv2.NORM_MINMAX, cv2.CV_8UC3)
+        py_free_image(pyrenderedImage)
         return ImageConverted
     
     def pygetXYZ(self):
@@ -184,9 +199,10 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         pyrenderedDEMImage = self.thisptr.getXYZ()
         cdef np.ndarray[float, ndim=3, mode='c'] TempRenderedImage
         TempRenderedImage = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
-        copy_image_to_float(pyrenderedDEMImage, &TempRenderedImage[0,0,0])
+        py_copy_image_to_float(pyrenderedDEMImage, &TempRenderedImage[0,0,0])
         RedChannelAfterToneMapped = TempRenderedImage[:,:,0:3]
         ImageConverted = cv2.normalize(RedChannelAfterToneMapped, None, 0,255, cv2.NORM_MINMAX, cv2.CV_8UC3)
+        py_free_image(pyrenderedDEMImage)
         return ImageConverted
     
     def pydisplay(self, normalize):

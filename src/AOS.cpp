@@ -3,6 +3,8 @@
 #include "AOS.h"
 #include "image.h"
 #include "learnopengl/model.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 
 
 void renderQuad();
@@ -120,8 +122,8 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 	// if it takes too long, do not do this every frame! e.g. only once every second or so
 	
 	getMinMaxFromFBO((glm::vec4 *)fboImg.data, render_width * render_height, fboCount, fboMin, fboMax);
-	//std::cout << "fbo_min: " << glm::to_string(fboMin).c_str() << std::endl;
-	//std::cout << "fbo_max: " << glm::to_string(fboMax).c_str() << std::endl;
+	std::cout << "fbo_min: " << glm::to_string(fboMin).c_str() << std::endl;
+	std::cout << "fbo_max: " << glm::to_string(fboMax).c_str() << std::endl;
 
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); // disable framebuffer
@@ -156,7 +158,14 @@ void AOS::addView(Image img, glm::mat4 pose, std::string name)
 {
 	View view;
 	view.pose = pose;
+	std::cout << "added pose " << glm::to_string(pose).c_str() << std::endl;
 	view.name = name.empty() ? std::to_string(ogl_imgs.size()) : name;
+	//int c = 1;
+	//int x = 1;
+	//int y = 10;
+	//float pixelvalue = img.data[c*img.h*img.w + y*img.w + x];
+	//std::cout << "Image Value Loaded " << pixelvalue << " image properties "<< img.h << img.w << img.c <<std::endl;
+	save_image_png(img, "Image"); //for checking if image is loaded
 	view.ogl_id = generateOGLTexture(img);
 	ogl_imgs.push_back(view);
 }
