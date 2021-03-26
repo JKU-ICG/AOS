@@ -34,8 +34,8 @@ def ReadJsonPosesFiles(PyClassObject,PosesFilePath,ImageLocation):
                 #print('ViewMatrixArray',PoseMatrixNumpyArray)
                 #print('len(PoseFileData[images]',)
                 #print('LoadImageName', LoadImageName)
-                #PILImage = Image.open(os.path.join(ImageLocation,LoadImageName))
-                PILImage = cv2.imread(os.path.join(ImageLocation,LoadImageName))
+                PILImage = Image.open(os.path.join(ImageLocation,LoadImageName))
+                #PILImage = cv2.imread(os.path.join(ImageLocation,LoadImageName))
                 CopiedImage = np.array(PILImage)
                 OpencvImage = CopiedImage.astype(np.float32) / 255.0
                 #print('Image Data Loading')
@@ -92,6 +92,9 @@ HalfValue = int(round(NoofPoses)/2)
 cameraids = np.array([],dtype=np.uintc)
 print('virtualcamerapose from main',virtualcamerapose)
 ImageReturned1 = PyLFClass.renderwithpose(virtualcamerapose, FocalLength, cameraids)
+ImageReturned1[:,:,0] = ImageReturned1[:,:,0] / ImageReturned1[:,:,3]
+ImageReturned1[:,:,1] = ImageReturned1[:,:,1] / ImageReturned1[:,:,3]
+ImageReturned1[:,:,2] = ImageReturned1[:,:,2] / ImageReturned1[:,:,3]
 ImageConverted = cv2.normalize(ImageReturned1[:,:,0:3], None, 0,255, cv2.NORM_MINMAX, cv2.CV_8UC3)
 cv2.imwrite('ImageRendered.png', ImageConverted)
 #cv2.imwrite('ImageRendered.png', (ImageReturned1[:,:,0] / ImageReturned1[:,:,3] * 255).astype(np.uint8))

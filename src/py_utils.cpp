@@ -130,8 +130,12 @@ void py_copy_image_to_float(Image im, float *pdata)
             for (i = 0; i < w; ++i) {
                 int dst_index = i + w * j + w * h*k;
                 int src_index = k + c * i + c * w*j;
-                data[dst_index] = (float)im.data[dst_index];
-                //data[src_index] = (float)im.data[dst_index];
+                int newsrc_index = k + c * j + c * h*i;
+                //data[dst_index] = (float)im.data[dst_index];
+                data[src_index] = (float)im.data[dst_index];
+                //data[src_index] = (float)im.data[src_index];
+                //data[dst_index] = (float)im.data[src_index];
+                //data[newsrc_index] = (float)im.data[dst_index];
             }
         }
     }
