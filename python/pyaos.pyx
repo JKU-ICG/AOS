@@ -194,7 +194,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         self.thisptr.replaceView(cameraindex, pyImage, pyPose, replacename.encode())
         py_free_image(pyImage)
     
-    def renderwithpose(self, virtualcamerapose, virtualcamerafieldofview, cameraids):
+    def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids):
         cdef vector[unsigned int] ids = np.asarray(cameraids, dtype = np.uintc, order="C")
 
         cdef mat4 pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())

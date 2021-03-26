@@ -91,7 +91,7 @@ print('NoofPoses',NoofPoses)
 HalfValue = int(round(NoofPoses)/2)
 cameraids = np.array([],dtype=np.uintc)
 print('virtualcamerapose from main',virtualcamerapose)
-ImageReturned1 = PyLFClass.renderwithpose(virtualcamerapose, FocalLength, cameraids)
+ImageReturned1 = PyLFClass.render(virtualcamerapose, FocalLength, cameraids)
 ImageReturned1[:,:,0] = ImageReturned1[:,:,0] / ImageReturned1[:,:,3]
 ImageReturned1[:,:,1] = ImageReturned1[:,:,1] / ImageReturned1[:,:,3]
 ImageReturned1[:,:,2] = ImageReturned1[:,:,2] / ImageReturned1[:,:,3]
