@@ -1,55 +1,142 @@
 import pyaos
 import cv2
 import os
-
-#import OpenGL
-#from OpenGL.GL import *
-#from OpenGL.GLUT import *
-#from OpenGL.GLU import *
-
-#def showScreen():
-#    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # Remove everything from screen (i.e. displays all white)
+import unittest
+import sys
+import glm
+import numpy as np
+import numpy.testing
 
 
-#glutInit() # Initialize a glut instance which will allow us to customize our window
-#glutInitDisplayMode(GLUT_RGBA) # Set the display mode to be colored
-#glutInitWindowSize(500, 500)   # Set the width and height of your window
-#glutInitWindowPosition(0, 0)   # Set the position at which this windows should appear
-#wind = glutCreateWindow("OpenGL Coding Practice") # Give your window a title
-#glutDisplayFunc(showScreen)  # Tell OpenGL to call the showScreen method continuously
-#glutIdleFunc(showScreen)     # Draw any graphics or shapes in the showScreen function at all times
-#glutMainLoop()  # Keeps the window created above displaying/running in a loop
+class TestAOSRender(unittest.TestCase):
 
-window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
+    _window = None
+    _aos = None
+    _fovDegrees = 50
 
+    def setUp(self):
+        self._window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
+        #print( 'initializing AOS ... ' )
+        self._aos = pyaos.PyAOS(512,512,self._fovDegrees)
 
-
-print( 'initializing AOS ... ' )
-aos = pyaos.PyAOS(512,512,50,10)
-print( 'aos created!' )
+    def tearDown(self):
+        del self._aos 
+        del self._window
 
 
-testfile = '../vs/debug_out.tiff'
-assert os.path.exists(testfile), 'testfile does not exist!' 
+    def test_render_single_image(self):
 
-# loading 32-bit floating point 4 channel images seems to work with -1
-img = cv2.imread( testfile, -1 )
+        img = np.ones(shape=(512,512,1), dtype = np.float32)
+        pose = np.eye(4)
 
-# image is then a ndarray type and can be nicely indexed
-# similar to matlab:
-print( img[100,100,0:4] )
-
-print( img.min() )
-print( img.max() )
+        # loading DEM
+        self._aos.loadDEM("../data/plane.obj")
 
 
+        # adding a view
+        self.assertTrue(self._aos.getSize()==0)
+        self._aos.addView( img, pose, "01" )
+        self.assertTrue(self._aos.getSize()==1)
 
-nimg = img - img.min()
-nimg = nimg / nimg.max()
+        rimg = self._aos.render(pose, self._fovDegrees)
+
+        # check that the rendered image is like the initial one
+        self.assertTrue(np.allclose(img[:,:,0],rimg[:,:,0]))
+
+        # adding a second view:
+        img2 = np.ones(shape=(512,512,1), dtype = np.float32) * 2.0
+
+        self.assertTrue(self._aos.getSize()==1)
+        self._aos.addView( img2, pose, "02" )
+        self.assertTrue(self._aos.getSize()==2)
+
+        rimg = self._aos.render(pose, self._fovDegrees)
+        rimg = rimg[:,:,0] / rimg[:,:,3]
+
+        # check that the rendered image an average of the first and the second one! (1 + 2)/2 = 1.5
+        self.assertTrue(np.allclose(rimg, np.ones(shape=(512,512), dtype = np.float32) * 1.5))
 
 
-cv2.imshow('image',img / img.max() )
-cv2.waitKey(0)
+        # replacing the second view with a new one
+        img3 = np.ones(shape=(512,512), dtype = np.float32) * 3.0
 
-#del window
+        self.assertTrue(self._aos.getSize()==2)
+        self._aos.replaceView( 1, img3, pose, "03" )
+        self.assertTrue(self._aos.getSize()==2)
 
+        rimg = self._aos.render(pose, self._fovDegrees)
+        rimg = rimg[:,:,0] / rimg[:,:,3]
+
+        # check that the rendered image is an average of the first and the thrid one! (1 + 3)/2 = 2.0
+        self.assertTrue(np.allclose(rimg, np.ones(shape=(512,512), dtype = np.float32) * 2.0))
+
+        # render only the third one
+        rimg = self._aos.render(pose, self._fovDegrees, [1])
+        rimg = rimg[:,:,0] / rimg[:,:,3]
+
+        # check that the rendered image is like the third image
+        self.assertTrue(np.allclose(rimg, np.ones(shape=(512,512), dtype = np.float32) * 3.0))
+
+        #cv2.imshow("Rendering",rimg)
+        #cv2.waitKey(0)
+
+        # get XYZ coordinates from plane.obj (z coordinate should be -100 everywhere)
+        xyz = self._aos.getXYZ()
+        self.assertTrue((xyz[:,:,2]==-100.0).all)
+
+        #print(xyz[256,256,:])
+
+
+
+
+
+class TestAOSInit(unittest.TestCase):
+    """ Test different scenarios for initialization
+
+    """
+
+    # standard initialization
+    def test_init(self):
+        window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
+        #print( 'initializing AOS ... ' )
+        aos = pyaos.PyAOS(512,512,50,10)
+        #print( 'aos created!' )
+
+        del aos
+        del window
+        
+    def test_nocontext(self):
+        # do it without valid opengl context
+
+        errorRaised = False
+        try:
+            aos = pyaos.PyAOS(512,512,50,10)
+        except RuntimeError as err:
+            print("Runtime error: ",  err)
+            errorRaised = True
+
+        self.assertTrue(errorRaised)
+
+    def test_shaderloading(self):
+        # wrong working directory, so shaders cannot be loaded!
+
+        olddir = os. getcwd()
+        os.chdir('..')
+
+        window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
+
+
+        errorRaised = False
+        try:
+            aos = pyaos.PyAOS(512,512,50,10)
+        except RuntimeError as err:
+            print("Runtime error: ",  err)
+            errorRaised = True
+
+        self.assertTrue(errorRaised)
+
+        os.chdir(olddir)
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -14,22 +14,20 @@ AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int prealloca
 	:render_width(width), render_height(height), dem_model(NULL)
 {
 
-	printf("Entering C++ AOS constructor");
+	// printf("Entering C++ AOS constructor");
 	// ToDo: init GL
 	// find a way to init GL only if no other OpenGL context exists!
 
-	//auto gl_version = glGetString(GL_VERSION);
-	//if (gl_version == 0) 
-	//{
-	//	printf("ERROR: no Opengl!");
-	//	throw "Error: No OpenGL context!";
-	//}
+	auto gl_version = glGetString(GL_VERSION);
+	if (gl_version == 0) 
+	{
+		printf("ERROR: no Opengl!");
+		throw std::runtime_error("Error: No OpenGL context!");
+	}
 
 
 	// build and compile shaders
 	// -------------------------
-	//Shader shader("../3.1.3.shadow_mapping.vs", "../3.1.3.shadow_mapping.fs");
-	//Shader simpleDepthShader("../3.1.3.shadow_mapping_depth.vs", "../3.1.3.shadow_mapping_depth.fs");
 	showFboShader = new Shader("../shader/show_fbo.vs.glsl", "../shader/show_fbo.fs.glsl");
 	projectShader = new Shader("../shader/deferred_project_image.vs.glsl", "../shader/deferred_project_image.fs.glsl");
 	demShader = new Shader("../shader/project_image.vs.glsl", "../shader/show_fbo.fs.glsl");
@@ -219,7 +217,7 @@ void AOS::display(bool normalize)
 Image AOS::getXYZ()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fboGBuffer);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// read framebuffer to CPU
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
@@ -254,7 +252,7 @@ void AOS::uploadOGLTexture(unsigned int textureID, Image img)
 		internal = GL_RGBA16F;
 		format = GL_RGBA;
 	} else
-		throw "Error: number of channels not supported!";
+		throw std::runtime_error( "Error: number of channels not supported!" );
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal, img.w, img.h, 0, format, GL_FLOAT, img.data);
@@ -280,13 +278,20 @@ void AOS::initFrameBufferTexture(unsigned int* fbo, unsigned int* texture)
 	// position color buffer
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
+#ifdef GL_EXT_color_buffer_float
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, render_width, render_height, 0, GL_RGBA, GL_FLOAT, NULL);
+#elif GL_EXT_color_buffer_half_float
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, render_width, render_height, 0, GL_RGBA, GL_FLOAT, NULL);
+#else
+	static_assert(true, "Error: floating point framebuffer not supported!");
+	throw std::runtime_error("Error: floating point framebuffer not supported!");
+#endif
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture, 0);
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		std::cout << "Framebuffer not complete!" << std::endl;
-		throw "Error: framebuffer not complete!";
+		throw std::runtime_error( "Error: framebuffer not complete!" );
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

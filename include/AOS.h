@@ -30,7 +30,7 @@ private:
 	std::vector<View> ogl_imgs;
 	unsigned int render_width, render_height;
 	glm::mat4 projection_imgs;
-	const float near_plane = 0.1f, far_plane = 1000.0f;
+	float near_plane = 1.0f, far_plane = 1000.0f;
 	const float view_aspect = 1.0f; // aspect ratio of views
 
 	// digital elevation model or focal surface
@@ -72,6 +72,11 @@ public:
 	//void loadViews(std::string json_file, std::string imgs_path = "") {};
 	unsigned int getViews() { return ogl_imgs.size(); }
 	unsigned int getSize() { return getViews(); } // legacy
+
+	float getNearPlane() { return near_plane; }
+	float getFarPlane() { return far_plane; }
+	float setNearPlane(float np) { near_plane = np;  return near_plane; }
+	float setFarPlane(float fp) { far_plane = fp;  return far_plane; }
 
 private:
 	unsigned int getOGLid(unsigned int idx) { return ogl_imgs[idx].ogl_id; }

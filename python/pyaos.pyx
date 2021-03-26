@@ -41,12 +41,6 @@ cdef extern from "../include/glm/glm.hpp" namespace "glm":
     ctypedef struct vec3:
         pass   
 
-cdef extern from "../include/GLFW/glfw3.h":
-    ctypedef struct GLFWwindow :
-        pass
-    
-
-
 
 cdef extern from "../include/AOS.h": # defines the source C++ file
     cdef cppclass AOS:
@@ -84,6 +78,8 @@ cdef extern from "../src/glm_utils.cpp":
     void get_float_ptr_vec(vec3* m, float* floatarr)
 
 cdef extern from "../src/py_utils.cpp":
+    ctypedef struct GLFWwindow :
+        pass
     # ToDo -> this here definitlely is wrong right now.
     GLFWwindow* InitGlfwWindow(const int width, const int height, const char* appname)
     void DestroyGlfwWindow(GLFWwindow* window)
@@ -100,7 +96,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
     cdef float *pyfloatarray
     cdef unsigned int LFRResolutionHeight
     cdef unsigned int LFRResolutionWidth
-    def __cinit__(self, unsigned int width, unsigned int height, float fovDegree, int preallocate_images): # defines the python wrapper class' init function
+    def __cinit__(self, unsigned int width, unsigned int height, float fovDegree, int preallocate_images=0): # defines the python wrapper class' init function
         self.LFRResolutionHeight = height  # destroys the reference to the C++ instance (which calls the C++ class destructor
         self.LFRResolutionWidth = width
         self.thisptr = new AOS(width, height, fovDegree, preallocate_images) # creates an instance of the C++ class and puts allocates the pointer to this
@@ -194,7 +190,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         self.thisptr.replaceView(cameraindex, pyImage, pyPose, replacename.encode())
         py_free_image(pyImage)
     
-    def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids):
+    def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids=[]):
         cdef vector[unsigned int] ids = np.asarray(cameraids, dtype = np.uintc, order="C")
 
         cdef mat4 pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
