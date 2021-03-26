@@ -73,7 +73,7 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 	gBufferShader->setMat4("projection", projection);
 	gBufferShader->setMat4("view", virtual_pose);
 
-		std::cout << "RENDER: view matrix " << glm::to_string(virtual_pose).c_str() << std::endl;
+	std::cout << "RENDER: view matrix " << glm::to_string(virtual_pose).c_str() << std::endl;
 
 
 	// 1. geometry pass: render scene's geometry/color data into gbuffer
@@ -105,7 +105,7 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 		_ids= std::vector<unsigned int>(ids);
 
 
-	unsigned int counter = 0;
+	//unsigned int counter = 0;
 	for (unsigned int idx : _ids)
 	{
 		auto projViewMatrix = projection_imgs * ogl_imgs[idx].pose;
@@ -115,10 +115,10 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 		
 		renderQuad(); //render quad
 
-		counter ++;
+		//counter ++;
 	}
 
-	std::cout << "RENDER: projected " << counter << " images " << std::endl;
+	//std::cout << "RENDER: projected " << counter << " images " << std::endl;
 
 
 
@@ -130,8 +130,8 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 	// if it takes too long, do not do this every frame! e.g. only once every second or so
 	
 	getMinMaxFromFBO((glm::vec4 *)fboImg.data, render_width * render_height, fboCount, fboMin, fboMax);
-	std::cout << "fbo_min: " << glm::to_string(fboMin).c_str() << std::endl;
-	std::cout << "fbo_max: " << glm::to_string(fboMax).c_str() << std::endl;
+	//std::cout << "fbo_min: " << glm::to_string(fboMin).c_str() << std::endl;
+	//std::cout << "fbo_max: " << glm::to_string(fboMax).c_str() << std::endl;
 
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); // disable framebuffer
@@ -168,12 +168,9 @@ void AOS::addView(Image img, glm::mat4 pose, std::string name)
 	view.pose = pose;
 	std::cout << "added pose " << glm::to_string(pose).c_str() << std::endl;
 	view.name = name.empty() ? std::to_string(ogl_imgs.size()) : name;
-	//int c = 1;
-	//int x = 1;
-	//int y = 10;
-	float pixelvalue = get_pixel(img,1,1,0);
-	std::cout << "Image Value Loaded " << pixelvalue << " image properties "<< img.h << img.w << img.c <<std::endl;
-	save_image_png(img, "Image"); //for checking if image is loaded
+	//float pixelvalue = get_pixel(img,1,1,0);
+	//std::cout << "Image Value Loaded " << pixelvalue << " image properties "<< img.h << img.w << img.c <<std::endl;
+	//save_image_png(img, "Image"); //for checking if image is loaded
 	view.ogl_id = generateOGLTexture(img);
 	ogl_imgs.push_back(view);
 }
@@ -195,7 +192,9 @@ void AOS::replaceView(unsigned int idx, Image img, glm::mat4 pose, std::string n
 }
 
 void AOS::display(bool normalize)
-{
+{	
+	//std::cout << std::boolalpha;   
+    //std::cout<<normalize<<"\n";
 	//glViewport(0, 0, render_width, render_height);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

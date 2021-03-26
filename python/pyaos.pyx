@@ -3,6 +3,7 @@ from libcpp.string cimport string
 from libc.stdlib cimport malloc , free
 from libc.string cimport memcpy 
 from libcpp cimport bool
+from cython.view cimport array as cvarray
 import numpy as np
 cimport numpy as np
 import json
@@ -79,8 +80,8 @@ cdef extern from "../src/glm_utils.cpp":
     mat4 make_mat4_from_float(char *pdata)
     mat4 make_mat4_from_floatarr(float* pdata)
     vec3 make_vec3_from_float(char* pdata)
-    float* get_float_ptr(mat4* m)
-    float* get_float_ptr(vec3* m)
+    void get_float_ptr_mat(mat4* m, float* floatarr)
+    void get_float_ptr_vec(vec3* m, float* floatarr)
 
 cdef extern from "../src/py_utils.cpp":
     # ToDo -> this here definitlely is wrong right now.
@@ -105,10 +106,9 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         self.thisptr = new AOS(width, height, fovDegree, preallocate_images) # creates an instance of the C++ class and puts allocates the pointer to this
     def __dealloc__(self): # defines the python wrapper class' deallocation function (python destructor)
         del self.thisptr # destroys the reference to the C++ instance (which calls the C++ class destructor
-    def pyloadDEM(self, objmodelpath):
+    def loadDEM(self, objmodelpath):
         self.thisptr.loadDEM(objmodelpath.encode())
-    def pyaddView(self, readimage, camerapose, pyImagename):
-        print('Add New Image')
+    def addView(self, readimage, camerapose, pyImagename):
         cdef Image pyImage
         cdef mat4 pyPose
         height = readimage.shape[0]
@@ -119,58 +119,67 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
             channels = readimage.shape[2]
         pyImage  = py_make_image(width, height,channels)
         py_copy_image_from_float(pyImage , readimage.tobytes())
-        #cdef np.ndarray[float, ndim=3, mode='c'] TempImage
-        #TempImage = np.asarray(readimage, dtype=np.float32, order='c')
-        #pyImage = py_float_to_image(width, height, channels, &TempImage[0,0,0])
-        print('camerapose', camerapose)
-        #cdef np.ndarray[float, ndim=1, mode='c'] TempPose
-        #TempPose = np.asarray(camerapose.flatten(), dtype=np.float32, order='c')
-        #pyPose =  make_mat4_from_floatarr(&TempPose[0])
         pyPose =  make_mat4_from_float(camerapose.astype(np.float32).tobytes())
         self.thisptr.addView(pyImage, pyPose, pyImagename.encode())
         py_free_image(pyImage)
     
     def getPose(self, poseindex):
         cdef mat4 pyPose
+        cdef np.ndarray[float, ndim=1, mode='c'] floatarr
+        floatarr = np.zeros((16,), dtype=np.float32)
         pyPose = self.thisptr.getPose(poseindex)
-        #ToDo Return float array which should be converted to numpyarray
-        cdef float[::1] arr = <float [:16]> get_float_ptr(&pyPose) # see https://stackoverflow.com/questions/24764048/get-the-value-of-a-cython-pointer
-        return np.asarray( arr ).reshape(4,4)
+        get_float_ptr_mat(&pyPose,&floatarr[0])
+        return floatarr[:].reshape(4,4)
+        #cdef float[::1] arr = <float [:16]> floatarr # see https://stackoverflow.com/questions/24764048/get-the-value-of-a-cython-pointer
+        #return np.asarray( floatarr ).reshape(4,4)
     
-    def pysetPose(self, poseindex, camerapose):
+    def setPose(self, poseindex, camerapose):
         cdef mat4 pyPose
         cdef mat4 returnedpyPose
-        pyPose =  make_mat4_from_float(camerapose.tobytes())
+        cdef np.ndarray[float, ndim=1, mode='c'] floatarr
+        floatarr = np.zeros((16,), dtype=np.float32)
+        pyPose =  make_mat4_from_float(camerapose.astype(np.float32).tobytes())
         returnedpyPose = self.thisptr.setPose(poseindex, pyPose)
-        #ToDo Return float array which should be converted to numpyarray
+        get_float_ptr_mat(&pyPose,&floatarr[0])
+        return floatarr[:].reshape(4,4)
+        #cdef float[::1] arr = <float [:16]> floatarr # see https://stackoverflow.com/questions/24764048/get-the-value-of-a-cython-pointer
+        #return np.asarray( arr ).reshape(4,4)
     
     def getPosition(self, cameraindex):
         cdef vec3 pyPosition
+        cdef np.ndarray[float, ndim=1, mode='c'] floatarr
+        floatarr = np.zeros((3,), dtype=np.float32)
         pyPosition = self.thisptr.getPosition(cameraindex)
-        #ToDO Return float array from vec3 which should be converted to numpyarray
-
-        cdef float[::1] arr = <float [:3]> get_float_ptr(&pyPosition) # see https://stackoverflow.com/questions/24764048/get-the-value-of-a-cython-pointer
-        return np.asarray( arr ).reshape(3,1)
+        get_float_ptr_vec(&pyPosition, &floatarr[0])
+        return floatarr[:]
+        #cdef float[::1] arr = <float [:3]>  floatarr# see https://stackoverflow.com/questions/24764048/get-the-value-of-a-cython-pointer
+        #return np.asarray( arr ).reshape(3,1)
     
-    def pygetUp(self, cameraindex):
+    def getUp(self, cameraindex):
         cdef vec3 pyUp
+        cdef np.ndarray[float, ndim=1, mode='c'] floatarr
+        floatarr = np.zeros((3,), dtype=np.float32)
         pyUp = self.thisptr.getUp(cameraindex)
-        #ToDO Return float array from vec3 which should be converted to numpyarray
+        get_float_ptr_vec(&pyUp, &floatarr[0])
+        return floatarr[:]
     
-    def pygetForward(self, cameraindex):
+    def getForward(self, cameraindex):
         cdef vec3 pyForward
+        cdef np.ndarray[float, ndim=1, mode='c'] floatarr
+        floatarr = np.zeros((3,), dtype=np.float32)
         pyForward = self.thisptr.getForward(cameraindex)
-        #ToDO Return float array from vec3 which should be converted to numpyarray
+        get_float_ptr_vec(&pyForward, &floatarr[0])
+        return floatarr[:]
     
-    def pygetName(self, cameraindex):
+    def getName(self, cameraindex):
         cdef string pyname
         pyname = self.thisptr.getName(cameraindex)
         return pyname.decode()
     
-    def pyremoveView(self, cameraindex):
+    def removeView(self, cameraindex):
         self.thisptr.removeView(cameraindex)
     
-    def pyreplaceView(self, cameraindex, replacingimage, replacingpose,replacename):
+    def replaceView(self, cameraindex, replacingimage, replacingpose,replacename):
         cdef Image pyImage
         cdef mat4 pyPose
         height = replacingimage.shape[0]
@@ -181,38 +190,34 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
             channels = replacingimage.shape[2]
         pyImage  = py_make_image(width, height,channels)
         py_copy_image_from_float(pyImage , replacingimage.tobytes()) 
-        pyPose =  make_mat4_from_float(replacingpose.tobytes())
+        pyPose =  make_mat4_from_float(replacingpose.astype(np.float32).tobytes())
         self.thisptr.replaceView(cameraindex, pyImage, pyPose, replacename.encode())
         py_free_image(pyImage)
     
-    def pyrenderwithpose(self, virtualcamerapose, virtualcamerafieldofview, cameraids):
+    def renderwithpose(self, virtualcamerapose, virtualcamerafieldofview, cameraids):
         cdef vector[unsigned int] ids = np.asarray(cameraids, dtype = np.uintc, order="C")
 
         cdef mat4 pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
         img = self.thisptr.render(pyvirtualPose, virtualcamerafieldofview, ids)
-
+        #cdef np.ndarray[float, ndim=3, mode='c'] floatarr
+        #floatarr = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
+        #py_copy_image_to_float(img, &floatarr[0,0,0])
+        #return floatarr
         return np.asarray( <float [:(img.w*img.h*img.c)]>img.data ).reshape(img.w,img.h,img.c)  # see https://stackoverflow.com/questions/59666307/convert-c-vector-to-numpy-array-in-cython-without-copying
     
-    def pygetXYZ(self):
-        cdef Image pyrenderedDEMImage
-        pyrenderedDEMImage = self.thisptr.getXYZ()
-        cdef np.ndarray[float, ndim=3, mode='c'] TempRenderedImage
-        TempRenderedImage = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
-        py_copy_image_to_float(pyrenderedDEMImage, &TempRenderedImage[0,0,0])
-        RedChannelAfterToneMapped = TempRenderedImage[:,:,0:3]
-        ImageConverted = cv2.normalize(RedChannelAfterToneMapped, None, 0,255, cv2.NORM_MINMAX, cv2.CV_8UC3)
-        py_free_image(pyrenderedDEMImage)
-        return ImageConverted
+    def getXYZ(self):
+        demimage = self.thisptr.getXYZ()
+        return np.asarray( <float [:(demimage.w*demimage.h*demimage.c)]>demimage.data ).reshape(demimage.w,demimage.h,demimage.c)
     
-    def pydisplay(self, normalize):
+    def display(self, normalize):
         cdef bool normalizeoption = <bint> normalize
         self.thisptr.display(normalizeoption)
     
-    def pygetViews(self):
+    def getViews(self):
         NoofViews = self.thisptr.getViews()
         return NoofViews
     
-    def pygetSize(self):
+    def getSize(self):
         SizeInfo = self.thisptr.getSize()
         return SizeInfo
 

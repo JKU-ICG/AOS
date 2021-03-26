@@ -114,16 +114,16 @@ int main()
 	//auto dem = Model("../data/dem.obj");
 	//auto demTexture = loadImageSTBI("../data/dem.png", true); // tell stb_image.h to flip loaded texture's on the y-axis
 	//float demAlpha = .25; // .25;
-    lf->loadDEM("../data/dem.obj");
+    lf->loadDEM("../data/Test20201022F1/LFR/dem.obj");
 	CHECK_GL_ERROR
 
 
 	// load the light field (matrices, textures, names ...)
 	// -----------------------
 	AOSGenerator generator;
-	generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
+	//generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
 	// faster, because less images: 	
-	//generator.Generate( lf, "../data/Hellmonsoedt_pose_corr_30.json", "../data/Hellmonsoedt_ldr_r512/");
+	generator.Generate( lf, "../data/Test20201022F1/SimulationPoses/4.json", "../data/Test20201022F1/UndistortedLDRImages/4/");
 	CHECK_GL_ERROR
 
 

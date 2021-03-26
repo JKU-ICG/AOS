@@ -130,7 +130,8 @@ void py_copy_image_to_float(Image im, float *pdata)
             for (i = 0; i < w; ++i) {
                 int dst_index = i + w * j + w * h*k;
                 int src_index = k + c * i + c * w*j;
-                data[src_index] = (float)im.data[dst_index];
+                data[dst_index] = (float)im.data[dst_index];
+                //data[src_index] = (float)im.data[dst_index];
             }
         }
     }
@@ -156,3 +157,4 @@ Image py_float_to_image(int w, int h, int c, float *data)
     out.data = data;
     return out;
 }
+
