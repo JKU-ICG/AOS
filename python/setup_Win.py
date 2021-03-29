@@ -22,7 +22,7 @@ ext_modules = [Extension("pyaos",
 
 # Building
 setup(
-    name = "glesLFR",
+    name = "pyaos",
     ext_modules = ext_modules,
     #ext_modules = cythonize([ext_modules]),
     cmdclass = {'build_ext': build_ext},
