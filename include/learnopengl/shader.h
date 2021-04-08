@@ -55,7 +55,9 @@ public:
         }
         catch (std::ifstream::failure& e)
         {
+            
             std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+            throw std::runtime_error("Error: Shader could not be loaded!");
         }
         const char* vShaderCode = vertexCode.c_str();
         const char * fShaderCode = fragmentCode.c_str();
@@ -176,7 +178,12 @@ private:
             if(!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+                char buffer[2048];
+                sprintf_s(buffer, "Error: %s - Shader could not be compiled! \n %s \n", type.c_str(), infoLog);
+                
                 std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+
+                throw std::runtime_error(buffer);
             }
         }
         else
@@ -186,6 +193,11 @@ private:
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
                 std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+
+                char buffer[2048];
+                sprintf_s(buffer, "Error: %s - Shader could not be linked! \n %s \n", type.c_str(), infoLog);
+
+                throw std::runtime_error(buffer);
             }
         }
     }
