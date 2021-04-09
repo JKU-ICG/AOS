@@ -160,7 +160,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         else :
             channels = replacingimage.shape[2]
         pyImage  = py_make_image(width, height,channels)
-        py_copy_image_from_float(pyImage , replacingimage.tobytes()) 
+        py_copy_image_from_float(pyImage , np.asarray(replacingimage).astype(np.float32).tobytes()) 
         pyPose =  make_mat4_from_float(replacingpose.astype(np.float32).tobytes())
         self.thisptr.replaceView(cameraindex, pyImage, pyPose, replacename.encode())
         py_free_image(pyImage)
