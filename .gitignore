@@ -31,3 +31,7 @@
 /tests/x64/Debug
 python/pyaos.cp37-win_amd64.pyd
 python/pyaos.cpp
+python/__pycache__/minrunscript.cpython-37.pyc
+python/build/temp.*
+python/build/temp.win-amd64-3.7/Release/pyaos.cp37-win_amd64.lib
+python/build/temp.win-amd64-3.7/Release/pyaos.cp37-win_amd64.exp

@@ -8,32 +8,7 @@ import numpy as np
 cimport numpy as np
 import json
 import os
-import cv2
-
-'''
-cdef extern from "glesLFR_Indrajit.cpp":
-    void RendererInit()
-    void Completerender()
-    void TerminateRenderer()
-    void LoadDemModel(string ModelFile, string Modelimage)
-    void PrintPyLightFieldInstanceInfo(Lightfield *PyLF)
-
-def Py_Initiaterender():
-    print('InitiateRender')
-    RendererInit()
-
-def Py_Completerender():
-    Completerender()
-
-def Py_TerminateRenderer():
-    TerminateRenderer()
-
-def Py_LoadDemModel(string OBJModelPath,string OBJModelImagePath):
-    LoadDemModel(OBJModelPath.encode(),OBJModelImagePath.encode())
-
-def Py_PrintPyLightFieldInstanceInfo(PyLightfieldClass PyLF):
-    PrintPyLightFieldInstanceInfo(PyLF.thisptr)
-'''
+#import cv2
 
 cdef extern from "../include/glm/glm.hpp" namespace "glm":
     ctypedef struct mat4:
@@ -114,8 +89,8 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         else :
             channels = readimage.shape[2]
         pyImage  = py_make_image(width, height,channels)
-        py_copy_image_from_float(pyImage , readimage.tobytes())
-        pyPose =  make_mat4_from_float(camerapose.astype(np.float32).tobytes())
+        py_copy_image_from_float(pyImage , np.asarray(readimage).astype(np.float32).tobytes())
+        pyPose =  make_mat4_from_float(np.asarray(camerapose).astype(np.float32).tobytes())
         self.thisptr.addView(pyImage, pyPose, pyImagename.encode())
         py_free_image(pyImage)
     
@@ -190,7 +165,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         self.thisptr.replaceView(cameraindex, pyImage, pyPose, replacename.encode())
         py_free_image(pyImage)
     
-    def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids=[]):
+    def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids=[], flipHorizontal=True):
         cdef vector[unsigned int] ids = np.asarray(cameraids, dtype = np.uintc, order="C")
 
         cdef mat4 pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
@@ -199,7 +174,10 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         #floatarr = np.zeros((self.LFRResolutionHeight,self.LFRResolutionWidth,4), dtype=np.float32)
         #py_copy_image_to_float(img, &floatarr[0,0,0])
         #return floatarr
-        return np.asarray( <float [:(img.w*img.h*img.c)]>img.data ).reshape(img.w,img.h,img.c)  # see https://stackoverflow.com/questions/59666307/convert-c-vector-to-numpy-array-in-cython-without-copying
+        tmp = np.asarray( <float [:(img.w*img.h*img.c)]>img.data ).reshape(img.w,img.h,img.c)  # see https://stackoverflow.com/questions/59666307/convert-c-vector-to-numpy-array-in-cython-without-copying
+        if flipHorizontal:
+            tmp = tmp[:,-1:0:-1,:] # flip the image horicontally. This seems to be much faster than cv2.flip
+        return tmp
     
     def getXYZ(self):
         demimage = self.thisptr.getXYZ()
@@ -224,3 +202,4 @@ cdef class PyGlfwWindow:
     def __dealloc__(self): # defines the python wrapper class' deallocation function (python destructor)
         DestroyGlfwWindow(self.windowPointer)
 #        del self.windowPointer # destroys the reference to the C++ instance (which calls the C++ class destructor
+
