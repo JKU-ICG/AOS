@@ -146,7 +146,12 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         cdef string pyname
         pyname = self.thisptr.getName(cameraindex)
         return pyname.decode()
-    
+
+    def clearViews(self):
+        while self.getViews()>0:
+            self.removeView(0)
+        assert self.getViews()==0
+
     def removeView(self, cameraindex):
         self.thisptr.removeView(cameraindex)
     
@@ -176,7 +181,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         #return floatarr
         tmp = np.asarray( <float [:(img.w*img.h*img.c)]>img.data ).reshape(img.w,img.h,img.c)  # see https://stackoverflow.com/questions/59666307/convert-c-vector-to-numpy-array-in-cython-without-copying
         if flipHorizontal:
-            tmp = tmp[:,-1:0:-1,:] # flip the image horicontally. This seems to be much faster than cv2.flip
+            tmp = tmp[:,::-1,:] # flip the image horicontally. This seems to be much faster than cv2.flip
         return tmp
     
     def getXYZ(self):

@@ -104,6 +104,9 @@ class TestAOSRenderTwice(unittest.TestCase):
         #print( 'initializing AOS ... ' )
         self._aos1 = pyaos.PyAOS(512,512,self._fovDegrees)
         self._aos2 = pyaos.PyAOS(512,512,self._fovDegrees)
+        # loading DEM
+        self._aos1.loadDEM("../data/plane.obj")
+        self._aos2.loadDEM("../data/plane.obj")
 
     def tearDown(self):
         del self._aos1
@@ -114,14 +117,34 @@ class TestAOSRenderTwice(unittest.TestCase):
         self.render_single_image(self._aos1)
         self.render_single_image(self._aos2)
 
+    def test_clear_view(self):
+        img = np.ones(shape=(512,512,1), dtype = np.float32)
+        pose = np.eye(4)
+        _aos = self._aos1
+
+        # adding 1 view
+        self.assertTrue(_aos.getSize()==0)
+        _aos.addView( img, pose, "01" )
+        self.assertTrue(_aos.getSize()==1)
+
+        _aos.clearViews()
+        self.assertTrue(_aos.getSize()==0)
+
+        # adding N views
+        for n in range(10):
+            self.assertTrue(_aos.getSize()==n)
+            _aos.addView( img, pose, str(n) )
+            self.assertTrue(_aos.getSize()==(n+1))
+        
+        _aos.clearViews()
+        self.assertTrue(_aos.getSize()==0)
 
     def render_single_image(self, _aos):
 
         img = np.ones(shape=(512,512,1), dtype = np.float32)
         pose = np.eye(4)
 
-        # loading DEM
-        _aos.loadDEM("../data/plane.obj")
+        
 
 
         # adding a view
