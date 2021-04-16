@@ -1,5 +1,10 @@
 
+## Python Bindings
 
+To compile the Python bindings make `python` your current working directory and run
+```
+python setup_Win.py build_ext --inplace
+```
 
 ## ToDos
 
