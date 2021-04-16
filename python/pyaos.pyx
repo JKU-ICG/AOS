@@ -170,7 +170,7 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         self.thisptr.replaceView(cameraindex, pyImage, pyPose, replacename.encode())
         py_free_image(pyImage)
     
-    def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids=[], flipHorizontal=True):
+    def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids=[], flipHorizontal=True, copyImage=True):
         cdef vector[unsigned int] ids = np.asarray(cameraids, dtype = np.uintc, order="C")
 
         cdef mat4 pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
@@ -182,6 +182,10 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         tmp = np.asarray( <float [:(img.w*img.h*img.c)]>img.data ).reshape(img.w,img.h,img.c)  # see https://stackoverflow.com/questions/59666307/convert-c-vector-to-numpy-array-in-cython-without-copying
         if flipHorizontal:
             tmp = tmp[:,::-1,:] # flip the image horicontally. This seems to be much faster than cv2.flip
+        
+        if copyImage:
+            tmp = tmp.copy()
+
         return tmp
     
     def getXYZ(self):

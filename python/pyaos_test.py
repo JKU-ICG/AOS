@@ -166,11 +166,12 @@ class TestAOSRenderTwice(unittest.TestCase):
         _aos.addView( img2, pose, "02" )
         self.assertTrue(_aos.getSize()==2)
 
-        rimg = _aos.render(pose, self._fovDegrees)
-        rimg = rimg[:,:,0] / rimg[:,:,3]
+        rimg2 = _aos.render(pose, self._fovDegrees)
+        rimg2 = rimg2[:,:,0] / rimg2[:,:,3]
 
         # check that the rendered image an average of the first and the second one! (1 + 2)/2 = 1.5
-        self.assertTrue(np.allclose(rimg, np.ones(shape=(512,512), dtype = np.float32) * 1.5))
+        self.assertTrue(np.allclose(rimg2, np.ones(shape=(512,512), dtype = np.float32) * 1.5))
+        self.assertTrue(np.allclose(img[:,:,0],rimg[:,:,0])) # check that rimg has not changed!
 
 
         # replacing the second view with a new one
