@@ -227,7 +227,25 @@ int main()
                     ImGui::EndChild();
                     ImGui::TreePop();
                     boolArrayToIdx(selected, render_ids);
-                }              
+                }   
+
+                if (ImGui::TreeNode("DEM"))
+                {
+                    static auto dem_translate = glm::vec3(0);
+                    static auto dem_rotate = glm::vec3(0);
+                    auto dem = lf->getDEM();
+                    auto num_meshes = dem->meshes.size();
+                    int num_vertices = 0;
+                    for (unsigned int i = 0; i < dem->meshes.size(); i++)
+                        num_vertices += dem->meshes[i].vertices.size();
+                    sprintf_s(buffer, 512, "%s (%d meshes with %d vertices)", "DEM", num_meshes, num_vertices );
+                    ImGui::Text(buffer);
+                    ImGui::SliderFloat3("Translation", &(dem_translate.x), -30, 30);
+                    ImGui::SliderFloat3("Rotation", &(dem_rotate.x), -180, 180, "%.1f °" );
+                    lf->setDEMTransformation(dem_translate, glm::radians(dem_rotate) );
+
+                    ImGui::TreePop();
+                }
 
                 ImGui::End();
             }

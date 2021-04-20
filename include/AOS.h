@@ -35,6 +35,7 @@ private:
 
 	// digital elevation model or focal surface
 	Model *dem_model = NULL;
+	glm::mat4 dem_transf; // DEM transformation matrix
 
 	// FBOs
 	unsigned int fboIntegral, tIntegral; // fbo and texture for integral
@@ -52,7 +53,7 @@ private:
 public:
 	AOS(unsigned int width, unsigned int height, float fovDegree = 50.815436217896945f, int preallocate_images = -1);
 	~AOS();
-	void loadDEM(std::string obj_file);
+
 	void addView(Image img, glm::mat4 pose, std::string name = "");
 	//Image getImage(unsigned int idx);
 	glm::mat4 getPose(unsigned int idx) const { return ogl_imgs[idx].pose; }
@@ -63,6 +64,13 @@ public:
 	std::string getName(unsigned int idx) const { return ogl_imgs[idx].name; }
 	void removeView(unsigned int idx);
 	void replaceView(unsigned int idx, Image img, glm::mat4 pose, std::string name = "");
+
+	// DEM functions
+	void loadDEM(std::string obj_file);
+	Model* getDEM(void) { return dem_model; }
+	void setDEMTransformation(const glm::mat4 model) { dem_transf = model; }
+	void setDEMTransformation(const glm::vec3 translation, const glm::vec3 eulerAngles = glm::vec3(0));
+	glm::mat4 getDEMTransformation() const { return dem_transf; }
 
 	Image render(const glm::mat4 virtual_pose, const float virtual_fovDegree, const std::vector<unsigned int> ids = {});
 	Image getXYZ();

@@ -199,9 +199,21 @@ class TestAOSRenderTwice(unittest.TestCase):
 
         # get XYZ coordinates from plane.obj (z coordinate should be -100 everywhere)
         xyz = _aos.getXYZ()
-        self.assertTrue((xyz[:,:,2]==-100.0).all)
+        self.assertTrue(np.isclose(xyz[:,:,2],-100.0).all())
 
-        #print(xyz[256,256,:])
+        # translate the DEM up 
+        _aos.setDEMTransform( [0,0,10] )
+        _aos.render(pose, self._fovDegrees, [1])
+        xyz = _aos.getXYZ()
+        print(xyz)
+        self.assertTrue(np.isclose(xyz[:,:,2],-90.0).all())
+
+        # translate the DEM down 
+        _aos.setDEMTransform( [0,0,-20] )
+        _aos.render(pose, self._fovDegrees, [1])
+        xyz = _aos.getXYZ()
+        print(xyz[:,:,2])
+        self.assertTrue(np.isclose(xyz[:,:,2],-120.0).all())
 
         _aos.removeView(0)
         self.assertTrue(_aos.getSize()==1)

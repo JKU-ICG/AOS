@@ -5,13 +5,14 @@
 #include "learnopengl/model.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 
 void renderQuad();
 
 
 AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int preallocate_images)
-	:render_width(width), render_height(height), dem_model(NULL)
+	:render_width(width), render_height(height), dem_model(NULL), dem_transf(glm::mat4(1.0f)) /*set identity*/
 {
 
 	// printf("Entering C++ AOS constructor");
@@ -71,16 +72,13 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 	gBufferShader->setMat4("projection", projection);
 	gBufferShader->setMat4("view", virtual_pose);
 
-	std::cout << "RENDER: view matrix " << glm::to_string(virtual_pose).c_str() << std::endl;
-
-
 	// 1. geometry pass: render scene's geometry/color data into gbuffer
 	// -----------------------------------------------------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, fboGBuffer);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glm::mat4 model = glm::mat4(1.0f);
-	gBufferShader->setMat4("model", model);
+	//glm::mat4 model = glm::mat4(1.0f);
+	gBufferShader->setMat4("model", dem_transf);
 	dem_model->Draw(*gBufferShader);
 
 	// 2. render scene deferred and project views
@@ -160,11 +158,17 @@ void AOS::loadDEM(std::string obj_file)
 	dem_model = new Model(obj_file);
 }
 
+void AOS::setDEMTransformation(const glm::vec3 translation, const glm::vec3 eulerAngles)
+{
+	glm::mat4 trans_mat = glm::translate(glm::mat4(1.0f), translation);
+	auto rot_mat = glm::eulerAngleXYZ(eulerAngles.x,eulerAngles.y,eulerAngles.z); // should be similar to legacy renderer! 
+	dem_transf = trans_mat * rot_mat;
+}
+
 void AOS::addView(Image img, glm::mat4 pose, std::string name)
 {
 	View view;
 	view.pose = pose;
-	std::cout << "added pose " << glm::to_string(pose).c_str() << std::endl;
 	view.name = name.empty() ? std::to_string(ogl_imgs.size()) : name;
 	//float pixelvalue = get_pixel(img,1,1,0);
 	//std::cout << "Image Value Loaded " << pixelvalue << " image properties "<< img.h << img.w << img.c <<std::endl;

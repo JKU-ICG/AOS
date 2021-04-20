@@ -21,6 +21,7 @@ cdef extern from "../include/AOS.h": # defines the source C++ file
     cdef cppclass AOS:
         AOS(unsigned int width, unsigned int height, float fovDegree, int preallocate_images) except +
         void loadDEM(string obj_file)
+        void setDEMTransformation(const vec3 translation, const vec3 eulerAngles)
         void addView(Image img, mat4 pose, string name)
         mat4 getPose(unsigned int idx)
         mat4 setPose(unsigned int idx, const mat4 pose)
@@ -79,6 +80,12 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         del self.thisptr # destroys the reference to the C++ instance (which calls the C++ class destructor
     def loadDEM(self, objmodelpath):
         self.thisptr.loadDEM(objmodelpath.encode())
+    def setDEMTransform(self, transl, euler=np.array([0,0,0])):
+        cdef vec3 translation
+        translation = make_vec3_from_float(np.asarray(transl).astype(np.float32).tobytes())
+        cdef vec3 eulerAngles
+        eulerAngles = make_vec3_from_float(np.asarray(euler).astype(np.float32).tobytes())
+        self.thisptr.setDEMTransformation(translation, eulerAngles)
     def addView(self, readimage, camerapose, pyImagename):
         cdef Image pyImage
         cdef mat4 pyPose
