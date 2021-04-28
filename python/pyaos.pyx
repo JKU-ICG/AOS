@@ -178,6 +178,22 @@ cdef class PyAOS: # defines a python wrapper to the C++ class
         py_free_image(pyImage)
     
     def render(self, virtualcamerapose, virtualcamerafieldofview, cameraids=[], flipHorizontal=True, copyImage=True):
+        """Renders an AOS image with the specified parameters and returns an image.
+
+        :param pose: pose of the virtual camera as 4 by 4 matrix
+        :type pose: array
+        :param field_of_view: field of view of the virtual camera in degrees
+        :type field_of_view: number
+        :param cameraids: view/camera ids used for rendering, defaults to [] which renders with all available views
+        :type cameraids: array, optional
+        :param flipHorizontal: if True, the rendered image is flipped horizontally to be similar to the views (note: the internal format is flipped), defaults to True
+        :type flipHorizontal: bool, optional
+        :param copyImage: if True, the returned image is copied before returning, defaults to True
+        :type copyImage: bool, optional
+
+        :rtype: numpy.array
+        :return: Rendered image
+        """
         cdef vector[unsigned int] ids = np.asarray(cameraids, dtype = np.uintc, order="C")
 
         cdef mat4 pyvirtualPose =  make_mat4_from_float(virtualcamerapose.astype(np.float32).tobytes())
@@ -219,3 +235,5 @@ cdef class PyGlfwWindow:
         DestroyGlfwWindow(self.windowPointer)
 #        del self.windowPointer # destroys the reference to the C++ instance (which calls the C++ class destructor
 
+
+# For documentation use python docstring in SPHINX style: https://betterprogramming.pub/the-guide-to-python-docstrings-3d40340e824b

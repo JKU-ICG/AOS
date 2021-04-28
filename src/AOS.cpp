@@ -193,7 +193,7 @@ void AOS::replaceView(unsigned int idx, Image img, glm::mat4 pose, std::string n
 	ogl_imgs[idx] = v; // update in vector
 }
 
-void AOS::display(bool normalize)
+void AOS::display(bool normalize, bool flipX, bool flipY)
 {	
 	//std::cout << std::boolalpha;   
     //std::cout<<normalize<<"\n";
@@ -213,6 +213,8 @@ void AOS::display(bool normalize)
 		showFboShader->setFloat("fbo_min", 0.0f);
 		showFboShader->setFloat("fbo_max", 1.0f);
 	}
+	showFboShader->setBool("flipX", flipX);
+	showFboShader->setBool("flipY", flipY);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tIntegral);
 	renderQuad();

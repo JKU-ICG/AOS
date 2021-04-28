@@ -106,22 +106,25 @@ int main()
 	//std::cout << texture_units << " texture units available!" << std::endl;
 	// https://stackoverflow.com/questions/46426331/number-of-texture-units-gl-texturei-in-opengl-4-implementation-in-visual-studi
 
-    lf = new AOS(SCR_WIDTH, SCR_HEIGHT);
-	CHECK_GL_ERROR
+    lf = new AOS(SCR_WIDTH, SCR_HEIGHT, 43.10803984095769);
+    CHECK_GL_ERROR
 
-	// load the DEM 
-	// -----------------------
-	// auto dem = Model("../data/dem.obj");
-	//auto demTexture = loadImageSTBI("../data/dem.png", true); // tell stb_image.h to flip loaded texture's on the y-axis
-	//float demAlpha = .25; // .25;
-    lf->loadDEM("../data/dem.obj");
+    // load the DEM 
+    // -----------------------
+    // auto dem = Model("../data/dem.obj");
+    //auto demTexture = loadImageSTBI("../data/dem.png", true); // tell stb_image.h to flip loaded texture's on the y-axis
+    //float demAlpha = .25; // .25;
+    //lf->loadDEM("../data/dem.obj");
+    lf->loadDEM("D:\\ResilioSync\\ANAOS\\SITES\\Test20210415_Conifer_f1\\LFR\\dem.obj");
 	CHECK_GL_ERROR
 
 
 	// load the light field (matrices, textures, names ...)
 	// -----------------------
 	AOSGenerator generator;
-	generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
+	//generator.Generate( lf, "../data/Hellmonsoedt_pose_corr.json", "../data/Hellmonsoedt_ldr_r512/");
+    generator.Generate( lf, "D:\\ResilioSync\\ANAOS\\SITES\\Test20210415_Conifer_f1\\FlightPoses\\CompletePath.json", 
+        "D:\\ResilioSync\\ANAOS\\SITES\\Test20210415_Conifer_f1\\r512\\");
 	// faster, because less images: 	
 	//generator.Generate( lf, "../data/Test20201022F1/SimulationPoses/4.json", "../data/Test20201022F1/UndistortedLDRImages/4/");
 	CHECK_GL_ERROR

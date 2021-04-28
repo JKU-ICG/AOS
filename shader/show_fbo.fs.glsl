@@ -16,11 +16,16 @@ uniform float far_plane;
 uniform float fbo_min;
 uniform float fbo_max;
 
+uniform bool flipX;
+uniform bool flipY;
+
 
 void main()
 {         
 	vec2 uv = TexCoords.xy;
 
+	if(flipX) uv.x = 1.0f - uv.x;
+	if(flipY) uv.y = 1.0f - uv.y;
 
     vec4 color = texture(fboTexture, uv);
     // FragColor = vec4(vec3(LinearizeDepth(depthValue) / far_plane), 1.0); // perspective
