@@ -26,10 +26,14 @@
     <ClCompile Include="..\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\src\AOS.cpp" />
     <ClCompile Include="..\src\AOSGenerator.cpp" />
+    <ClCompile Include="..\src\benchmark.cpp" />
     <ClCompile Include="..\src\glad.c" />
     <ClCompile Include="..\src\gl_utils.cpp" />
     <ClCompile Include="..\src\image.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>

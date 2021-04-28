@@ -49,6 +49,7 @@ private:
 	Shader* projectShader; // ("../deferred_project_image.vs.glsl", "../deferred_project_image.fs.glsl");
 	Shader* demShader; // ("../project_image.vs.glsl", "../show_fbo.fs.glsl");
 	Shader* gBufferShader; // ("../g_buffer.vs.glsl", "../g_buffer.fs.glsl");
+	Shader* forwardShader; // shader for rendering with forward rendering
 
 public:
 	AOS(unsigned int width, unsigned int height, float fovDegree = 50.815436217896945f, int preallocate_images = -1);
@@ -73,6 +74,8 @@ public:
 	glm::mat4 getDEMTransformation() const { return dem_transf; }
 
 	Image render(const glm::mat4 virtual_pose, const float virtual_fovDegree, const std::vector<unsigned int> ids = {});
+	Image renderForward(const glm::mat4 virtual_pose, const float virtual_fovDegree, const std::vector<unsigned int> ids = {});
+
 	Image getXYZ();
 	void display(bool normalize = true, bool flipX=true, bool flipY=true);
 	//void display(int display_width, int display_height,  bool normalize = true);

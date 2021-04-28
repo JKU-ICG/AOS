@@ -17,9 +17,17 @@
 #include "AOS.h"
 #include "gl_utils.h"
 
+#include <nlohmann/json.hpp> 
+
 #include <iostream>
 #include <algorithm>    // std::min
 #include <chrono> // for timings
+using std::chrono::high_resolution_clock; // timings
+using std::chrono::duration_cast; // timings
+using std::chrono::duration; // timings
+using std::chrono::milliseconds; // timings
+
+using json = nlohmann::json;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -88,7 +96,7 @@ int main()
     int display_w = 1024, display_h = 1024;
 
 
-    InitWindowAndGUI(display_w, display_h, APP_NAME);
+    InitWindow(display_w, display_h, APP_NAME);
 
     // tell GLFW to capture our mouse
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -106,7 +114,8 @@ int main()
 	//std::cout << texture_units << " texture units available!" << std::endl;
 	// https://stackoverflow.com/questions/46426331/number-of-texture-units-gl-texturei-in-opengl-4-implementation-in-visual-studi
 
-    lf = new AOS(SCR_WIDTH, SCR_HEIGHT, 43.10803984095769);
+    auto fov = 43.10803984095769;
+    lf = new AOS(SCR_WIDTH, SCR_HEIGHT, fov);
     CHECK_GL_ERROR
 
     // load the DEM 
@@ -127,158 +136,96 @@ int main()
     //    "D:\\ResilioSync\\ANAOS\\SITES\\Test20210415_Conifer_f1\\r512\\");
 	// faster, because less images: 	
 	//generator.Generate( lf, "../data/Test20201022F1/SimulationPoses/4.json", "../data/Test20201022F1/UndistortedLDRImages/4/");
-	CHECK_GL_ERROR
+    CHECK_GL_ERROR
 
 
+    // store as json
+    auto j = json::array();
 
- 
 
-    // start with full aperture
-    std::vector<unsigned int> render_ids;
-    for (unsigned int i = 0; i < lf->getSize(); i++)
-            render_ids.push_back(i);
-
-    // render loop
-    // -----------
-    while (!glfwWindowShouldClose(window))
+    for (unsigned int i_dem = 0; i_dem < 3; i_dem++)
     {
-        auto start_loop = std::chrono::steady_clock::now();
-        // per-frame time logic
-        // --------------------
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-		showFPS(window);
-
-        // input
-        // -----
-        processInput(window);
-        // GUI
-        // ---------------------------------------------------
-        if (gui) {
-            // Start the Dear ImGui frame
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-
-            // some settings
-            static bool pinholeActive = false;
-
-            // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-            {   char buffer[512];
-                sprintf_s(buffer, 512, "%s (fps: %.1f)", APP_NAME, ImGui::GetIO().Framerate);
-                ImGui::Begin(APP_NAME);
-                ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-                //ImGui::SliderFloat("gamma", &gamma, 0.1f, 5.0f);   // Edit 1 float using a slider from 0.0f to 1.0f
-
-                if (ImGui::TreeNode("Virtual Camera"))
-                {
-                    ImGui::InputFloat3("Position", &(camera.Position.x));
-                    ImGui::InputFloat3("Forward", &(camera.Front.x));
-                    ImGui::InputFloat3("Up", &(camera.Up.x));
-                    auto fovRad = glm::radians(camera.Zoom);
-                    ImGui::SliderAngle("FOV", &fovRad, 1, 180);
-                    camera.Zoom = glm::degrees(fovRad);
-                    float nfp[] = { lf->getNearPlane(), lf->getFarPlane() };
-                    ImGui::InputFloat2("Near/Far Plane", nfp);
-                    lf->setNearPlane(nfp[0]); lf->setFarPlane(nfp[1]);
-
-
-                    
-                    auto prevView = currView;
-                    ImGui::InputInt("Jump to", &currView);
-                    if (prevView != currView) {
-                        if (currView < 0) currView = 0;
-                        if (currView >= lf->getSize()) currView = lf->getSize() - 1;
-                        // jump to view!
-                        camera.Position = lf->getPosition(currView);
-                        camera.Front = lf->getForward(currView);
-                        camera.Up = lf->getUp(currView);
-                        //camera.updateYawPitch();
-                    }
-                    sprintf_s(buffer, 512, "[%c] pinhole", pinholeActive ? 'x' : ' ');
-                    if (ImGui::Button(buffer))
-                        pinholeActive = !pinholeActive;
-                    ImGui::SameLine();
-                    if (ImGui::Button("open")) {
-                        pinholeActive = false;
-                        fillIdx(render_ids, lf->getSize());
-                    }
-                    ImGui::SameLine();  ImGui::Text("aperture");
-
-
-                    
-                    ImGui::TreePop();
-                }
-                // keep current view as pinhole
-                if (pinholeActive) {
-                    render_ids.clear();
-                    render_ids.push_back(currView);
-                }
-                
-                if (ImGui::TreeNode("Single Images"))
-                {
-                    std::vector<bool> selected;
-                    idxToBoolArray(render_ids, selected, lf->getSize());
-                    ImGui::BeginChild("Views scrolling");
-                    for (int n = 0; n < lf->getSize(); n++) {
-                        sprintf_s( buffer, 512, "[%c] %04d: %s ", selected[n]?'x':' ', n, lf->getName(n).c_str() );
-                        bool sel = selected[n];
-                        ImGui::Selectable(buffer, &sel );
-                        selected[n] = sel;
-                    }
-                    ImGui::EndChild();
-                    ImGui::TreePop();
-                    boolArrayToIdx(selected, render_ids);
-                }   
-
-                if (ImGui::TreeNode("DEM"))
-                {
-                    static auto dem_translate = glm::vec3(0);
-                    static auto dem_rotate = glm::vec3(0);
-                    auto dem = lf->getDEM();
-                    auto num_meshes = dem->meshes.size();
-                    int num_vertices = 0;
-                    for (unsigned int i = 0; i < dem->meshes.size(); i++)
-                        num_vertices += dem->meshes[i].vertices.size();
-                    sprintf_s(buffer, 512, "%s (%d meshes with %d vertices)", "DEM", num_meshes, num_vertices );
-                    ImGui::Text(buffer);
-                    ImGui::SliderFloat3("Translation", &(dem_translate.x), -30, 30);
-                    ImGui::SliderFloat3("Rotation", &(dem_rotate.x), -180, 180, "%.1f °" );
-                    lf->setDEMTransformation(dem_translate, glm::radians(dem_rotate) );
-
-                    ImGui::TreePop();
-                }
-
-                ImGui::End();
-            }
-
-            ImGui::Render();
+        switch (i_dem) {
+            case 0: 
+                lf->loadDEM("../data/dem_f0.1.obj");
+                break;
+            case 1:
+                lf->loadDEM("../data/dem.obj");
+                break;
+            case 2:
+                lf->loadDEM("../data/dem_f2.obj");
+                break;
         }
 
-        // LFR Render
-        // ----------
-        lf->renderForward(camera.GetViewMatrix(), camera.Zoom, render_ids);
 
-        // ----- render results
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-        lf->display();
+        // count the vertices in the DEM
+        auto dem = lf->getDEM();
+        auto num_meshes = dem->meshes.size();
+        int num_vertices = 0;
+        for (unsigned int i = 0; i < dem->meshes.size(); i++)
+            num_vertices += dem->meshes[i].vertices.size();
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        if (gui) ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(window);
-        glfwPollEvents();
 
-        // TIMINGs
-        auto end_loop = std::chrono::steady_clock::now();
-        std::chrono::duration<double> duration_loop = end_loop - start_loop; // duration
-        // printf("TIMINGS (sec) - entire loop %.6f\n", duration_loop.count() );
+
+        // start with full aperture
+        std::vector<unsigned int> render_ids;
+        for (unsigned int i = 0; i < lf->getSize(); i++)
+        {
+            render_ids.push_back(i);
+
+            // render once
+            // -----------
+            {
+                const int num_trails = 100;
+
+
+                auto currView = 1;
+                camera.Position = lf->getPosition(currView);
+                camera.Front = lf->getForward(currView);
+                camera.Up = lf->getUp(currView);
+
+                auto vpose = camera.GetViewMatrix();
+
+                double ms_forward, ms_deferred;
+                {
+                    // forward
+                    auto t1 = high_resolution_clock::now();
+                    for (int i = 0; i < num_trails; ++i)
+                    {
+                        auto img = lf->renderForward(vpose, fov, render_ids);
+                    }
+                    auto t2 = high_resolution_clock::now();
+
+                    /* Getting number of milliseconds as a double. */
+                    duration<double, std::milli> ms_double = t2 - t1;
+                    ms_forward = ms_double.count() / num_trails;
+                    //std::cout << "forward rendering: " << ms_double.count()/num_trails << "ms" << std::endl ;
+                }
+                {
+                    // deferred
+                    auto t1 = high_resolution_clock::now();
+                    for (int i = 0; i < num_trails; ++i)
+                    {
+                        auto img = lf->render(vpose, fov, render_ids);
+                    }
+                    auto t2 = high_resolution_clock::now();
+
+                    /* Getting number of milliseconds as a double. */
+                    duration<double, std::milli> ms_double = t2 - t1;
+                    ms_deferred = ms_double.count() / num_trails;
+                    //std::cout << "deferred rendering: " << ms_double.count()/num_trails << "ms" << std::endl;
+                }
+                std::cout << "vertices: " << num_vertices << "; images: " << render_ids.size() << "; forward/deferred rendering: " << ms_forward << " / " << ms_deferred << "ms" << " (x" << ms_forward / ms_deferred << ") " << std::endl;
+
+                // store in json
+                j.push_back({ { "vertices", num_vertices}, {"images", render_ids.size()}, {"ms_forward", ms_forward}, {"ms_deferred", ms_deferred}, {"factor", ms_forward / ms_deferred} });
+            }
+        }
     }
+
+    // write prettified JSON to another file
+    std::ofstream o("benchmark.json");
+    o << std::setw(4) << j << std::endl;
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------

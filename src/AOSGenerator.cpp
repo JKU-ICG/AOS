@@ -64,7 +64,7 @@ glm::mat4 ParseMatrix(json::value_type jMat) // Matrice 3x4
 
 }
 
-void AOSGenerator::Generate(AOS* aos, const std::string& jsonPoseFile, const std::string& imgFilePath)
+void AOSGenerator::Generate(AOS* aos, const std::string& jsonPoseFile, const std::string& imgFilePath, bool replaceExt)
 {
 	std::ifstream poseStream(jsonPoseFile);
 	json j;
@@ -83,7 +83,7 @@ void AOSGenerator::Generate(AOS* aos, const std::string& jsonPoseFile, const std
 			auto pose = m;
 
 			std::string name = fname;
-			//name.replace(fname.find(".tiff"), strlen(".tiff"), ".png");
+			if(replaceExt) name.replace(fname.find(".tiff"), strlen(".tiff"), ".png");
 			Image img = load_image( (imgFilePath + "/" + name).c_str() );
 			if( !is_empty_image(img) )
 				aos->addView(img, pose, name);

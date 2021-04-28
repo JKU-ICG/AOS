@@ -33,6 +33,7 @@ AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int prealloca
 	projectShader = new Shader("../shader/deferred_project_image.vs.glsl", "../shader/deferred_project_image.fs.glsl");
 	demShader = new Shader("../shader/project_image.vs.glsl", "../shader/show_fbo.fs.glsl");
 	gBufferShader = new Shader("../shader/g_buffer.vs.glsl", "../shader/g_buffer.fs.glsl");
+	forwardShader = new Shader("../shader/project_image.vs.glsl", "../shader/project_image.fs.glsl");
 	CHECK_GL_ERROR
 
 	projection_imgs = glm::perspective(glm::radians(fovDegree), view_aspect, near_plane, far_plane);
@@ -45,6 +46,8 @@ AOS::AOS(unsigned int width, unsigned int height, float fovDegree, int prealloca
 	projectShader->setInt("imageTexture", 1);
 	showFboShader->use();
 	showFboShader->setInt("fboTexture", 0);
+	forwardShader->use();
+	forwardShader->setInt("imageTexture", 0);
 
 	// configure global opengl state
 	// -----------------------------
@@ -126,6 +129,62 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 	// if it takes too long, do not do this every frame! e.g. only once every second or so
 	
 	getMinMaxFromFBO((glm::vec4 *)fboImg.data, render_width * render_height, fboCount, fboMin, fboMax);
+	//std::cout << "fbo_min: " << glm::to_string(fboMin).c_str() << std::endl;
+	//std::cout << "fbo_max: " << glm::to_string(fboMax).c_str() << std::endl;
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // disable framebuffer
+
+
+	return fboImg;
+}
+
+Image AOS::renderForward(const glm::mat4 virtual_pose, const float virtualFovDegrees, const std::vector<unsigned int> ids)
+{
+	glViewport(0, 0, render_width, render_height);
+	forwardShader->use();
+	auto projection = glm::perspective(glm::radians(virtualFovDegrees), (float)render_width / (float)render_height, near_plane, far_plane);
+	// set uniforms that do no change
+	forwardShader->setMat4("projection", projection);
+	forwardShader->setMat4("view", virtual_pose);
+
+	// render the scene with multiple forward passes and project views
+	// -----------------------------------------------------------------
+	glBindFramebuffer(GL_FRAMEBUFFER, fboIntegral); // enable results framebuffer
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	// if empty create an ids array running from 0 to size
+	std::vector<unsigned int> _ids;
+	if (ids.empty()) {
+		for (unsigned int i = 0; i < ogl_imgs.size(); i++)
+			_ids.push_back(i);
+	}
+	else // otherwise use specified ids!
+		_ids = std::vector<unsigned int>(ids);
+
+	forwardShader->setMat4("model", dem_transf);
+
+
+	//unsigned int counter = 0;
+	for (unsigned int idx : _ids)
+	{
+		auto projViewMatrix = projection_imgs * ogl_imgs[idx].pose;
+		forwardShader->setMat4("projViewMatrix", projViewMatrix);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, ogl_imgs[idx].ogl_id);
+
+		dem_model->Draw(*forwardShader); // render the model
+	}
+
+
+	// read framebuffer to CPU
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
+	glReadPixels(0, 0, render_width, render_height, GL_RGBA, GL_FLOAT, fboImg.data);
+	// to access a single pixel use indexing like (j)width+i, where j is the row
+	// calculate minimum and maximum of FBO. Note this is very slow!
+	// if it takes too long, do not do this every frame! e.g. only once every second or so
+
+	getMinMaxFromFBO((glm::vec4*)fboImg.data, render_width * render_height, fboCount, fboMin, fboMax);
 	//std::cout << "fbo_min: " << glm::to_string(fboMin).c_str() << std::endl;
 	//std::cout << "fbo_max: " << glm::to_string(fboMax).c_str() << std::endl;
 
