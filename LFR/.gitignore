@@ -1,0 +1,36 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Precompiled Headers
+*.gch
+*.pch
+
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Executables
+*.exe
+*.out
+*.app
+/vs/x64
+/vs/.vs/glesLFR/v16
+/vs/packages/Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.3
+/vs/Tests/x64/Release
+/tests/x64/Debug
+python/pyaos.cp37-win_amd64.pyd
+python/pyaos.cpp
+python/__pycache__/minrunscript.cpython-37.pyc
+python/build/temp.*
+python/build/temp.win*
