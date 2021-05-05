@@ -36,3 +36,4 @@
 /tests/x64/Debug
 python/pyaos.cp37-win_amd64.pyd
 python/pyaos.cpp
+*/__pycache__
