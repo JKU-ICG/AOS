@@ -14,16 +14,16 @@ Our software uses the following freely available code/libraries/tools from:
 - [GLM](https://github.com/g-truc/glm) for matrix/vector calculations
 - [nlohmann/json](https://github.com/nlohmann/json) for reading and writing JSON files
 - [stb_image](https://github.com/nothings/stb) for reading images
-XXX check again XXX
+- ***XXX check again XXX***
 
 ## Python bindings
-We provide Python bindings, which make it easy to use the renderer in Python projects. To compile them follow the steps described in [`LFR/python/README`](./LFR/python/README.md).
+We provide Python bindings, which make it easy to use the renderer in Python projects. To compile them follow the steps described in [`./python/README`](./LFR/python/README.md).
 
 ## Install
 
 To compile the renderer with the user interface in native C++ follow the steps below:
 ### Windows building: 
-Open the Visual Studio solution at `LFR/vs/LFR.sln` and compile it. Compilation has been tested with Visual Studio 2019 and the necessary libraries/DLLs (for Assimp and GLFW) are precompiled and included in the repository (`lib` and `bin`). 
+Open the Visual Studio solution at `./vs/LFR.sln` and compile it. Compilation has been tested with Visual Studio 2019 and the necessary libraries/DLLs (for Assimp and GLFW) are precompiled and included in the repository (`lib` and `bin`). 
 
 ### Linux (e.g. a Raspberry Pi) building: 
 Install GLFW and compile Assimp first. 
@@ -33,16 +33,17 @@ XXX ToDo XXX
 
 ## Detailed usage
 
-Please take a look at `LFR/src/main.cpp` file in the repository for how to use it.
+Please take a look at `./src/main.cpp` file in the repository for how to use it.
 
 
 ## ToDos/Wishlist
 
-Some of the features that will be nice to have `../README.md`.
+Some of the features that will be nice to have or are on our agenda for implementation:
 
 - [ ] support for masking / alpha channels (e.g., to remove FLIR watermark)
 - [ ] render with RGB
-- [ ] display the satelite image on the ground
+- [ ] optionally display the satelite image on the ground
+- [ ] show a wireframe of the digital elevation model
 - [ ] check if float32 ifdef is working on the Raspberry Pi
 - [ ] command line arguments: https://github.com/CLIUtils/CLI11#install 
 - [ ] OBJ loading: https://github.com/tinyobjloader/tinyobjloader or keep Assimp
