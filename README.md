@@ -11,10 +11,10 @@ This repository contains software for drone-based search and rescue applications
 ## Modules
 
 - [LFR:          C++ and Python code to compute integral images](LFR/README.md)
-- [DET:          Python code for person classification] 
-- [CAM:          Python code for triggering, recording, and processing thermal images]
-- [DRONE:        C++ and Python code for drone communication and control]
-- [PLAN:         Python modules for path planning]
+- [DET:          Python code for person classification](DET/README.md) 
+- [CAM:          Python code for triggering, recording, and processing thermal images](CAM/README.md)
+- [DRONE:        C++ and Python code for drone communication and control](DRONE/README.md)
+- [PLAN:         Python modules for path planning](PLAN/README.md)
 
 
 ## Hardware

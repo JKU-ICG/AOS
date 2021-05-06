@@ -1,6 +1,7 @@
 import time
 import shutil
 import os
+from pathlib import Path
 import glob
 import numpy as np
 import math
@@ -694,481 +695,68 @@ def compute_grid( utm_center, area_size, tile_size  ):
 
     #return utm_grid, gps_grid, utm_corner_grid, gps_corner_grid, utm_cell_vertical_center_grid, gps_cell_vertical_center_grid, utm_cell_horizontal_center_grid, gps_cell_horizontal_center_grid,utm_grid_waypoints,gps_grid_waypoints
     return utm_grid, gps_grid, utm_corner_grid, gps_corner_grid, utm_grid_waypoints,gps_grid_waypoints
+
+
+
 # __name__ guard 
 if __name__ == '__main__':
 
-    # for visualization
+    # for visualization on DEM image
     from PathVisualizer import Visualizer
+    
 
-    # GPS lat/lon as left-bottom; right-bottom; right-top; left-top
-    #lb = (48.33303472314657, 14.329971135229782) # 0,0
-    #rb = (48.339308, 14.332926) # 1,0
-    #rt = (48.340503, 14.333822) # 1,1
-    #lt = (48.341045, 14.331837) # 0,1
-    #corners = [lb,rb,rt,lt]
-    #utm_corners = [ utm.from_latlon(c[0],c[1]) for c in corners ]
-
-    '''
-    GridSideLength = 30
-    fine_subdiv = 5
-
+    
+    
     gps_center = (48.3356687, 14.3262629)
     utm_center = utm.from_latlon( gps_center[0], gps_center[1] )
     gps_start = (48.335673, 14.32703)
+    grid_size = 30
+    num_cells = 3
+    area_size = (grid_size*num_cells, grid_size*num_cells) # produce a square grid
+    
+    
+    # path to the digital elevation model as required by the Visualizer
+    dem_path = os.path.join( Path(__file__).parent.absolute(), '..',  'data', 'open_field', 'DEM' )
+    vis = Visualizer( dem_path ) # initialize an instance of the visualizer (this is optional)
 
-    #gps_start = (48.33241944673243, 14.32992264916058)
-    #utm_center = (450351.05, 5353488.57, 33, "U")
-    area_sides = (60, 90)
-    '''
-    GridSideLength = 200
-    fine_subdiv = 5
+    prob_map =   None 
 
-    #gps_center = (48.3332141, 14.3314393)
-    #utm_center = utm.from_latlon( gps_center[0], gps_center[1] )
-    #gps_start = (48.33317099114822, 14.33074864055678)
+    # Optionally define a probability map (as numpy array)
+    prob_map = np.ones( (np.asarray(area_size)/grid_size).astype(int) ) * .1
+    prob_map[0,0] = .9 # a high probability area is visited first
+    # Note that probabilities of zero are never visited while flying
 
-    #gps_center = (48.3359362, 14.3267626)
-    #utm_center = utm.from_latlon( gps_center[0], gps_center[1] )
-    #gps_start = (48.335913, 14.326160)
-    #utm_center = (450351.05, 5353488.57, 33, "U")
-    #area_sides = (150, 150)
+    # initialize the planning algorithm
+    p = Planner( utm_center, area_size, prob_map=prob_map, tile_distance=grid_size , debug=True, vis=vis, 
+        conf_threshold=0.05, # only detections above this confidence score are resampled
+        gridalignedplanpath = True)
 
-    gps_center = (48.3326174, 14.3300418)
-    utm_center = utm.from_latlon( gps_center[0], gps_center[1] )
-    gps_start = (48.333071, 14.330167)
-    #utm_center = (450351.05, 5353488.57, 33, "U")
-    area_sides = (200, 200)
-
-    # utm_corners = compute_corners( utm_center, (AreaLength,AreaLength) )
-    # print(utm_corners)
-    # gps_corners = utm_list_to_gps( utm_corners )
-    # utm_grid, gps_grid = compute_grid( utm_center, (AreaLength,AreaLength), GridSideLength  )
-    # print(utm_grid.shape)
-
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111)
-
-    # plt.plot(gps_center[0], gps_center[1], 'x', c='y', lw=2) # center
-    # plt.plot([c[0] for c in gps_corners], [c[1] for c in gps_corners], '+', c='y', lw=2)
-    # plt.plot(gps_grid[:,:,0].flatten(), gps_grid[:,:,1].flatten(), 'o', c='r', lw=2) # grid centers
-
-    # fine_utm_grid, fine_gps_grid = compute_grid( utm_center, (AreaLength,AreaLength), GridSideLength/fine_subdiv  )
-    # plt.plot(fine_gps_grid[:,:,0].flatten(), fine_gps_grid[:,:,1].flatten(), 'x', lw=2) # grid centers
-
-    gridplanned = True
-    #p = Planner( utm_center, (30,60), debug=True )
-    anaos_data_path = os.getenv( 'ANAOS_DATA' )
-    if anaos_data_path is None:
-        print( 'ERROR: ANAOS_DATA environment variable not set!' )
-
-    sitename = 'Test20200326_ConiferLarge'
-    lfr_path = os.path.join( anaos_data_path,  'SITES', sitename, 'LFR' )
-    #lfr_path = os.path.join( '../data',  'FlightResults', sitename, 'LFR' )
-    vis = Visualizer( lfr_path )
-
-    #prob_map = None #np.array([[0.01, 0.01],[0.02, 0.10],
-                     #    [0.01, 0.01],[0.05, 0.10]]) 
-    prob_map =   None #np.array([[0.01, 0.01,0.02, 0.10],
-                       #  [0.01, 0.01,0.05, 0.10]])
-
-    p = Planner( utm_center, area_sides, prob_map=prob_map, tile_distance= GridSideLength, debug=True, vis=vis , gridalignedplanpath = gridplanned)
-
-     # some tests below
+    # Simualtion with the planning algorithm below
     path = np.array([gps_start[0],gps_start[1]])
-    print(path.shape)
     prev_pt = gps_start
     
-    if gridplanned :
+    for i in range(num_cells**2+1):
 
-        # FIRST line
-        next_pts,planned_gps_points_flag = p.planpoints( prev_pt )
+        next_pts, record_flags = p.planpoints( prev_pt )
         next_pt = next_pts[-1]
-        if any(planned_gps_points_flag) :
-            print('One of Planned Flag True')
-        if planned_gps_points_flag[0] :
-            print('Flag True', planned_gps_points_flag)
+
+        if record_flags[0] : # if True the drone should record while flying
             first_pt = prev_pt
         else :
-            print('Flag False', planned_gps_points_flag)
             first_pt = next_pts[0]
         path = np.row_stack((path,next_pts)) 
+        
         # update information for planning
         ct_pt = ( (first_pt[0]+next_pt[0])/2, (first_pt[1]+next_pt[1])/2 )
-        detections = [] # very low confidence
-        p.update( ct_pt, detections )
-        #prev_pt =  ( (ct_pt[0]+next_pt[0])/2, (ct_pt[1]+next_pt[1])/2 )
-        prev_pt = next_pt
-        # SECOND line
-        '''
-        next_pts,planned_gps_points_flag = p.planpoints( prev_pt )
-        print(next_pts)
-        if any(planned_gps_points_flag) :
-            print('One of Planned Flag True')
-        if planned_gps_points_flag[0] :
-            print('Flag True', planned_gps_points_flag)
-            first_pt = prev_pt
-        else :
-            print('Flag False', planned_gps_points_flag)
-            first_pt = next_pts[0]
-        next_pt = next_pts[-1]
-        path = np.row_stack((path,next_pts)) 
-        # update information for planning
-        ct_pt = ( ((first_pt[0]+next_pt[0])/2), ((first_pt[1]+next_pt[1])/2) )
-        #detections = [] # above threshold confidence
-        #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-        detections = [  {'gps': (ct_pt[0]+.00007,ct_pt[1]+.00009), 'conf': 0.4},{'gps': (ct_pt[0]+.00007,ct_pt[1]-.00009), 'conf': 0.5}] # 3 above threshold confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-        
-        # THIRD line
-        #assert p.useFineSampling() == True
-        next_pts,planned_gps_points_flag = p.planpoints( prev_pt ) # this should result in a fine sampling now
-        #print( len(next_pts) )
-        next_pt = next_pts[-1]
-        if any(planned_gps_points_flag) :
-            print('One of Planned Flag True')
-        if planned_gps_points_flag[0] :
-            print('Flag True', planned_gps_points_flag)
-            first_pt = prev_pt
-        else :
-            print('Flag False', planned_gps_points_flag)
-            first_pt = next_pts[0]
-        path = np.row_stack((path,next_pts)) 
-        # update information for planning
-        ct_pt = ( (first_pt[0]+next_pt[0])/2, (first_pt[1]+next_pt[1])/2 )
-        #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
+        detections = [] # no detections
 
-        
-        # 4th line line
-        #assert p.useFineSampling() == False
-        next_pts,planned_gps_points_flag = p.planpoints( prev_pt ) # this should continue with a regular sampling!
-        #print( len(next_pts) )
-        next_pt = next_pts[-1]
-        if any(planned_gps_points_flag) :
-            print('One of Planned Flag True')
-        if planned_gps_points_flag[0] :
-            print('Flag True', planned_gps_points_flag)
-            first_pt = prev_pt
-        else :
-            print('Flag False', planned_gps_points_flag)
-            first_pt = next_pts[0]
-        path = np.row_stack((path,next_pts)) 
-        # update information for planning
-        ct_pt = ( (first_pt[0]+next_pt[0])/2 , (first_pt[1]+next_pt[1])/2 )
-        detections = [] # below threshold confidence
-        #detections = [  {'gps': (ct_pt[0]-.00005,ct_pt[1]+.00007), 'conf': 0.4},{'gps': (next_pt[0]+.00002,prev_pt[1]+.00003), 'conf': 0.005}]
+
+        if i == 3: # simulte a detection
+            detections = [{'gps': np.asarray(next_pt)-3e-5, 'conf': 0.3}]
+
+        # update with position of AOS image and the detections 
         p.update( ct_pt, detections )
         prev_pt = next_pt
 
 
-        # 5th line line
-        #assert p.useFineSampling() == False
-        next_pts,planned_gps_points_flag = p.planpoints( prev_pt ) # this should continue with a regular sampling!
-        #print( len(next_pts) )
-        next_pt = next_pts[-1]
-        if any(planned_gps_points_flag) :
-            print('One of Planned Flag True')
-        if planned_gps_points_flag[0] :
-            print('Flag True', planned_gps_points_flag)
-            first_pt = prev_pt
-        else :
-            print('Flag False', planned_gps_points_flag)
-            first_pt = next_pts[0]
-        path = np.row_stack((path,next_pts)) 
-        # update information for planning
-        ct_pt = ( (first_pt[0]+next_pt[0])/2, (first_pt[1]+next_pt[1])/2 )
-        #detections = [  {'gps': (ct_pt[0]+.00007,ct_pt[1]+.00009), 'conf': 0.4}] # 3 above threshold confidence
-        detections = [] # below threshold confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-
-        
-        # continue
-        for i in range(10):
-            next_pts,planned_gps_points_flag = p.planpoints( prev_pt )
-            if len(next_pts) < 1:
-                break # stop if no new points available
-            next_pt = next_pts[-1]
-            if any(planned_gps_points_flag) :
-                print('One of Planned Flag True')
-            if planned_gps_points_flag[0] :
-                print('Flag True', planned_gps_points_flag)
-                first_pt = prev_pt
-            else :
-                print('Flag False', planned_gps_points_flag)
-                first_pt = next_pts[0]
-            # center of flown line
-            ct_pt = ( (first_pt[0]+next_pt[0])/2, (first_pt[1]+next_pt[1])/2 )
-            # add detection
-            detections = []
-            p.update( ct_pt, detections )
-            prev_pt = next_pt
-    else :
-            # FIRST line
-        next_pts = p.planpoints( prev_pt )
-        next_pt = next_pts[-1]
-        path = np.row_stack((path,[next_pt[0],next_pt[1]])) 
-        # update information for planning
-        ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-        detections = [] # very low confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-
-        # SECOND line
-        next_pts = p.planpoints( prev_pt )
-        next_pt = next_pts[-1]
-        path = np.row_stack((path,[next_pt[0],next_pt[1]])) 
-        # update information for planning
-        ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-        detections = [] # above threshold confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-        
-        # THIRD line
-        #assert p.useFineSampling() == True
-        next_pts = p.planpoints( prev_pt ) # this should result in a fine sampling now
-        #print( len(next_pts) )
-        next_pt = next_pts[-1]
-        path = np.row_stack((path,next_pts)) 
-        # update information for planning
-        ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-        #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-
-        
-        # 4th line line
-        #assert p.useFineSampling() == False
-        next_pts = p.planpoints( prev_pt ) # this should continue with a regular sampling!
-        #print( len(next_pts) )
-        next_pt = next_pts[-1]
-        path = np.row_stack((path,next_pts)) 
-        # update information for planning
-        ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-        detections = [] # below threshold confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-
-
-        # 5th line line
-        #assert p.useFineSampling() == False
-        next_pts = p.planpoints( prev_pt ) # this should continue with a regular sampling!
-        #print( len(next_pts) )
-        next_pt = next_pts[-1]
-        path = np.row_stack((path,next_pts)) 
-        # update information for planning
-        ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-        detections = [] # below threshold confidence
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-
-
-        # continue
-        for i in range(10):
-            next_pts = p.planpoints( prev_pt )
-            if len(next_pts) < 1:
-                break # stop if no new points available
-            next_pt = next_pts[0]
-            # center of flown line
-            ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-            # add detection
-            detections = []
-            p.update( ct_pt, detections )
-            prev_pt = next_pt
-
-    '''
-    '''
-    # 5th line line
-    assert p.useFineSampling() == False
-    next_pts = p.planpoints( prev_pt ) # this should continue with a regular sampling!
-    #print( len(next_pts) )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,next_pts)) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    detections = [] # no detections
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-
-     # 7th line
-    next_pts = p.planpoints( prev_pt )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,[next_pt[0],next_pt[1]])) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    detections = [  {'gps': (prev_pt[0]-.0000123,next_pt[1]-.000012), 'conf': 0.4}, 
-                    {'gps': (ct_pt[0]+.00007,ct_pt[1]+.00009), 'conf': 0.2},
-                    {'gps': (next_pt[0]+.00002,prev_pt[1]+.00003), 'conf': 0.3}] # 3 above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-    # 8th line
-    assert p.useFineSampling() == True
-    next_pts = p.planpoints( prev_pt ) # this should result in a fine sampling now
-    #print( len(next_pts) )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,next_pts)) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 9th line
-    next_pts = p.planpoints( prev_pt )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,[next_pt[0],next_pt[1]])) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    detections = [  {'gps': (prev_pt[0]-.0000123,next_pt[1]-.000012), 'conf': 0.04}] # 3 above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 10th line
-    assert p.useFineSampling() == False
-    next_pts = p.planpoints( prev_pt ) # this should result in a fine sampling now
-    #print( len(next_pts) )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,next_pts)) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 11th line
-    next_pts = p.planpoints( prev_pt )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,[next_pt[0],next_pt[1]])) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    detections = [  {'gps': (prev_pt[0]-.0000123,next_pt[1]-.000012), 'conf': 0.04}] # 3 above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 12th line
-    assert p.useFineSampling() == False
-    next_pts = p.planpoints( prev_pt ) # this should result in a fine sampling now
-    #print( len(next_pts) )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,next_pts)) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 13th line
-    next_pts = p.planpoints( prev_pt )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,[next_pt[0],next_pt[1]])) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    detections = [  {'gps': (ct_pt[0]+.00007,ct_pt[1]+.00009), 'conf': 0.4}] # 3 above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 14th line
-    assert p.useFineSampling() == True
-    next_pts = p.planpoints( prev_pt ) # this should result in a fine sampling now
-    #print( len(next_pts) )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,next_pts)) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 15th line
-    next_pts = p.planpoints( prev_pt )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,[next_pt[0],next_pt[1]])) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    detections = [  {'gps': (prev_pt[0]-.0000123,next_pt[1]-.000012), 'conf': 0.4}] # 3 above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-     # 16th line
-    assert p.useFineSampling() == True
-    next_pts = p.planpoints( prev_pt ) # this should result in a fine sampling now
-    #print( len(next_pts) )
-    next_pt = next_pts[-1]
-    path = np.row_stack((path,next_pts)) 
-    # update information for planning
-    ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-    #detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.02, }] # above threshold confidence
-    p.update( ct_pt, detections )
-    prev_pt = next_pt
-
-    # continue
-    for i in range(99):
-        next_pts = p.planpoints( prev_pt )
-        if len(next_pts) < 1:
-            break # stop if no new points available
-        next_pt = next_pts[0]
-        # center of flown line
-        ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-        # add detection
-        detections = [{'gps': prev_pt, 'conf': 0.005}, {'gps': next_pt, 'conf': 0.001}]
-        p.update( ct_pt, detections )
-        prev_pt = next_pt
-
-
-    print( len(path) )
-    print( path )
-
-    #plt.plot(path[:,0], path[:,1], 'o:', c='g', lw=2) # grid centers
-
-    if False:
-        # some tests below
-        path = np.array([lb[0],lb[1]])
-        print(path.shape)
-        prev_pt = lb
-        for i in range(7):
-            next_pts = p.planpoints( prev_pt )
-            if len(next_pts) < 1:
-                continue
-            next_pt = next_pts[0]
-            path = np.column_stack((path,[next_pt[0],next_pt[1]])) 
-            # center of flown line
-            ct_pt = ( (prev_pt[0]+next_pt[0])/2, (prev_pt[1]+next_pt[1])/2 )
-            # add detection
-            detections = [{'gps': prev_pt, 'conf': 0.5}, {'gps': next_pt, 'conf': 0.1}]
-            p.update( ct_pt, detections )
-            prev_pt = next_pt
-
-        plt.plot(path[0,:], path[1,:], 'o:', c='g', lw=2) # grid centers
-        print(path)
-    '''   
-    
-    if False:
-
-        # this is buggy, below!!!
-        # when using it with different resolutions you get a different offset, so the grid is not centered around the original center_point
-        # Indrajit -- Center Point is the Grid cornor -- Center point is not the Grid Center that is true
-        GPSPoints,GPSCenterPoints = GenerateGPSGridInfo(utm_center, GridSideLength, AreaLength, AreaLength, utm_center[0], utm_center[1], RotationAngle = 0)
-
-        print(GPSPoints.shape)
-        print(GPSCenterPoints.shape)
-
-
-
-
-
-        plt.plot(GPSPoints[:,:,0].flatten(), GPSPoints[:,:,1].flatten(), '-', lw=2)
-        plt.plot(GPSCenterPoints[:,:,0].flatten(), GPSCenterPoints[:,:,1].flatten(), 'o', color='r', lw=2)
-        plt.tight_layout()
-
-        fine_GPSPoints,fine_GPSCenterPoints = GenerateGPSGridInfo(utm_center, GridSideLength/fine_subdiv, AreaLength, AreaLength, utm_center[0], utm_center[1], RotationAngle = 0)
-        plt.plot(fine_GPSCenterPoints[:,:,0].flatten(), fine_GPSCenterPoints[:,:,1].flatten(), '+', color='g', lw=2)
-        plt.plot(fine_GPSPoints[:,:,0].flatten(), fine_GPSPoints[:,:,1].flatten(), ':', lw=2)
-
-
-    #ax.set_aspect('equal', adjustable='box')
     plt.show()
-    #p = Planner()

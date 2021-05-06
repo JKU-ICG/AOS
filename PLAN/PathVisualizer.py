@@ -1,10 +1,33 @@
 import numpy as np
 import os
 import json
-from Flight_utils import read_dem
 import matplotlib.pyplot as plt
 import cv2
 import utm
+
+
+def read_dem(DemFileName):
+    """ reads the verticex coordinates from the digital elevation model """
+    Count = 0
+    dem_pts = np.zeros(shape=(3,0))
+    with open(DemFileName) as DemFile: 
+        Line = DemFile.readline() 
+        while True: 
+            Line = DemFile.readline() 
+            if not Line: 
+                break
+            CheckVertex = Line.split(' ')
+
+            if 'v' in CheckVertex:
+                VertexEast = float(CheckVertex[1])
+                VertexNorth = float(CheckVertex[2])
+                Height = -(float(CheckVertex[3]))
+
+                dem_pts = np.column_stack( (dem_pts,[VertexEast,VertexNorth,Height]) )
+            else :
+                break
+            Count = Count + 1
+    return dem_pts
 
 def unique_with_TOL(a, TOL=3.0):
     b = a.copy()

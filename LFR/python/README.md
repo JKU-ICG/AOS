@@ -1,7 +1,7 @@
 
-# AOS/LFR, A Light-Field Renderer for Airborne Optical Sectioning
+# AOS/LFR: Python Bindings for the Light-Field Renderer for Airborne Optical Sectioning
 
-This is a python wrapper for the C++ Light-Field Renderer for Airborne Optical Sectioning. 
+This is a python wrapper for the [C++ Light-Field Renderer](../README.md) for Airborne Optical Sectioning. 
 
 ## Install
 

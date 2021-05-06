@@ -25,7 +25,7 @@ Have a look at the following example:
 from detecor import Detector
 threshold = .05
 
-# init the detector with the weights stored in the xml file
+# init the detector with the weights stored in the xml and bin files
 det = Detector()
 weights_file = os.path.join( 'DET', 'weights', 'yolov4-tiny.xml')
 det.init(weights_file, device = 'CPU' ) # for VPUs use device = "MYRIAD"
@@ -49,7 +49,11 @@ cv2.waitKey()
 
 ## More detailed usage
 
-XXX explain the Renderer_Detector stuff XXX
+Training was performed with the [Darknet](https://github.com/AlexeyAB/darknet) software using the YOLOv4-tiny architecture. For details on training the classifier refer to:
+- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, [Search and rescue with airborne optical sectioning](https://arxiv.org/pdf/2009.08835.pdf), Nature Machine Intelligence 2 (12), 783-790, 2020
+  - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
+- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (under review), 2021
+  - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
 
 
 ## References/License

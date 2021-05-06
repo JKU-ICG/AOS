@@ -1,5 +1,5 @@
 
-# AOS/LFR, A Light-Field Renderer for Airborne Optical Sectioning
+# AOS/LFR: A Light-Field Renderer for Airborne Optical Sectioning
 
 This is a C++ implementation of the Light-Field Renderer for Airborne Optical Sectioning. 
 It is based on OpenGL, uses [Dear ImGui](https://github.com/ocornut/imgui) and [WGLF](https://www.glfw.org/) for a basic user interface, and uses [Assimp](https://www.assimp.org/) to load a digital terrain.
