@@ -47,5 +47,7 @@ For a more detailed example look at the main program in `Planner.py`.
 
 The digital elevation models are provided from the Upper Austrian government at https://www.land-oberoesterreich.gv.at/211780.htm and are converted with [GDAL](https://gdal.org/).
 
-## References/License
+## Todo / Wishlist
+
+- [ ] Planner.__init__ use gps instead of utm (more consistent)
 
