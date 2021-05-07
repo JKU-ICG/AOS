@@ -49,5 +49,5 @@ The digital elevation models are provided from the Upper Austrian government at 
 
 ## Todo / Wishlist
 
-- [ ] Planner.__init__ use gps instead of utm (more consistent)
+- [ ] `Planner.__init__` use gps instead of utm (more consistent)
 
