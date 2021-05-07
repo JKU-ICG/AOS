@@ -22,7 +22,7 @@ Make sure that the [required Python lybraries](../requirements.txt) are installe
   dem_path = os.path.join( Path(__file__).parent.absolute(), '..',  'data', 'open_field', 'DEM' )
   vis = Visualizer( dem_path ) # initialize an instance of the visualizer (this is optional)
 
-  # initialize the planning algorithm
+  # initialize the planning algorithm for a 90x90m area, where the grid cells are 30x30m large.
   p = Planner(  utm.from_latlon( 48.3356687, 14.3262629 ), (90,90), tile_distance=30 , debug=True, vis=vis, 
       conf_threshold=0.05) # only detections above this confidence score are resampled
 
