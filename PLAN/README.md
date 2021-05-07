@@ -26,7 +26,7 @@ Make sure that the [required Python lybraries](../requirements.txt) are installe
   p = Planner(  utm.from_latlon( 48.3356687, 14.3262629 ), (90,90), tile_distance=30 , debug=True, vis=vis, 
       conf_threshold=0.05) # only detections above this confidence score are resampled
 
-  # plan the first points
+  # plan the first points, if record_flags is True the drone should record while flying
   first_pts, record_flags = p.planpoints( ( 48.335673, 14.32703 ) )
 
   # ... do recording, processing, classifications 
