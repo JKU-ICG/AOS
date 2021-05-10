@@ -185,17 +185,25 @@ if __name__ == "__main__":
     #vis = Visualizer( InitializedValuesClass._LFRPath )
     #PlanningAlgoClass = Planner( InitializedValuesClass._utm_center, InitializedValuesClass._area_sides, tile_distance = InitializedValuesClass._GridSideLength,  prob_map=InitializedValuesClass._prob_map, debug=False,vis=None, results_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'),gridalignedplanpath = InitializedValuesClass._GridAlignedPathPlanning)
     
-    CurrentGPSInfoQueue = multiprocessing.Queue(maxsize=200)
-    SendWayPointInfoQueue = multiprocessing.Queue(maxsize=20)
+    CurrentGPSInfoQueue   = multiprocessing.Queue(maxsize=200)  # 
+    SendWayPointInfoQueue = multiprocessing.Queue(maxsize=20)   # waypoint information queue.get() returns a dictionary as:
+     #   {   
+     #       'Latitude':  # x 10000000
+     #       'Longitude': # x 10000000
+     #       'Altitude': # x 10
+     #       'Speed': # x 10
+     #       'Index':
+     #   }
     CurrentGPSInfoQueueEventQueue = multiprocessing.Queue(maxsize=20)
-    RenderingQueue = multiprocessing.Queue(maxsize=200)
-    FrameQueue = multiprocessing.Queue(maxsize=200)
+    RenderingQueue = multiprocessing.Queue(maxsize=200) 
+    FrameQueue = multiprocessing.Queue(maxsize=200)             # dictionary of the form { 'Frames': [img1, img2, ...] 'FrameTimes': [time1, time2, ...] }
     
-    DroneProcessEvent = multiprocessing.Event()
-    FlyingProcessEvent = multiprocessing.Event()
-    RenderingProcessEvent = multiprocessing.Event()
-    CameraProcessEvent = multiprocessing.Event()
-    GetFramesEvent = multiprocessing.Event()
+    # events are only binary
+    DroneProcessEvent = multiprocessing.Event()     # enabling this event (.set) stops the DroneCommunication process terminally (only do once)
+    FlyingProcessEvent = multiprocessing.Event()    # if enabled (signaled from the DroneFlyingControl) the last waypoint has been reached
+    RenderingProcessEvent = multiprocessing.Event() # enabling this event (.set) stops the Renderer process terminally (only do once)
+    CameraProcessEvent = multiprocessing.Event()    # enabling this event (.set) stops the camera process terminally (only do once)
+    GetFramesEvent = multiprocessing.Event()        # enable if you want to retrieve recorded frames
 
     if InitializedValuesClass._ReadfromFile:
         GPSReceivedLogFile = os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'GPSReceivedLog.log')
@@ -207,9 +215,15 @@ if __name__ == "__main__":
 
     CameraClass = CameraControl(FlirAttached=InitializedValuesClass._FlirAttached, AddsynthethicImage=False, out_folder = os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'))
     
+    # interpolation is done here. 
     DroneCommunicationClass = DroneCommunication(simulate=False,GPSLog=GPSlogFileInfo, interpolation=True,extrapolate=False, AddSynthethicImage=False,FlirAttached = InitializedValuesClass._FlirAttached,
                                                  out_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'))
+    # geotagged images are the output here (interpolation and adding GPS) -> input to FlyingControl
+    # many more images than are actually used
     
+    # check if waypoint reached, planning the next waypoints, send waypoint to DroneCom
+    # selects frames which are one meter apart and send it to Renderer
+    # Planner is in here
     FlyingControlClass = DroneFlyingControl(sitename = InitializedValuesClass._sitename,CenterEast = InitializedValuesClass._CenterEast,CenterNorth = InitializedValuesClass._CenterNorth,
                                             objectmodelpath=InitializedValuesClass._ObjModelPath,basedatapath=InitializedValuesClass._basedatapath,Render=True,
                                             FlirAttached = InitializedValuesClass._FlirAttached,Flying_Height = InitializedValuesClass._Flying_Height,
@@ -219,6 +233,7 @@ if __name__ == "__main__":
                                             prob_map=InitializedValuesClass._prob_map,
                                             adddebugInfo=True)
     
+    # Renderer does undistortion, LFR, DET
     RendererClass = Renderer(CenterUTMInfo=InitializedValuesClass._CenterUTMInfo,ObjModelPath=InitializedValuesClass._ObjModelPath,
                             Detect=True,ObjModelImagePath=InitializedValuesClass._ObjModelImagePath,basedatapath=InitializedValuesClass._basedatapath,
                             sitename=InitializedValuesClass._sitename,results_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults',InitializedValuesClass._sitename, 'RenderedResults'),
