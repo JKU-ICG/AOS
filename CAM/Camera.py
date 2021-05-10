@@ -61,6 +61,19 @@ class CameraControl :
             print('Height',NewHeight,'Width',NewWidth)
     
     def AcquireFrames(self, FrameQueue, CameraProcessEvent, GetFramesEvent):
+        """Blocking function that records and provides frames based on events. 
+            It is intended to run with threading or multiprocessing
+
+        :param FrameQueue: queue which stores recorded frames and corresponding timings.  
+            reading with `FrameQueue.get()` returns a dictionary of the form 
+            `{ 'Frames': [img1, img2, ...], 'FrameTimes': [time1, time2, ...] }`
+            
+        :type FrameQueue: `multiprocessing.Queue` or `threading.Queue`
+        :param CameraProcessEvent: if you want to stop recording (exit the infinite loop) `CameraProcessEvent.set()`
+        :type CameraProcessEvent: `multiprocessing.Event` or `threading.Event`
+        :param GetFramesEvent: if you want to get frames captured till now use `GetFramsEvent.set()`
+        :type GetFramesEvent: `multiprocessing.Event` or `threading.Event`
+        """
         self._log = setup_logger( 'CameraInterpolation_Logger', os.path.join( self._out_folder, 'CameraFrameCapturedLog.log') )
         while not CameraProcessEvent.is_set():
             if self._FlirAttached and not self._addsynthethicimage:
@@ -96,6 +109,8 @@ class CameraControl :
         self._FrameTimeList = []
 
 if __name__ == '__main__':
+    """ Exemplary usage of the CameraControl unit. It records frames for 50 seconds in a dictionary every .2 seconds
+    """
     out_folder = 'CameraControl_Results'
     if not os.path.isdir( out_folder ): 
         os.mkdir( out_folder)
@@ -110,27 +125,9 @@ if __name__ == '__main__':
     CameraAcquireFramesProcess = multiprocessing.Process(name = 'CameraAcquireFramesProcess',target=CameraClass.AcquireFrames, args=(FrameQueue, CameraProcessEvent, GetFramesEvent))
     StartCameraProcessTime = datetime.now(timezone.utc).timestamp()
     print(StartCameraProcessTime)
+    print('CameraAcquireFramesProcess will run for 50 seconds ... ')
+
     CameraAcquireFramesProcess.start()
-    ####Checking FPS without interrupting with event at regular intervals
-    '''
-    time.sleep(50)
-    GetFramesEvent.set()
-    while FrameQueue.empty():
-        time.sleep(0.01)
-    FramesInfo = FrameQueue.get()
-    CameraProcessEvent.set()
-    MainLog.debug('%s',str(len(FramesInfo['FrameTimes'])))
-    FrameTimeList = FramesInfo['FrameTimes']
-    TimeDifferencebetweenFrames = []
-    for i in range(len(FramesInfo['FrameTimes']) - 1):
-        #print(i,FrameTimeList[i])
-        TimeDifferencebetweenFrames.append(abs(FrameTimeList[i] - FrameTimeList[i+1]))
-    MainLog.debug('%s',str(len(FramesInfo['FrameTimes'])))
-    MainLog.debug('%s',str('Minimum Time Difference between frames' , min(TimeDifferencebetweenFrames)))
-    MainLog.debug('%s',str('Maximum Time Difference between frames' , max(TimeDifferencebetweenFrames)))
-    MainLog.debug('%s',str('Mean Time Difference between frames' , np.array(TimeDifferencebetweenFrames).mean()))
-    MainLog.debug('%s',str('Meadian Time Difference between frames' , statistics.median(np.array(TimeDifferencebetweenFrames))))
-    '''
     ####Checking FPS without interrupting with event at regular intervals
     ####Checking FPS with interrupting with event at regular intervals
     CurrentTime = datetime.now(timezone.utc).timestamp()
