@@ -1,74 +1,78 @@
 
-# AOS/CAM: Acquiring samples for Airborne Optical Sectioning using a framegrabber connected to thermal camera
+# AOS/CAM: Acquiring samples for Airborne Optical Sectioning using a frame grabber connected to the thermal camera
 
-This is a Python implementation for acquiring samples for Airborne Optical Sensing. 
+This is a Python implementation for acquiring camera images for Airborne Optical Sensing. 
 
 ## Requirements
 
-Make sure that the [required Python lybraries](../requirements.txt) are installed.
+Make sure that the [required Python libraries](../requirements.txt) are installed.
 
 ## Quick tutorial
 
 
 ```py
-if __name__ == '__main__':
-  import multiprocessing
-  import time
-  import cv2
-  from Camera import CameraControl
-  from Undistort import Undistort
-  
-  #set up a queue to communicate data with the camera process
-  frame_queue = multiprocessing.Queue()
+import multiprocessing
+import time
+import cv2
+from Camera import CameraControl
+from Undistort import Undistort
 
-  #set up an event to let camera process know when to stop acquriring samples for AOS
-  camera_process_event = multiprocessing.Event()
 
-  #set up an event to let camera process know to put the acquired frames into the queue
-  get_frames_event = multiprocessing.Event()
+#set up a queue and events to communicate with the camera process
+frame_queue, camera_process_event, get_frames_event = multiprocessing.Queue(maxsize=1000), multiprocessing.Event(), multiprocessing.Event()
 
-  #folder to save output results
-  out_folder = os.path.join( Path(__file__).parent.absolute(), '..',  'data', 'open_field', 'images' )
+# init a camera class
+camera_class = CameraControl()
 
-  #set up a camera class
-  camera_class = CameraControl(cropImage=None, FlirAttached=False,AddsynthethicImage=True,out_folder = out_folder)
+# init the undistortion class
+ud = Undistort()
 
-  #set up undistortion class
-  ud = Undistort()
+#start the camera_process as a separate process
+camera_process = multiprocessing.Process(name = 'camera_process',target=camera_class.AcquireFrames, args=(frame_queue, camera_process_event, get_frames_event))
+camera_process.start()
 
-  #start the camera_process as a separate process
-  camera_process = multiprocessing.Process(name = 'camera_process',target=camera_class.AcquireFrames, args=(frame_queue, camera_process_event, get_frames_event))
+# Start recording by sending an event signal 
+get_frames_event.set()
 
-  #start the camera_process
-  camera_process.start()
+# ...
 
-  #wait for certain time 
-  time.sleep(1)
-  
-  #send an event signal to let camera_process know that acquired samples need to be put in queue
-  get_frames_event.set()
+# Retrieve recorded frames
+frames_info = frame_queue.get()
+# frames_info is dictionary of the form { 'Frames': [img1, img2, ...] 'FrameTimes': [time1, time2, ...] }
+times = frames_info['FrameTimes']
 
-  time.sleep(0.02)
-  frames_info = frame_queue.get()
-  
-  for image in frames_info['Frames']:
-    im = ud.undistort( image )
-    cv2.imshow('undistorted_image',im)
-    cv2.waitKey(0)
+# undistort the recorded frames
+for image in frames_info['Frames']:
+    undistored = ud.undistort( image )
 
-  camera_process_event.set()
-  while not frame_queue.empty():
-    frames_info_dummy = frame_queue.get()
-  frame_queue.close()
-  camera_process.join(5) 
-  if camera_process.is_alive() :
+# Stop recording by sending an event
+camera_process_event.set()
+
+# cleanup
+frame_queue.close()
+camera_process.join(5) 
+if camera_process.is_alive() :
     camera_process.terminate()
 ```
 
 ## More detailed usage
 
-For a more detailed example look at the main program in `Camera.py` and `Undistort.py`.
+For a more detailed example on the classes `Camera` and `Undistort` look at the main programs in `Camera.py` and `Undistort.py`.
 
-## Todo / Wishlist
+### Using a different camera
+When using a different thermal camera there might be a need for modifications. 
+If the camera (or the frame grabber) is a USB camera supported by OpenCV's `VideoCapture` method, the `Camera.py` class will work.
+
+Applying a new camera (or frame grabber) with different optics or changed the resolution, however, requires a calibration. We use a checkerboard pattern to calibrate our thermal camera. The calibration pattern is a metal plate with velvet squares and you need to record several images where the board is visible.
+You can use OpenCV's `calibrateCamera` function to obtain the distortion coefficients and the camera matrix as explained [here](https://docs.opencv.org/master/dc/dbb/tutorial_py_calibration.html). Additionally, you can use Matlab's camera calibration app (available with the Image Processing Toolbox).
+
+```py
+distCoeff = np.array([ -0.2536, 0.0649, 0., 0., 0.  ])
+cameraMatrix = np.array( [
+        [ 417.8933,   0.0,       344.4168],
+        [ 0.0,        526.2962,  206.0617],
+        [ 0.0,        0.0,       1.0 ]
+    ])
+```
 
 

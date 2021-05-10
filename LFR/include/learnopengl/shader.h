@@ -179,7 +179,8 @@ private:
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
                 char buffer[2048];
-                sprintf_s(buffer, "Error: %s - Shader could not be compiled! \n %s \n", type.c_str(), infoLog);
+                std::snprintf( buffer, sizeof(buffer), "Error: %s - Shader could not be compiled! \n %s \n", type.c_str(), infoLog);
+                //sprintf_s(buffer, "Error: %s - Shader could not be compiled! \n %s \n", type.c_str(), infoLog);
                 
                 std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
 
@@ -195,7 +196,8 @@ private:
                 std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
 
                 char buffer[2048];
-                sprintf_s(buffer, "Error: %s - Shader could not be linked! \n %s \n", type.c_str(), infoLog);
+                std::snprintf(buffer, sizeof(buffer), "Error: %s - Shader could not be linked! \n %s \n", type.c_str(), infoLog);
+                //sprintf_s(buffer, "Error: %s - Shader could not be linked! \n %s \n", type.c_str(), infoLog);
 
                 throw std::runtime_error(buffer);
             }
