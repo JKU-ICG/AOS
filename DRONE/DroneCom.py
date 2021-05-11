@@ -10,7 +10,14 @@ import cv2
 import utm
 import random
 from datetime import datetime, timezone
-from ..CAM.CameraControl import CameraControl
+from pathlib import Path
+import sys
+# to find the local modules we need to add the folders to sys.path
+cur_file_path = Path(__file__).resolve().parent
+sys.path.insert(1, cur_file_path )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
+
+from CameraControl import CameraControl
 from scipy import interpolate
 from scipy.interpolate import InterpolatedUnivariateSpline
 import logging
@@ -107,7 +114,7 @@ class DroneCommunication():
     _synthethic_image_res_y = 320
     _FlirAttached = False
     _interpolation = True
-    _extrapolate = True
+    _extrapolate = False
 
 
     def  __init__(self, simulate = False, GPSLog = [], interpolation = True, extrapolate = True, AddSynthethicImage = False, FlirAttached = False, resx = 480, resy = 320,  out_folder='Communication_results',   so_file = '/home/pi/PyCLFR_AutoDrone/glesLFR/src/droneCommunication_SI_ZeroTol.so'):
@@ -313,12 +320,12 @@ if __name__ == '__main__':
 
     CurrentGPSInfoQueue = multiprocessing.Queue(maxsize=100)
     SendWayPointInfoQueue = multiprocessing.Queue(maxsize=100)
-    CurrentGPSInfoQueueEventQueue = multiprocessing.Queue(maxsize=100)
     FrameQueue = multiprocessing.Queue(maxsize=200)
 
     DroneProcessEvent = multiprocessing.Event()
     CameraProcessEvent = multiprocessing.Event()
     GetFramesEvent = multiprocessing.Event()
+    RecordEvent = multiprocessing.Event()
 
     GPSReceivedLogFile = 'D:\\RESILIO\\ANAOS\\SITES\\TestFrameGrab_20210201_Openfield_T3\\GPSReceivedLogFile.log'
     GPSlogFileInfo = ReadGPSReceivedLogFiles(GPSReceivedLogFile)
@@ -329,16 +336,14 @@ if __name__ == '__main__':
                                                  out_folder = out_folder)
    
     #DroneComm = DroneCommunication(True,GPSlogFileInfo,True)
-    CurrentGPSInfoQueueEventQueue.put(True)
-    TakeImages = True 
-    CurrentGPSInfoQueueEventQueue.put(TakeImages)
+    RecordEvent.set()
     GPSCount = 0
     #Look into Multi Producer -- Multi Consumer Queue Threads
     processes = []
     CameraAcquireFramesProcess =  multiprocessing.Process(name = 'CameraAcquireFramesProcess', target=CameraClass.AcquireFrames, args=(FrameQueue, CameraProcessEvent, GetFramesEvent))
     
 
-    DroneCommunicationProcess = multiprocessing.Process(name = 'DroneCommunicationProcess', target=DroneComm.DroneInfo, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue,CurrentGPSInfoQueueEventQueue, DroneProcessEvent, FrameQueue, GetFramesEvent))
+    DroneCommunicationProcess = multiprocessing.Process(name = 'DroneCommunicationProcess', target=DroneComm.DroneInfo, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent))
 
     processes.append(CameraAcquireFramesProcess)
     processes.append(DroneCommunicationProcess)
@@ -360,9 +365,12 @@ if __name__ == '__main__':
             #    cv2.imwrite(filename,Image)
         time.sleep(0.01)
         if(GPSCount > 1000) :
+            RecordEvent.clear()
             DroneProcessEvent.set()
+    RecordEvent.clear()
     DroneProcessEvent.set()
     CameraProcessEvent.set()
+    
     time.sleep(2)
     while not FrameQueue.empty():
         FramesInfo = FrameQueue.get()
@@ -370,11 +378,8 @@ if __name__ == '__main__':
         FramesInfo = CurrentGPSInfoQueue.get()
     while not SendWayPointInfoQueue.empty():
         FramesInfo = SendWayPointInfoQueue.get()
-    while not CurrentGPSInfoQueueEventQueue.empty():
-        FramesInfo = CurrentGPSInfoQueueEventQueue.get()
     CurrentGPSInfoQueue.close()
     SendWayPointInfoQueue.close()
-    CurrentGPSInfoQueueEventQueue.close()
     FrameQueue.close()
     for process in processes:
         process.join(5)
