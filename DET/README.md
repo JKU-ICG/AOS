@@ -64,6 +64,6 @@ Training was performed with the [Darknet](https://github.com/AlexeyAB/darknet) s
 ## References/License
 
 The OpenVINO detector is based on the [YOLOv3 example in the OpenVINO Toolkit](https://docs.openvinotoolkit.org/2019_R1/_inference_engine_ie_bridges_python_sample_object_detection_demo_yolov3_async_README.html) with some modifications by Wu Tianwen on [the OpenVINO-YOLOV4 Github repository](https://github.com/TNTWEN/OpenVINO-YOLOV4).
-Note that the OpenVINO examples are originally licensed under the Apache License Version 2.0:
+Note that the OpenVINO examples (the basis for the detector) are licensed under the Apache License Version 2.0 by Intel:
 
 http://www.apache.org/licenses/LICENSE-2.0
