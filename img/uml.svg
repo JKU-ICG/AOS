@@ -8,7 +8,7 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    sodipodi:docname="uml.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    id="svg8"
    version="1.1"
    viewBox="0 0 210.54375 134.84068"
@@ -28,11 +28,11 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:snap-bbox-midpoints="true"
      inkscape:snap-bbox="true"
-     inkscape:window-maximized="0"
-     inkscape:window-y="0"
-     inkscape:window-x="4221"
-     inkscape:window-height="2066"
-     inkscape:window-width="2488"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:window-height="1027"
+     inkscape:window-width="1920"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
@@ -60,7 +60,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -176,7 +176,7 @@
     <path
        id="rect963-3"
        style="fill:#aec7e8;fill-opacity:1;stroke:#000000;stroke-width:0.4;stroke-dashoffset:0.377953"
-       d="M 80.781244,99.483396 H 124.4375 l 6.61459,7.937504 -6.61459,7.9375 H 80.781245 l 6.614584,-7.9375 z"
+       d="m 130.8863,115.35562 -43.656253,0.005 -6.615469,-7.93677 6.61371,-7.938233 43.656252,-0.0048 -6.6137,7.938229 z"
        sodipodi:nodetypes="ccccccc" />
     <text
        id="text837-10-7"
