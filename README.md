@@ -4,7 +4,7 @@ Airborne Optical Sectioning (AOS) is a wide synthetic-aperture imaging technique
 
 Single Images         |  Airborne Optical Sectioning
 :-------------------------:|:-------------------------:
-![alt text](./img/Nature_single-images.gif) | ![alt text](./img/Nature_aos.gif)
+![single-images](./img/Nature_single-images.gif) | ![AOS](./img/Nature_aos.gif)
 
 > Source: [Video on YouTube](https://www.youtube.com/watch?v=kyKVQYG-j7U) | [FLIR](https://www.flir.com/discover/cores-components/researchers-develop-search-and-rescue-technology-that-sees-through-forest-with-thermal-imaging/)
  
