@@ -7,7 +7,7 @@ Inference is done with the [OpenVINO](https://docs.openvinotoolkit.org/latest/in
 ## Requirements
 
 Install the [OpenVINO](https://docs.openvinotoolkit.org/latest/index.html) toolkit and make sure it is running.
-Before running any Python script make sure that you setup the OpenVINO environment.
+Before running any Python script make sure that you setup the OpenVINO environment variables.
 
 On Windows the followng command can be used: 
 
@@ -17,7 +17,7 @@ On Windows the followng command can be used:
 
 On Linux the command is:
 ```sh
-source /opt/intel/openvino_2021/bin/setupvars.sh
+source /opt/intel/openvino_*/bin/setupvars.sh
 ```
 
 
