@@ -6,7 +6,6 @@ import glob
 import numpy as np
 import math
 import logging
-import pyaos
 import glm
 import json
 import cv2
@@ -15,15 +14,25 @@ import statistics
 import random
 from PIL import Image
 #import png
-detection = True
+from pathlib import Path
+import sys
+
+# to find the local modules we need to add the folders to sys.path
+cur_file_path = Path(__file__).resolve().parent
+sys.path.insert(1, cur_file_path )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'PLAN') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'DET') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
+
+import pyaos
+detection = False
 if detection :
-    import naos_det
-    import importlib
-    importlib.reload(naos_det) # this makes sure that changes in naos_det.py have an effect
+    from detector import Detector
 from matplotlib import pyplot as plt
-from Flight_utils import hdr_mean_adjust,createviewmateuler,CreateJsonPoseFile,FindStartingHeight,determine_Location_inView, Undistort
-from Planner_Indrajit import Planner
-#from LFR_utils import Undistort
+from utils import createviewmateuler,FindStartingHeight
+from LFR_utils import read_poses_and_images, pose_to_virtualcamera, init_aos, init_window
+from Undistort import Undistort
 import multiprocessing
 
 
@@ -173,15 +182,15 @@ class Renderer :
         #print('No of Poses', PyLFClass.getViews())
         #print('CurrentImageIndex', CurrentImageIndex)
         #print('CurrentImageNumber', CurrentImageNumber)
-        print('virtualcamerapose', virtualcamerapose)
+        #print('virtualcamerapose', virtualcamerapose)
         if RenderandDetectFlag:
             ids = np.array([],dtype=np.uintc)
             ImageReturned1 = PyLFClass.render(virtualcamerapose, self._FieldofView, ids)
-            ImageReturned1 = cv2.flip(ImageReturned1,1)
+            #ImageReturned1 = cv2.flip(ImageReturned1,1)
             if self._UpdatePathPlanning:
                 #self._RendererLog.debug('Rendering Finished')
-                RenderDemInfo = PyLFClass.RenderGetDemInfo()
-                RenderDemInfo = cv2.flip(RenderDemInfo,1)
+                RenderDemInfo = PyLFClass.getXYZ()
+                #RenderDemInfo = cv2.flip(RenderDemInfo,1)
         else :
             ImageReturned1 = np.zeros((512,512), dtype=float)
         if not self._UpdatePathPlanning:
@@ -195,7 +204,9 @@ class Renderer :
         #weightsXmlFile = os.path.join(".","weights",yoloversion,aug,yoloversion+'.xml')
         #weightsXmlFile = os.path.join(".","weights","vL.2noTest","AP25to30",yoloversion,aug,yoloversion+'.xml')
         #weightsXmlFile = os.path.join(".","weights","vL.2noTest","APall",self._yoloversion,self._aug,self._yoloversion+'.xml')
-        weightsXmlFile = os.path.join(".","weights","vL.56","APall",self._yoloversion,self._aug,self._yoloversion+'.xml')
+        #weightsXmlFile = os.path.join(".","weights","vL.56","APall",self._yoloversion,self._aug,self._yoloversion+'.xml')
+        cur_file_path = Path(__file__).resolve().parent
+        weightsXmlFile = os.path.join(cur_file_path, '..', 'DET',"weights",self._yoloversion+'.xml')
         #ToDo:- Get StartHeight and Get MeanEast and MeanNorth RendererLog
         #StartHeight = 282.10198974609375
         #time.sleep(10)
@@ -203,8 +214,12 @@ class Renderer :
         #CopiedImage = np.array(PILImage)
         #DummyImage = CopiedImage.astype(np.float32)
         if self._Render == True or self._Detect == True :
-            window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
-            PLFClass = pyaos.PyAOS(512,512,self._FieldofView,30) # Put as a Global Variable in the main file to be used in different iterations or in the
+            if 'window' not in locals() or window == None: 
+                window = init_window() # only init the window once (causes problems if closed and loaded again!)
+            fov = self._FieldofView
+            # init the light-field renderer
+            PLFClass = init_aos(fov=fov)
+
             PLFClass.loadDEM(self.ObjModelPath)
             self._RendererLog.debug('Renderer Initialized')
             if self._Detect == True:
@@ -360,8 +375,8 @@ if __name__ == '__main__':
     sitename = '20210323_OpenField_T4NA_S1'
     #anaos_path = os.environ.get('ANAOS_DATA')
     
-    basedatapath = '../data'
-    #basedatapath = 'D:\\RESILIO\\ANAOS\\SIMULATIONS'
+    #basedatapath = '../data'
+    basedatapath = 'D:\\RESILIO\\ANAOS\\SIMULATIONS'
     ImageLocation = os.path.join(basedatapath, 'FlightResults',sitename, 'Frames_renamed')
     ObjModelPath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.obj')
     ObjModelImagePath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.png')
@@ -387,6 +402,7 @@ if __name__ == '__main__':
     ud = Undistort()
 
     RenderingQueue = multiprocessing.Queue(maxsize=100)
+    DetectionInfoQueue = multiprocessing.Queue(maxsize=100)
     RenderingProcessEvent = multiprocessing.Event()
 
     #utm_center = (CenterUTMInfo[0], CenterUTMInfo[1], CenterUTMInfo[2], CenterUTMInfo[3])
@@ -394,9 +410,9 @@ if __name__ == '__main__':
     
     RendererClass = Renderer(CenterUTMInfo=CenterUTMInfo,ObjModelPath=ObjModelPath, ObjModelImagePath=ObjModelImagePath,basedatapath=basedatapath,
     sitename=sitename,results_folder=os.path.join(basedatapath,'FlightResults',sitename, 'RendereredResults_Deferred'),
-    FieldofView=float(FieldofView),adddebuginfo=True,Detect=True)
+    FieldofView=float(FieldofView),adddebuginfo=True,Detect=False)
     
-    RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, RenderingProcessEvent))
+    RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent,))
     #threads.append(RenderThread)
     RenderProcess.start()
     EastUtmList = []
@@ -455,6 +471,7 @@ if __name__ == '__main__':
     while not RenderingQueue.empty():
         FramesInfo = RenderingQueue.get()
     RenderingQueue.close()
+    DetectionInfoQueue.close()
     print('RenderProcess.is_alive()', RenderProcess.is_alive())
     RenderProcess.join(5)
     print('RenderProcess.is_alive()', RenderProcess.is_alive())
