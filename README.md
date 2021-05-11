@@ -7,7 +7,7 @@
 
 This repository contains software for drone-based search and rescue applications as discussed in the following publications:
 
-- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Search and rescue with airborne optical sectioning, Nature Machine Intelligence 2 (12), 783-790, 2020, https://doi.org/10.1038/s42256-020-00261-3 [Nature](https://www.nature.com/articles/s42256-020-00261-3)/[arXiv](https://arxiv.org/pdf/2009.08835.pdf)
+- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Search and rescue with airborne optical sectioning, Nature Machine Intelligence 2 (12), 783-790, 2020, https://doi.org/10.1038/s42256-020-00261-3 [Nature](https://www.nature.com/articles/s42256-020-00261-3) [pre-print on arXiv](https://arxiv.org/pdf/2009.08835.pdf)
   - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (under review), 2021
   - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
@@ -42,4 +42,3 @@ A detailed description on how to compile indivdual modules can be found in every
 ## License
 * Data: Creative Commons Attribution 4.0 International
 * Code: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
-* References: [REF.md](REF.md)
