@@ -26,7 +26,7 @@ sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
 
 import pyaos
-detection = False
+detection = True
 if detection :
     from detector import Detector
 from matplotlib import pyplot as plt
@@ -223,7 +223,7 @@ class Renderer :
             PLFClass.loadDEM(self.ObjModelPath)
             self._RendererLog.debug('Renderer Initialized')
             if self._Detect == True:
-                YoloDetector = naos_det.Detector()
+                YoloDetector = Detector()
                 YoloDetector.init(weightsXmlFile, device = self._device )
                 self._RendererLog.debug('Detector Initilized')
             ud = Undistort()
@@ -376,7 +376,7 @@ if __name__ == '__main__':
     #anaos_path = os.environ.get('ANAOS_DATA')
     
     #basedatapath = '../data'
-    basedatapath = 'D:\\RESILIO\\ANAOS\\SIMULATIONS'
+    basedatapath = 'D:\\ResilioSync\\ANAOS\\SIMULATIONS'
     ImageLocation = os.path.join(basedatapath, 'FlightResults',sitename, 'Frames_renamed')
     ObjModelPath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.obj')
     ObjModelImagePath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.png')
@@ -409,8 +409,8 @@ if __name__ == '__main__':
     #PlanningAlgoClass = Planner( utm_center, (150,150), tile_distance = 150,  prob_map=None, debug=False,vis=None, results_folder=os.path.join(basedatapath,'FlightResults', sitename, 'Log'),gridalignedplanpath = True)
     
     RendererClass = Renderer(CenterUTMInfo=CenterUTMInfo,ObjModelPath=ObjModelPath, ObjModelImagePath=ObjModelImagePath,basedatapath=basedatapath,
-    sitename=sitename,results_folder=os.path.join(basedatapath,'FlightResults',sitename, 'RendereredResults_Deferred'),
-    FieldofView=float(FieldofView),adddebuginfo=True,Detect=False)
+    sitename=sitename,results_folder=os.path.join(basedatapath,'FlightResults',sitename, 'RendereredResults_Deferred'), device="CPU", # device should be MYRIAD for Neural Compute Stick
+    FieldofView=float(FieldofView),adddebuginfo=True,Detect=detection)
     
     RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent,))
     #threads.append(RenderThread)
