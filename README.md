@@ -7,14 +7,23 @@
 
 This repository contains software for drone-based search and rescue applications as discussed in the following publications:
 
-- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Search and rescue with airborne optical sectioning, Nature Machine Intelligence 2 (12), 783-790, 2020, https://doi.org/10.1038/s42256-020-00261-3 
+- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (under review), (2021)
+  - **Todo** [arXiv (pre-print)]  
+  - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
+- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Search and rescue with airborne optical sectioning, Nature Machine Intelligence 2 (12), 783-790, https://doi.org/10.1038/s42256-020-00261-3 (2020)
   - [Nature (final version)](https://www.nature.com/articles/s42256-020-00261-3) 
   - [arXiv (pre-print)](https://arxiv.org/pdf/2009.08835.pdf)
   - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
-- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (under review), 2021
-  - **Todo** [arXiv (pre-print)]  
-  - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
-- IEEE Sensors?
+- I. Kurmi, D. C. Schedl, O. Bimber, Fast automatic visibility optimization for thermal synthetic aperture visualization, IEEE Geosci. Remote Sens. Lett. available at https://doi.org/10.1109/LGRS.2020.2987471 (2020).
+- D. C. Schedl, I. Kurmi, O. Bimber, Airborne optical sectioning for nesting observation. Sci Rep. 10, 7254 (2020).
+- I. Kurmi, D. C. Schedl, O. Bimber, Thermal airborne optical sectioning. Remote Sensing. 11, 1668 (2019).
+- I. Kurmi, D. C. Schedl, O. Bimber, A statistical view on synthetic aperture imaging for occlusion removal. IEEE Sensors J. 19, 9374 – 9383 (2019).
+- O. Bimber, I. Kurmi, D. C. Schedl, Synthetic aperture imaging with drones. IEEE Computer Graphics and Applications. 39, 8 – 15 (2019).
+- I. Kurmi, D. C. Schedl, O. Bimber, Airborne optical sectioning. Journal of Imaging. 4, 102 (2018).
+
+
+
+
 
 ## Modules
 
