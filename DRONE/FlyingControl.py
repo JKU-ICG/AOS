@@ -11,25 +11,23 @@ import utm
 import datetime
 from scipy.stats import circmean
 
-from PathVisualizer import Visualizer
-from Planner import Planner
-from Flight_utils import FindStartingHeight, haversine, ReadInterpolatedGPSlogFiles
+from pathlib import Path
+import sys
 
-from Drone_Communication_MultiProcess import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
-from Renderer_Detector_MultiProcess import Renderer
+# to find the local modules we need to add the folders to sys.path
+cur_file_path = Path(__file__).resolve().parent
+sys.path.insert(1, cur_file_path )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'PLAN') )
+
+from Planner import Planner
+from utils import FindStartingHeight, haversine, ReadInterpolatedGPSlogFiles, CreateText, smtp_connect
 
 import random
 import multiprocessing
 from multiprocessing import Process,Queue
 from statistics import mean 
 
-#New Changes to send Email
-import email, smtplib, ssl
 
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 ###################### Multiple Logging Files Setup ##########################
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 logging.basicConfig(level=logging.DEBUG)
@@ -43,49 +41,6 @@ def setup_logger(name, log_file, level=logging.DEBUG):
     logger.setLevel(level)
     logger.addHandler(handler)
     return logger
-##############################################################################
-#New Changes to send Email
-def CreateText(sender_email, receiver_email, subject, body, ImageName) :
-    # Create a multipart message and set headers
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-    message["Bcc"] = receiver_email  # Recommended for mass emails
-
-    # Add body to email
-    message.attach(MIMEText(body, "plain"))
-
-    filename = ImageName  # In same directory as script
-
-    # Open PDF file in binary mode
-    with open(filename, "rb") as attachment:
-        # Add file as application/octet-stream
-        # Email client can usually download this automatically as attachment
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
-
-    # Encode file in ASCII characters to send by email    
-    encoders.encode_base64(part)
-
-    # Add header as key/value pair to attachment part
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename= {filename}",
-    )
-
-    # Add attachment to message and convert message to string
-    message.attach(part)
-    text = message.as_string()
-    return text
-
-def smtp_connect(sender_email):
-    password = os.getenv('EmailPass')
-    print(password)
-    context = ssl.create_default_context()
-    server = smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context)
-    server.login(sender_email, password)
-    return server
 
 class DroneFlyingControl():
     _simulation = False
@@ -248,7 +203,7 @@ class DroneFlyingControl():
         self._log.debug('Current Time %s ', str(CurrentFlightTime))
         RecordEvent.set()
         while CurrentFlightTime < self._maxflighttime:
-            if not DetectionInfoQueue.is_empty():
+            if not DetectionInfoQueue.empty():
                 DetectionInfo = DetectionInfoQueue.get()
                 if self._UpdatePathPlanning :
                     self._PlanningAlgo.update(DetectionInfo['PreviousVirtualCamPos'], DetectionInfo['DLDetections'])
@@ -590,6 +545,7 @@ if __name__ == '__main__':
     CurrentGPSInfoQueue = multiprocessing.Queue()
     SendWayPointInfoQueue = multiprocessing.Queue()
     RenderingQueue = multiprocessing.Queue()
+    DetectionInfoQueue = multiprocessing.Queue()
 
     FlyingProcessEvent = multiprocessing.Event()
     RecordEvent = multiprocessing.Event()
@@ -602,12 +558,14 @@ if __name__ == '__main__':
     #PlanningAlgoClass = Planner( utm_center=utm_center, area_size= (90,90), tile_distance = 90,  prob_map=None, debug=False,vis=None, results_folder=out_folder)
     
     FlyingControlClass = DroneFlyingControl(sitename = sitename,CenterEast = CenterEast,CenterNorth = CenterNorth,
-    objectmodelpath=ObjModelPath,basedatapath=basedatapath,Render=True,
-                                            FlirAttached = True,Flying_Height = 30,
-                                            DroneFlyingSpeed = 40,RenderAfter = 2, CenterUTMInfo=CenterUTMInfo,
-    out_folder=out_folder,adddebugInfo=True)
+                                            objectmodelpath=ObjModelPath,basedatapath=basedatapath,Render=True,
+                                            FlirAttached = False,Flying_Height = 30,
+                                            DroneFlyingSpeed = 4,RenderAfter = 2, CenterUTMInfo=CenterUTMInfo,
+                                            area_sides=(90,90),GridSideLength=90,GridAlignedPathPlanning=True,
+                                            prob_map=None,
+                                            out_folder=out_folder,adddebugInfo=True)
 
-    FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',target= FlyingControlClass.FlyingControl, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue,RenderingQueue,FlyingProcessEvent,RecordEvent,))
+    FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',target= FlyingControlClass.FlyingControl, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue,RenderingQueue,DetectionInfoQueue,FlyingProcessEvent,RecordEvent,))
     #FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',target= FlyingControlClass.TryClassFunction, args=(CurrentGPSInfoQueue,))
     
     FlyingControlProcess.start()
@@ -624,7 +582,7 @@ if __name__ == '__main__':
         CurrentDroneInfoDict['CompassHeading'] = float(InterpolatedTargetHoldTime[i])
         CurrentDroneInfoDict['Image'] = np.random.randint(0,255,size = (640,480,3)).astype(np.uint8)
         CurrentGPSInfoQueue.put(CurrentDroneInfoDict)
-        print('Sent Waypoints', i)
+        #print('Sent Waypoints', i)
         if not RenderingQueue.empty():
             RenderingInfo = RenderingQueue.get()
             MainLog.debug('Rendering Info Received %s %s', str(RenderingInfo['Latitude']),str(RenderingInfo['Longitude']))
@@ -634,6 +592,7 @@ if __name__ == '__main__':
             CurrentGPSInfoQueue.close()
             SendWayPointInfoQueue.close()
             RenderingQueue.close()
+            DetectionInfoQueue.close()
             break
     FlyingControlProcess.join()
     print('FlyingControlProcess.is_alive()', FlyingControlProcess.is_alive())

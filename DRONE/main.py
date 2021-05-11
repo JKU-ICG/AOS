@@ -220,9 +220,12 @@ if __name__ == "__main__":
         #   in the form of a dictionary
         #    {   'Latitude' = # 
         #        'Longitude' = # 
-        #        'Altitude' = # 
+        #        'Altitude' = #
+        #        'CompassHeading' = #  
         #        'Image' = # 
         #        'StartingHeight' = #
+        #        'Render' = # boolean indicating after adding which frame we should render
+        #        'UpdatePlanningAlgo' = # boolean indicating after adding which frame we should send the detections
         #    }
     FrameQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
         #   {   'Frames': [img1, img2, ...],  
