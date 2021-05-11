@@ -107,6 +107,7 @@ class Renderer :
     _previousMergedDetection = None
     _previousMergedDetectionCount = None
     _WriteImages = True
+    _UpdatePathPlanning = False
 
 
     def __init__(self, CenterUTMInfo, ObjModelPath, ObjModelImagePath, basedatapath, sitename, results_folder='Renderer_results', device = "MYRIAD", yoloversion = "yolov4-tiny",aug = "noAHE", FieldofView = 43.10803984095769, LFRHeight = 512,LFRWidth = 512, Render = True, Detect = True, legacy_normalization = False,PrePlannedPath = False, LowerThreshold = 0.1,UpperThreshold = 0.1,GrabVideoFrames = True, adddebuginfo = False):
@@ -177,15 +178,17 @@ class Renderer :
             ids = np.array([],dtype=np.uintc)
             ImageReturned1 = PyLFClass.render(virtualcamerapose, self._FieldofView, ids)
             ImageReturned1 = cv2.flip(ImageReturned1,1)
-            #self._RendererLog.debug('Rendering Finished')
-            #RenderDemInfo = PyLFClass.RenderGetDemInfo()
-            #RenderDemInfo = cv2.flip(RenderDemInfo,1)
+            if self._UpdatePathPlanning:
+                #self._RendererLog.debug('Rendering Finished')
+                RenderDemInfo = PyLFClass.RenderGetDemInfo()
+                RenderDemInfo = cv2.flip(RenderDemInfo,1)
         else :
             ImageReturned1 = np.zeros((512,512), dtype=float)
-        RenderDemInfo = np.zeros((512,512,3), dtype=float)
+        if not self._UpdatePathPlanning:
+            RenderDemInfo = np.zeros((512,512,3), dtype=float)
         return ImageReturned1,RenderDemInfo,cameraviewarr
 
-    def RendererandDetectContinuous(self, RenderingQueue, RenderingProcessEvent, PlanningAlgo = None):
+    def RendererandDetectContinuous(self, RenderingQueue, DetectionInfoQueue, RenderingProcessEvent):
         #print('Renderer and Detection Started in Third Thread')
         self._RendererLog = setup_logger( 'Renderer_logger', os.path.join( self._out_folder, 'RendererLog.log') )
         self._RendererLog.debug('Renderer and Detection Started in Third Thread')
@@ -310,6 +313,12 @@ class Renderer :
                                         else :
                                             #PreviousVirtualCamPos = CurrentVirtualCamPos
                                             #PlanningAlgo.update( PreviousVirtualCamPos, CurrentPathDetections )
+                                            DLDetections = self.GenerateDetectionTuples(RenderedDEM_Info, DetectedObjects)
+                                            DetectionInfo = {}
+                                            DetectionInfo['PreviousVirtualCamPos'] = PreviousVirtualCamPos
+                                            DetectionInfo['DLDetections'] = DLDetections
+                                            DetectionInfo['DetectedImageName'] = DetectedPathName
+                                            DetectionInfoQueue.put(DetectionInfo)
                                             CurrentPathDetections = []
                                             self._RendererLog.debug('UpdatedPathPlanningFlag for Path = %s',str(UpdatePathPlanningFlag))
                                             #CaptureRenderDetectCurrentData.UpdateCurrentPathInspectedIndex(CurrentPathIndex)

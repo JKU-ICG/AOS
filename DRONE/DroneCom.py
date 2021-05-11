@@ -152,7 +152,7 @@ class DroneCommunication():
         print(StreamI)
         #fw.write('StreamInfo = ' + repr(StreamI) + '\n');
     
-    def DroneInfo(self, CurrentGPSInfoQueue, SendWayPointInfoQueue, CurrentGPSInfoQueueEventQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, GPSLog = None):
+    def DroneInfo(self, CurrentGPSInfoQueue, SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent):
         #print('Drone Communication Started in First Thread')
         #if self._simulation:
         #    self._GPSInfoDictList = GPSLog
@@ -168,8 +168,6 @@ class DroneCommunication():
             if self._FlirAttached and not self._addsynthethicimage:
                 FlirVideoSource = cv2.VideoCapture(0)
         while not DroneProcessEvent.is_set():
-            if not CurrentGPSInfoQueueEventQueue.empty():
-                self._CaptureFrameandAddtoQueue = CurrentGPSInfoQueueEventQueue.get()
             if not SendWayPointInfoQueue.empty():
                 SendingWayPointInfo = SendWayPointInfoQueue.get()
                 print('Sending Waypoint')
@@ -213,8 +211,7 @@ class DroneCommunication():
                                 self._GPSLatList.append(DroneInfoData.Latitude)
                                 self._GPSLonList.append(DroneInfoData.Longitude)
                                 self._GPSAltList.append(DroneInfoData.BaroAltitude)
-                                self._GPSCompList.append(self._PreviousCompassHeading)
-                                time.sleep(0.02)    
+                                self._GPSCompList.append(self._PreviousCompassHeading)   
                             else :
                                 if Index == 15:
                                     self._log.debug('%s %s %s %s %s %s Old WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(DroneInfoData.TargetHoldTime),str(CurrentGPSReceivedtime))           
@@ -231,7 +228,10 @@ class DroneCommunication():
                         if self._simulation:
                             self._PreviousDroneTargetHoldTime = DroneInfoData.TargetHoldTime
                             self._PreviousCompassHeading = DroneInfoData.CompassHeading
-                    if self._CaptureFrameandAddtoQueue :
+                    if not RecordEvent.is_set():
+                        if not FrameQueue.empty():
+                            FrameBundle = FrameQueue.get()
+                    else :
                         if not self._interpolation:
                             if self._FlirAttached and not self._addsynthethicimage:
                                 FrameGrabbingSuccessFlag, Frame = FlirVideoSource.read()

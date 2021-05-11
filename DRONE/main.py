@@ -105,7 +105,8 @@ class InitializationClass():
                 StartLongitudeGlobal = 0.0 , FasterDroneFlyingSpeed = 50, WayPointHoldingTime = 5, PiWayPointRadiusCheck = 5.0, TimeDelayForFlirConnection = 7.0, pwmPin = 18,
                 LowerThreshold = 0.05, UpperThreshold = 0.10, Render = True, Detect = True, PrePlannedPath = False, legacy_normalization = False, _NormalizedDistance = 30,
                 AlwaysRenderSeparetly = True, SimulateonCPU = False, GridAlignedPathPlanning = True, ContinuousIntegration = True, ContinuousIntegrationAfterNoofImages = 10,
-                DetectWithPiImages = False, SendEmail = False, ProjectIndividualImages = False, WritePoses = False, aug = "noAHE", yoloversion = "yolov4-tiny",prob_map = None
+                DetectWithPiImages = False, SendEmail = False, UpdatePathPlanningflag = False, sender_email = None, receiver_email = None, subject = None, body = None,
+                ProjectIndividualImages = False, WritePoses = False, aug = "noAHE", yoloversion = "yolov4-tiny",prob_map = None
     ):
         self._sitename = sitename
         self._DroneFlyingSpeed = DroneFlyingSpeed # in 0.1m/s
@@ -122,6 +123,7 @@ class InitializationClass():
         self._ReadfromFile = ReadfromFile
         self._Render = Render
         self._Detect = Detect
+        self._UpdatePathPlanning = UpdatePathPlanningflag
         self._PrePlannedPath = PrePlannedPath
         self._legacy_normalization = legacy_normalization
         self._AlwaysRenderSeparetly = AlwaysRenderSeparetly
@@ -130,6 +132,10 @@ class InitializationClass():
         self._WritePoses = WritePoses
         self._DetectWithPiImages = DetectWithPiImages
         self._SendEmail = SendEmail
+        self._sender_email = sender_email
+        self._receiver_email = receiver_email
+        self._subject = subject
+        self._body = body
         self._ProjectIndividualImages = ProjectIndividualImages
         self._GrabVideoFrames = GrabVideoFrames
         self._ContinuousIntegration = ContinuousIntegration
@@ -186,8 +192,8 @@ if __name__ == "__main__":
     
     CurrentGPSInfoQueue   = multiprocessing.Queue(maxsize=200)  # queue which stores gps tagged frames.  
         #   reading with `CurrentGPSInfoQueue.get()`   returns a dictionary of the form 
-        #   {   'Latitude' = # gps lat = (value x 0.0000001)
-        #       'Longitude' = # gps lon = (value x 0.0000001)
+        #   {   'Latitude' = # gps lat in degrees
+        #       'Longitude' = # gps lon in degrees
         #       'Altitude' = # absolute altitude
         #       'BaroAltitude' = # relative altitude = (value / 100) 
         #       'TargetHoldTime' = # Counter set to fixed value and counts down to 0 once it reaches waypoint
@@ -220,6 +226,7 @@ if __name__ == "__main__":
     RenderingProcessEvent = multiprocessing.Event() # enabling this event (.set) stops the Renderer process terminally (only do once)
     CameraProcessEvent = multiprocessing.Event()    # enabling this event (.set) stops the camera process terminally (only do once)
     GetFramesEvent = multiprocessing.Event()        # enable if you want to retrieve recorded frames
+    RecordEvent = multiprocessing.Event()           # enable if you want to record information while flying
 
     if InitializedValuesClass._ReadfromFile:
         GPSReceivedLogFile = os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'GPSReceivedLog.log')
@@ -257,16 +264,16 @@ if __name__ == "__main__":
 
     
     processes = []
-    RenderProcess = multiprocessing.Process(name='RenderingProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, RenderingProcessEvent))
+    RenderProcess = multiprocessing.Process(name='RenderingProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
     processes.append(RenderProcess)
     RenderProcess.start()
     time.sleep(2)
 
-    DroneCommunicationProcess = multiprocessing.Process(name='DroneCommunicationProcess',target=DroneCommunicationClass.DroneInfo, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue,CurrentGPSInfoQueueEventQueue, DroneProcessEvent, FrameQueue, GetFramesEvent))
+    DroneCommunicationProcess = multiprocessing.Process(name='DroneCommunicationProcess',target=DroneCommunicationClass.DroneInfo, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent))
     processes.append(DroneCommunicationProcess)
     DroneCommunicationProcess.start()
 
-    FlyingControlProcess = multiprocessing.Process(name='FlyingControlProcess',target= FlyingControlClass.FlyingControl, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue,CurrentGPSInfoQueueEventQueue, RenderingQueue,FlyingProcessEvent))
+    FlyingControlProcess = multiprocessing.Process(name='FlyingControlProcess',target= FlyingControlClass.FlyingControl, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent))
     processes.append(FlyingControlProcess)
     FlyingControlProcess.start()
     
@@ -289,13 +296,10 @@ if __name__ == "__main__":
         FramesInfo = CurrentGPSInfoQueue.get()
     while not SendWayPointInfoQueue.empty():
         FramesInfo = SendWayPointInfoQueue.get()
-    while not CurrentGPSInfoQueueEventQueue.empty():
-        FramesInfo = CurrentGPSInfoQueueEventQueue.get()
     while not RenderingQueue.empty():
         FramesInfo = RenderingQueue.get()
     CurrentGPSInfoQueue.close()
     SendWayPointInfoQueue.close()
-    CurrentGPSInfoQueueEventQueue.close()
     FrameQueue.close()
     RenderingQueue.close()
 

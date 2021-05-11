@@ -23,7 +23,13 @@ import multiprocessing
 from multiprocessing import Process,Queue
 from statistics import mean 
 
+#New Changes to send Email
+import email, smtplib, ssl
 
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 ###################### Multiple Logging Files Setup ##########################
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 logging.basicConfig(level=logging.DEBUG)
@@ -38,6 +44,48 @@ def setup_logger(name, log_file, level=logging.DEBUG):
     logger.addHandler(handler)
     return logger
 ##############################################################################
+#New Changes to send Email
+def CreateText(sender_email, receiver_email, subject, body, ImageName) :
+    # Create a multipart message and set headers
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+    message["Bcc"] = receiver_email  # Recommended for mass emails
+
+    # Add body to email
+    message.attach(MIMEText(body, "plain"))
+
+    filename = ImageName  # In same directory as script
+
+    # Open PDF file in binary mode
+    with open(filename, "rb") as attachment:
+        # Add file as application/octet-stream
+        # Email client can usually download this automatically as attachment
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+
+    # Encode file in ASCII characters to send by email    
+    encoders.encode_base64(part)
+
+    # Add header as key/value pair to attachment part
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename= {filename}",
+    )
+
+    # Add attachment to message and convert message to string
+    message.attach(part)
+    text = message.as_string()
+    return text
+
+def smtp_connect(sender_email):
+    password = os.getenv('EmailPass')
+    print(password)
+    context = ssl.create_default_context()
+    server = smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context)
+    server.login(sender_email, password)
+    return server
 
 class DroneFlyingControl():
     _simulation = False
@@ -68,12 +116,14 @@ class DroneFlyingControl():
     _adddebugInfo = False
     _RenderAfter = 1
     _area_sides = None
+    _UpdatePathPlanning = False
 
     def  __init__(self, sitename, CenterEast, CenterNorth, objectmodelpath, basedatapath, area_sides = None, ReadfromFile = False, maxflighttime = 20.0*60.0, simulate = False, FlirAttached = False, 
                     startlat = 0,startlon = 0,out_folder='FlyingControl_results', GridAlignedPathPlanning = True, PiWayPointRadiusCheck = 5.0,
                     PlanningAlgo = None, Flying_Height = 35, DroneFlyingSpeed =  1, FasterDroneFlyingSpeed = 3, WayPointHoldingTime = 5,
                     GrabVideoFrames = True, ImageSamplingDistance = 1.0, SimulatedData = None, Render = True,
-                      RenderAfter = 1, CenterUTMInfo = None, GridSideLength = 30,prob_map = None, adddebugInfo = False
+                      RenderAfter = 1, CenterUTMInfo = None, GridSideLength = 30,prob_map = None, UpdatePathPlanningflag = False, sender_email = None, 
+                      receiver_email = None, subject = None, body = None, SendEmailFlag = False, adddebugInfo = False
                     ):
         if not os.path.isdir( out_folder ): 
             os.mkdir( out_folder)
@@ -106,16 +156,20 @@ class DroneFlyingControl():
         self._GridAlignedPathPlanning = GridAlignedPathPlanning
         self._GridSideLength = GridSideLength
         self._prob_map = prob_map
+        self._UpdatePathPlanning = UpdatePathPlanningflag
+        self._SendEmail = SendEmailFlag
+        self._sender_email = sender_email
+        self._receiver_email = receiver_email
+        self._subject = subject
+        self._body = body
 
     ##############################################################################    
-    def FlyingControl(self, CurrentGPSInfoQueue, SendWayPointInfoQueue, CurrentGPSInfoQueueEventQueue, RenderingQueue, FlyingProcessEvent):
+    def FlyingControl(self, CurrentGPSInfoQueue, SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent):
         """Blocking Function till maximum drone flying time has been reached or last waypoint has been reached
             once a waypoint has been reached it ask Planner to plan next waypoints by sending current coordinates
             for every gps tagged frame ut receives from DroneCom it determines whether waypoint has been reached or not
             if waypoint is not reached it than selects frames which are 1m away from last selected frame. 
             selected frames are communicated to the Renderer_Detector
-        :param CurrentGPSInfoQueueEventQueue: boolean queue to indicate whether to capture frames or not --- Redundant in new implementation with framegrabber
-        :type CurrentGPSInfoQueueEventQueue:    `multiprocessing.Queue` or `threading.Queue`
         :param SendWayPointInfoQueue: queue which stores info of waypoints to be traversed.
             based on planned waypoints it sends DroneCom Waypoints info to communicate to drone
             waypoint data is comprised in a dictionary {    'Latitude':  # value =int(gps lat x 10000000), 
@@ -152,6 +206,8 @@ class DroneFlyingControl():
         :param FlyingProcessEvent: boolean type event enabled by 'FlyingProcessEvent.set()' when last waypoint has been reached 
                                     or flying time is more than maximum allowed drone flying time
         :type FlyingProcessEvent:`multiprocessing.Event` or `threading.Event`
+        :param RecordEvent: enable to indicate whether to capture frames or not
+        :type RecordEvent:    `multiprocessing.Event` or `threading.Event`
         """
         self._PlanningAlgo = Planner( utm_center=(self._CenterUTMInfo[0], self._CenterUTMInfo[1], self._CenterUTMInfo[2], self._CenterUTMInfo[3]), area_size= self._area_sides, tile_distance = self._GridSideLength,  prob_map=self._prob_map, debug=False,vis=None, results_folder=self._out_folder,gridalignedplanpath=self._GridAlignedPathPlanning)
         self._log = setup_logger( 'Flying_logger', os.path.join( self._out_folder, 'FlyControlInfoLog.log'))
@@ -159,10 +215,10 @@ class DroneFlyingControl():
         self._log.debug('Start Flight')
         self._gpsframelog.debug('StartTime StartLatitude StartLongitude')
         if not self._ReadfromFile :
-            CurrentGPSInfoQueueEventQueue.put(True)
+            RecordEvent.set()
             while CurrentGPSInfoQueue.empty():
                 time.sleep(1)
-            CurrentGPSInfoQueueEventQueue.put(False)
+            RecordEvent.clear()
             while not CurrentGPSInfoQueue.empty():
                 CurrentGPSInfo = CurrentGPSInfoQueue.get()
                 StartLatitude = CurrentGPSInfo['Latitude']*0.0000001
@@ -190,8 +246,15 @@ class DroneFlyingControl():
         starttime = datetime.datetime.now()
         CurrentFlightTime = 0.0
         self._log.debug('Current Time %s ', str(CurrentFlightTime))
-        CurrentGPSInfoQueueEventQueue.put(True)
+        RecordEvent.set()
         while CurrentFlightTime < self._maxflighttime:
+            if not DetectionInfoQueue.is_empty():
+                DetectionInfo = DetectionInfoQueue.get()
+                if self._UpdatePathPlanning :
+                    self._PlanningAlgo.update(DetectionInfo['PreviousVirtualCamPos'], DetectionInfo['DLDetections'])
+                if self._SendEmail:
+                    server = smtp_connect(self._sender_email)
+                    server.sendmail(self._sender_email, self._receiver_email, CreateText(self._sender_email, self._receiver_email,self._subject, self._body, DetectionInfo['DetectedImageName']))
             if DetectedHumanFlag:
                 pass # For Testing Pass if Human Detected --- For Actual Flights -- break
             if not self._GridAlignedPathPlanning :    
@@ -484,7 +547,7 @@ class DroneFlyingControl():
         ###################################################################################################                    
         self._gpsframelog.debug('%s %s %s %s', str(x), str(NoofPointsinPreviousPath),str(NoofPointsChecked),str(0))
         time.sleep(1.0)
-        CurrentGPSInfoQueueEventQueue.put(False)
+        RecordEvent.clear()
         FlyingProcessEvent.set()
         #Todo .-  Indicate to other threads to stop.
         print('Flying  Process Done')
@@ -526,10 +589,10 @@ if __name__ == '__main__':
 
     CurrentGPSInfoQueue = multiprocessing.Queue()
     SendWayPointInfoQueue = multiprocessing.Queue()
-    CurrentGPSInfoQueueEventQueue = multiprocessing.Queue()
     RenderingQueue = multiprocessing.Queue()
 
     FlyingProcessEvent = multiprocessing.Event()
+    RecordEvent = multiprocessing.Event()
 
     InterPolatedGPSReceivedLogFileName = 'D:\\RESILIO\\ANAOS\\SIMULATIONS\\FlightResults\\20210304_OpenField_T4R2_T1_S1\\GPSInterpolatedLog.log'
     InterpolatedLat, InterpolatedLon, InterpolatedAlt, InterpolatedCompass, InterpolatedTargetHoldTime = ReadInterpolatedGPSlogFiles(InterPolatedGPSReceivedLogFileName)
@@ -544,7 +607,7 @@ if __name__ == '__main__':
                                             DroneFlyingSpeed = 40,RenderAfter = 2, CenterUTMInfo=CenterUTMInfo,
     out_folder=out_folder,adddebugInfo=True)
 
-    FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',target= FlyingControlClass.FlyingControl, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue,CurrentGPSInfoQueueEventQueue, RenderingQueue,FlyingProcessEvent,))
+    FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',target= FlyingControlClass.FlyingControl, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue,RenderingQueue,FlyingProcessEvent,RecordEvent,))
     #FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',target= FlyingControlClass.TryClassFunction, args=(CurrentGPSInfoQueue,))
     
     FlyingControlProcess.start()
@@ -570,7 +633,6 @@ if __name__ == '__main__':
             time.sleep(2)
             CurrentGPSInfoQueue.close()
             SendWayPointInfoQueue.close()
-            CurrentGPSInfoQueueEventQueue.close()
             RenderingQueue.close()
             break
     FlyingControlProcess.join()
