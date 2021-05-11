@@ -129,7 +129,7 @@ class Renderer :
         self._device = device
         self._legacy_normalization = legacy_normalization
         self._PrePlannedPath = PrePlannedPath
-        self._LowerThreshold =LowerThreshold
+        self._LowerThreshold = LowerThreshold
         self._UpperThreshold = UpperThreshold
         self.CenterEast = CenterUTMInfo[0]
         self.CenterNorth = CenterUTMInfo[1]

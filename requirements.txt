@@ -4,3 +4,4 @@ numpy
 cython
 utm
 matplotlib
+scipy

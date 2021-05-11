@@ -24,7 +24,25 @@ from enum import Enum
 
 import cv2
 import numpy as np
-from openvino.inference_engine import IECore
+try:
+    from openvino.inference_engine import IECore
+except ImportError as e:
+    """OpenVino is not initialized. Make sure it is installed and the environment variables are set.
+    You can run the following command on Windows:
+    ```sh
+    "C:\Program Files (x86)\IntelSWTools\openvino\bin\setupvars.bat"
+    ```
+
+    On Linux the command is:
+    ```sh
+    source /opt/intel/openvino_*/bin/setupvars.sh
+    ```
+    """
+    print( "ERROR: OpenVino is not initialized. Make sure it is installed and the environment variables are set \n \
+        by running \"C:\\Program Files (x86)\\IntelSWTools\\openvino\\bin\\setupvars.bat\" on Windows or \n \
+        \"source /opt/intel/openvino_*/bin/setupvars.sh\" on Unix" )
+    print( "Traceback: " + str(e) ) # print traceback!
+
 
 
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO, stream=sys.stdout)

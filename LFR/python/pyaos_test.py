@@ -6,6 +6,7 @@ import sys
 import glm
 import numpy as np
 import numpy.testing
+from pathlib import Path
 
 
 class TestAOSRenderTwice(unittest.TestCase):
@@ -216,4 +217,14 @@ class TestAOSInit(unittest.TestCase):
 
 
 if __name__ == '__main__':
+
+    file = Path(__file__).resolve()
+    parent, root = file.parent, file.parents[1]
+
+    wd = os.getcwd()
+    os.chdir(parent) # change to AOS working dir for startup (this is required so that the program finds dlls and the shader)
+    
+
     unittest.main()
+
+    os.chdir(wd) # change back to previous working directory

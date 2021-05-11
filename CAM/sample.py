@@ -2,7 +2,7 @@ import multiprocessing
 import time
 import cv2
 import os
-from Camera import CameraControl
+from CameraControl import CameraControl
 from Undistort import Undistort
 
 if __name__ == '__main__':  

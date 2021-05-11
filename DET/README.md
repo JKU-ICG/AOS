@@ -11,8 +11,13 @@ Before running any Python script make sure that you setup the OpenVINO environme
 
 On Windows the followng command can be used: 
 
-```
+```sh
 "C:\Program Files (x86)\IntelSWTools\openvino\bin\setupvars.bat"
+```
+
+On Linux the command is:
+```sh
+source /opt/intel/openvino_2021/bin/setupvars.sh
 ```
 
 

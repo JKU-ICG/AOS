@@ -5,10 +5,12 @@ import cv2
 from PIL import Image # needed to load hdr images
 import math
 import os
+from pathlib import Path 
 import glm
 import sys
 
-def init_window( aos_python_path = 'LFR/python' ):
+
+def init_window( aos_python_path = Path(__file__).resolve().parent ):
     
     sys.path.insert(1,aos_python_path )
     import pyaos
@@ -16,7 +18,7 @@ def init_window( aos_python_path = 'LFR/python' ):
     window = pyaos.PyGlfwWindow(512,512,'AOS') # make sure there is an OpenGL context
     return window
 
-def init_aos(fov = 50.815436217896945, aos_python_path = 'LFR/python' ):
+def init_aos(fov = 50.815436217896945, aos_python_path = Path(__file__).resolve().parent ):
     
     try:
         import pyaos

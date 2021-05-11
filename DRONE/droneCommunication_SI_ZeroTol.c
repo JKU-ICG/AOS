@@ -67,7 +67,7 @@ typedef volatile signed char     vs8;
 
 //#define SERIAL "/dev/bus/usb/001/005" /*<- this needs to be updated*/
 //#define SERIAL "/dev/ttyAMA0" /*<- default from student!*/
-#define SERIAL "/dev/ttyUSB0" /* <- this should be correct in Linux (talked to Stefan about it)! */
+#define SERIAL "/dev/ttyUSB0" /* <- this should be correct in Linux (e.g. Raspberry Pi)! */
 
 typedef struct
 {

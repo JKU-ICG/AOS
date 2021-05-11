@@ -20,13 +20,13 @@ if detection :
     importlib.reload(naos_det) # this makes sure that changes in naos_det.py have an effect
 import datetime
 import multiprocessing
-from Planner_Indrajit import Planner
-from FlyingControl_MultiProcess import DroneFlyingControl
-from Drone_Communication_MultiProcess import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
-from Renderer_Detector_MultiProcess_Deferred import Renderer
-from CameraControl_MultiProcess import CameraControl
-from LFR_utils import hdr_mean_adjust
-from PathVisualizer import Visualizer
+from ..PLAN.Planner import Planner
+from ..DRONE.FlyingControl import DroneFlyingControl
+from ..DRONE.DroneCom import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
+from ..DRONE.Renderer_Detector import Renderer
+from ..CAM.CameraControl import CameraControl
+from ..LFR.python.LFR_utils import hdr_mean_adjust
+from ..PLAN.PathVisualizer import Visualizer
 from scipy.stats import circmean
 import random
 from scipy import interpolate
@@ -35,7 +35,6 @@ from statistics import mean
 
 #New Changes to send Email
 import email, smtplib, ssl
-
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -194,7 +193,7 @@ if __name__ == "__main__":
      #       'Speed': # x 10
      #       'Index':
      #   }
-    CurrentGPSInfoQueueEventQueue = multiprocessing.Queue(maxsize=20)
+    # CurrentGPSInfoQueueEventQueue = multiprocessing.Queue(maxsize=20)
     RenderingQueue = multiprocessing.Queue(maxsize=200) 
     FrameQueue = multiprocessing.Queue(maxsize=200)             # dictionary of the form { 'Frames': [img1, img2, ...] 'FrameTimes': [time1, time2, ...] }
     
