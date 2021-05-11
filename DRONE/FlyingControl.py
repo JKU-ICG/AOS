@@ -518,7 +518,7 @@ if __name__ == '__main__':
     sitename = '20210304_OpenField_T4R2_T1_S1'
     #anaos_path = os.environ.get('ANAOS_DATA')
     
-    basedatapath = 'D:\\RESILIO\\ANAOS\\SIMULATIONS'
+    basedatapath = 'D:\\RESILIOSYNC\\ANAOS\\SIMULATIONS'
     print(os.path.join(basedatapath,'FlightResults', sitename, 'Pose_absolute'))
     PosesFilePath = os.path.join(basedatapath,'FlightResults', sitename, 'NewNormalization','SimulationPoses')
     ImageLocation = os.path.join(basedatapath, 'FlightResults',sitename, 'Frames_renamed')
@@ -550,7 +550,7 @@ if __name__ == '__main__':
     FlyingProcessEvent = multiprocessing.Event()
     RecordEvent = multiprocessing.Event()
 
-    InterPolatedGPSReceivedLogFileName = 'D:\\RESILIO\\ANAOS\\SIMULATIONS\\FlightResults\\20210304_OpenField_T4R2_T1_S1\\GPSInterpolatedLog.log'
+    InterPolatedGPSReceivedLogFileName = 'D:\\RESILIOSYNC\\ANAOS\\SIMULATIONS\\FlightResults\\20210304_OpenField_T4R2_T1_S1\\GPSInterpolatedLog.log'
     InterpolatedLat, InterpolatedLon, InterpolatedAlt, InterpolatedCompass, InterpolatedTargetHoldTime = ReadInterpolatedGPSlogFiles(InterPolatedGPSReceivedLogFileName)
 
     #utm_center = (CenterUTMInfo[0], CenterUTMInfo[1], CenterUTMInfo[2], CenterUTMInfo[3])

@@ -327,7 +327,7 @@ if __name__ == '__main__':
     GetFramesEvent = multiprocessing.Event()
     RecordEvent = multiprocessing.Event()
 
-    GPSReceivedLogFile = 'D:\\RESILIO\\ANAOS\\SITES\\TestFrameGrab_20210201_Openfield_T3\\GPSReceivedLogFile.log'
+    GPSReceivedLogFile = 'D:\\RESILIOSYNC\\ANAOS\\SITES\\TestFrameGrab_20210201_Openfield_T3\\GPSReceivedLogFile.log'
     GPSlogFileInfo = ReadGPSReceivedLogFiles(GPSReceivedLogFile)
 
     CameraClass = CameraControl(FlirAttached=False, AddsynthethicImage=True, out_folder = out_folder)

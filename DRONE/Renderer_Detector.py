@@ -374,6 +374,8 @@ if __name__ == '__main__':
     
     sitename = '20210323_OpenField_T4NA_S1'
     #anaos_path = os.environ.get('ANAOS_DATA')
+
+    # Todo: change to 
     
     #basedatapath = '../data'
     basedatapath = 'D:\\ResilioSync\\ANAOS\\SIMULATIONS'
