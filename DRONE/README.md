@@ -36,7 +36,7 @@ Make sure that the [required Python libraries](../requirements.txt), OpenVino, a
 **Todo** Compile the drone communication (C code):
 ```sh
 **TODO**
-gcc droneCommunication_SI_ZeroTol.c
+cc -fPIC -shared -std=c++17 -o dronecommunication.so dronecommunication.c
 ```
 
 ## Quick tutorial
