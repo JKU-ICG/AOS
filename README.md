@@ -45,3 +45,9 @@ A detailed description on how to compile indivdual modules can be found in every
 ## License
 * Data: Creative Commons Attribution 4.0 International
 * Code: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
+
+
+## Todo
+* [ ] rework READMEs
+* [ ] LFR/Makefile
+* [ ] Drone/Makefile
