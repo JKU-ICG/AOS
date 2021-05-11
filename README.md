@@ -18,7 +18,7 @@ This repository contains software for drone-based search and rescue applications
 ## Publications
 
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (accepted), (2021)
-  - - [arXiv (pre-print)](https://arxiv.org/pdf/2105.04328)  
+  - [arXiv (pre-print)](https://arxiv.org/pdf/2105.04328)  
   - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Search and rescue with airborne optical sectioning, Nature Machine Intelligence 2 (12), 783-790, https://doi.org/10.1038/s42256-020-00261-3 (2020)
   - [Nature (final version)](https://www.nature.com/articles/s42256-020-00261-3) 
