@@ -12,7 +12,7 @@ This repository contains software for drone-based search and rescue applications
   - [arXiv (pre-print)](https://arxiv.org/pdf/2009.08835.pdf)
   - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (under review), 2021
-  - **Todo** [arXiv (pre-print]  
+  - **Todo** [arXiv (pre-print)]  
   - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
 - IEEE Sensors?
 
