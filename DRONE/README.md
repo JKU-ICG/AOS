@@ -25,7 +25,7 @@ Symbol | Description |
 --- | --- |
  ▭ (rectangle)  | process (can contain multiple modules) |
  ⌦ (bold arrow) |  queue for inter-process communication  |
- ↔  (thin arrow) | communication with external resources |
+ <-->  (thin arrow) | communication with external resources |
 
 
 
