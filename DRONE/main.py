@@ -43,8 +43,8 @@ from email.mime.text import MIMEText
 
 class InitializationClass():
     _sitename = None
-    _DroneFlyingSpeed = 10 # in 0.1m/s
-    _FasterDroneFlyingSpeed = 30 # in 0.1m/s
+    _DroneFlyingSpeed = 1 # in 0.1m/s
+    _FasterDroneFlyingSpeed = 3 # in 0.1m/s
     _WayPointHoldingTime = 5
     _PiWayPointRadiusCheck = 5.0
     _TimeDelayForFlirConnection = 7.0
@@ -180,7 +180,7 @@ class InitializationClass():
 ##############################################################################
 if __name__ == "__main__":
     InitializedValuesClass = InitializationClass(sitename="Test20200326_Conifer_Fs6Re3_motion",area_sides = (90,90), ReadfromFile=False, DroneAttached=True,FlirAttached=True,
-    DroneFlyingSpeed=60,Flying_Height = 35, GridSideLength = 90, SimulateonCPU=False)
+    DroneFlyingSpeed=6,Flying_Height = 35, GridSideLength = 90, SimulateonCPU=False)
     
     #vis = Visualizer( InitializedValuesClass._LFRPath )
     #PlanningAlgoClass = Planner( InitializedValuesClass._utm_center, InitializedValuesClass._area_sides, tile_distance = InitializedValuesClass._GridSideLength,  prob_map=InitializedValuesClass._prob_map, debug=False,vis=None, results_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'),gridalignedplanpath = InitializedValuesClass._GridAlignedPathPlanning)

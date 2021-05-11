@@ -175,7 +175,7 @@ class DroneCommunication():
                 LatToSend = SendingWayPointInfo['Latitude']
                 LongtoSend = SendingWayPointInfo['Longitude']
                 AlttoSend = SendingWayPointInfo['Altitude']*10
-                SpeedtoSend = SendingWayPointInfo['Speed']
+                SpeedtoSend = SendingWayPointInfo['Speed']*10
                 #print('Upload and Send Drone to Waypoint', Index)
                 self._sentwaypointlog.debug('Upload and Send Drone to Waypoint = %s to Lat = %s, Lon = %s, Alt = %s and Speed = %s', str(Index), str(LatToSend), str(LongtoSend),str(AlttoSend),str(SpeedtoSend) )
                 if not self._simulation :

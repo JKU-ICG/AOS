@@ -71,7 +71,7 @@ class DroneFlyingControl():
 
     def  __init__(self, sitename, CenterEast, CenterNorth, objectmodelpath, basedatapath, area_sides = None, ReadfromFile = False, maxflighttime = 20.0*60.0, simulate = False, FlirAttached = False, 
                     startlat = 0,startlon = 0,out_folder='FlyingControl_results', GridAlignedPathPlanning = True, PiWayPointRadiusCheck = 5.0,
-                    PlanningAlgo = None, Flying_Height = 35, DroneFlyingSpeed =  10, FasterDroneFlyingSpeed = 30, WayPointHoldingTime = 5,
+                    PlanningAlgo = None, Flying_Height = 35, DroneFlyingSpeed =  1, FasterDroneFlyingSpeed = 3, WayPointHoldingTime = 5,
                     GrabVideoFrames = True, ImageSamplingDistance = 1.0, SimulatedData = None, Render = True,
                       RenderAfter = 1, CenterUTMInfo = None, GridSideLength = 30,prob_map = None, adddebugInfo = False
                     ):
@@ -109,6 +109,50 @@ class DroneFlyingControl():
 
     ##############################################################################    
     def FlyingControl(self, CurrentGPSInfoQueue, SendWayPointInfoQueue, CurrentGPSInfoQueueEventQueue, RenderingQueue, FlyingProcessEvent):
+        """Blocking Function till maximum drone flying time has been reached or last waypoint has been reached
+            once a waypoint has been reached it ask Planner to plan next waypoints by sending current coordinates
+            for every gps tagged frame ut receives from DroneCom it determines whether waypoint has been reached or not
+            if waypoint is not reached it than selects frames which are 1m away from last selected frame. 
+            selected frames are communicated to the Renderer_Detector
+        :param CurrentGPSInfoQueueEventQueue: boolean queue to indicate whether to capture frames or not --- Redundant in new implementation with framegrabber
+        :type CurrentGPSInfoQueueEventQueue:    `multiprocessing.Queue` or `threading.Queue`
+        :param SendWayPointInfoQueue: queue which stores info of waypoints to be traversed.
+            based on planned waypoints it sends DroneCom Waypoints info to communicate to drone
+            waypoint data is comprised in a dictionary {    'Latitude':  # value =int(gps long x 10000000), 
+                                                            'Longitude': # value =int(gps long x 10000000), 
+                                                            'Altitude': # value should be desired Altitude in m above starting height,
+                                                            'Speed': # value should be desired speed in m/s, 
+                                                            'Index':
+                                                        }
+            and sent to DroneCom by 'SendWayPointInfoQueue.put(dictionary)'
+        :type SendWayPointInfoQueue:    `multiprocessing.Queue` or `threading.Queue`
+        :param CurrentGPSInfoQueue: queue which stores gps tagged frames.  
+            reading with `CurrentGPSInfoQueue.get()` returns a dictionary of the form 
+            {   'Latitude' = # gps lat = (value x 0.0000001)
+                'Longitude' = # gps lon = (value x 0.0000001)
+                'Altitude' = # absolute altitude
+                'BaroAltitude' = # relative altitude = (value / 100) 
+                'TargetHoldTime' = # Counter set to fixed value and counts down to 0 once it reaches waypoint
+                'CompassHeading' = # compass values in step of 2 degrees
+                'Image' = #Acquired frame from framegrabber
+            }
+        :type CurrentGPSInfoQueue: `multiprocessing.Queue` or `threading.Queue`
+        :param RenderingQueue: queue which stores selected gpstagged frames approx. 1m apart from each other.
+            each read frame from CurrentGPSInfoQueue is checked to see if waypoint has been reached or not.
+            if not it checks if it is 1m away from previously selected frame. 
+            if it is the frame is put in queue in form of a dictionary
+            {   'Latitude' = # 
+                'Longitude' = # 
+                'Altitude' = # 
+                'Image' = # 
+                'StartingHeight' = #
+            }
+            the dictionary is sent to Renderer_Detector by 'RenderingQueue.put(dictionary)'
+        :type RenderingQueue: `multiprocessing.Queue` or `threading.Queue`
+        :param FlyingProcessEvent: boolean type event enabled by 'FlyingProcessEvent.set()' when last waypoint has been reached 
+                                    or flying time is more than maximum allowed drone flying time
+        :type FlyingProcessEvent:`multiprocessing.Event` or `threading.Event`
+        """
         self._PlanningAlgo = Planner( utm_center=(self._CenterUTMInfo[0], self._CenterUTMInfo[1], self._CenterUTMInfo[2], self._CenterUTMInfo[3]), area_size= self._area_sides, tile_distance = self._GridSideLength,  prob_map=self._prob_map, debug=False,vis=None, results_folder=self._out_folder,gridalignedplanpath=self._GridAlignedPathPlanning)
         self._log = setup_logger( 'Flying_logger', os.path.join( self._out_folder, 'FlyControlInfoLog.log'))
         self._gpsframelog = setup_logger( 'GPSFrame_logger', os.path.join( self._out_folder, 'GPSLog.log'))
