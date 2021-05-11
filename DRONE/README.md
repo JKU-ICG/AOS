@@ -33,6 +33,12 @@ Symbol | Description |
 
 Make sure that the [required Python libraries](../requirements.txt), OpenVino, and the Python bindings for [LFR](/LFR/python) are installed.
 
+Compile the drone communication (C code):
+```sh
+**TODO**
+gcc droneCommunication_SI_ZeroTol.c
+```
+
 ## Quick tutorial
 
 
