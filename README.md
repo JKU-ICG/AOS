@@ -5,7 +5,7 @@
 
 ## Publications
 
-This repository contains software for drone-based search and rescue applications as discussed in the following publications:
+This repository contains software for drone-based search and rescue applications with airborne optical sectioning as discussed in the following publications:
 
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (under review), (2021)
   - **Todo** [arXiv (pre-print)]  
