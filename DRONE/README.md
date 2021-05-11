@@ -43,6 +43,10 @@ Make sure that the [required Python libraries](../requirements.txt), OpenVino, a
 ## More detailed usage
 
 
+## Todo
+- [ ] test with Github data (use relative paths)
+- [ ] unittest (optional)
+
 
 
 
