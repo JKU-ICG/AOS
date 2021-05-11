@@ -17,7 +17,8 @@ Open the Visual Studio solution at `/LFR/vs/LFR.sln` and compile it. Compilation
 ### Linux (e.g. a Raspberry Pi) building: 
 Install [GLFW](https://www.glfw.org/) and compile [Assimp](https://www.assimp.org/) first. 
 Then run ...
-XXX ToDo XXX
+
+**XXX ToDo XXX**
 
 
 ## Detailed usage
