@@ -54,11 +54,7 @@ cv2.waitKey()
 
 ## More detailed usage
 
-Training was performed with the [Darknet](https://github.com/AlexeyAB/darknet) software using the YOLOv4-tiny architecture. For details on training the classifier refer to:
-- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, [Search and rescue with airborne optical sectioning](https://arxiv.org/pdf/2009.08835.pdf), Nature Machine Intelligence 2 (12), 783-790, 2020
-  - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
-- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (under review), 2021
-  - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
+Training was performed with the [Darknet](https://github.com/AlexeyAB/darknet) software using the YOLOv4-tiny architecture. For details on training the classifier refer to our most recent [publications](/README.md#publications).
 
 
 ## References/License
