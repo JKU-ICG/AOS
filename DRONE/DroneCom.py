@@ -101,7 +101,7 @@ class DroneCommunication():
     _simulation = False
     _addsynthethicimage = False
     #_so_file = '/home/pi/PyCLFR_AutoDrone/glesLFR/src/droneCommunication_SI_ZeroTol.so'
-    _so_file = os.path.join( Path(__file__).resolve().parent, 'droneCommunication_SI_ZeroTol.so' ) # <- needs to be compiled!
+    _so_file = os.path.join( Path(__file__).resolve().parent, 'dronecommunication.so' ) # <- needs to be compiled!
     _DroneCommunication = None
     _GPSInfoDictList = []
     _SimulationCount = 0
