@@ -1,6 +1,6 @@
 
 # AOS/DRONE: Drone Communication and Flight Logic
-This is a Python implementation for the drone communication and the logic to perform AOS flights.
+This is a Python implementation for drone communication and the logic to perform AOS flights.
 
 ## UML
 ![alt text](../img/uml.svg)

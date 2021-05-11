@@ -118,8 +118,8 @@ class DroneFlyingControl():
         :type CurrentGPSInfoQueueEventQueue:    `multiprocessing.Queue` or `threading.Queue`
         :param SendWayPointInfoQueue: queue which stores info of waypoints to be traversed.
             based on planned waypoints it sends DroneCom Waypoints info to communicate to drone
-            waypoint data is comprised in a dictionary {    'Latitude':  # value =int(gps long x 10000000), 
-                                                            'Longitude': # value =int(gps long x 10000000), 
+            waypoint data is comprised in a dictionary {    'Latitude':  # value =int(gps lat x 10000000), 
+                                                            'Longitude': # value =int(gps lon x 10000000), 
                                                             'Altitude': # value should be desired Altitude in m above starting height,
                                                             'Speed': # value should be desired speed in m/s, 
                                                             'Index':

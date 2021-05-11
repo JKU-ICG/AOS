@@ -10,12 +10,13 @@ import cv2
 import utm
 import random
 from datetime import datetime, timezone
-from CameraControl_MultiProcess import CameraControl
+from ..CAM.CameraControl import CameraControl
 from scipy import interpolate
 from scipy.interpolate import InterpolatedUnivariateSpline
 import logging
 import multiprocessing
 from statistics import mean 
+from pathlib import Path
 
 
 
@@ -92,7 +93,8 @@ def ReadNewGPSReceivedLogFiles(FileName):
 class DroneCommunication():
     _simulation = False
     _addsynthethicimage = False
-    _so_file = '/home/pi/PyCLFR_AutoDrone/glesLFR/src/droneCommunication_SI_ZeroTol.so'
+    #_so_file = '/home/pi/PyCLFR_AutoDrone/glesLFR/src/droneCommunication_SI_ZeroTol.so'
+    _so_file = os.path.join( Path(__file__).resolve().parent, 'droneCommunication_SI_ZeroTol.so' ) # <- needs to be compiled!
     _DroneCommunication = None
     _GPSInfoDictList = []
     _SimulationCount = 0

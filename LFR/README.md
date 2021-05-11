@@ -4,7 +4,7 @@
 This is a C++ implementation of the Light-Field Renderer for Airborne Optical Sectioning. 
 It is based on OpenGL, uses [Dear ImGui](https://github.com/ocornut/imgui) and [WGLF](https://www.glfw.org/) for a basic user interface, and uses [Assimp](https://www.assimp.org/) to load a digital terrain.
 
-
+![alt text](../img/LFR.gif)
 
 ## [Python bindings](/LFR/python/)
 We provide Python bindings, which make it easy to use the renderer in Python projects. To compile them follow the steps described in [`/LFR/python/README`](./python/README.md).

@@ -42,9 +42,9 @@ class Visualizer :
     _pts = None
 
     def  __init__(self, lfr_path):
-        dem_img_file = os.path.join( lfr_path, 'dem.png' )
+        dem_img_file  = os.path.join( lfr_path, 'dem.png' )
         dem_info_file = os.path.join( lfr_path, 'dem_info.json' )
-        dem_obj_file = os.path.join( lfr_path, 'dem.obj' )
+        dem_obj_file  = os.path.join( lfr_path, 'dem.obj' )
 
         with open(dem_info_file) as json_file:
             self._info = json.load(json_file)
@@ -54,8 +54,7 @@ class Visualizer :
             lr_rel_utm = self.relative_utm( [(self._info['cornersUTM'][1][0],self._info['cornersUTM'][1][1])] )
             pts_min = [ul_rel_utm[0][0],lr_rel_utm[0][1]]
             pts_max = [ul_rel_utm[0][1],lr_rel_utm[0][0]]
-        else: # this might be very slow
-        #if True:
+        else: # this might be very slow, because it reads every vertex in the OBJ model
             self._pts = read_dem( dem_obj_file )
             pts_min = np.amin(self._pts, axis=1)
             pts_max = np.amax(self._pts, axis=1)

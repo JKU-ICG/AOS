@@ -22,7 +22,7 @@ import datetime
 import multiprocessing
 from ..PLAN.Planner import Planner
 from ..DRONE.FlyingControl import DroneFlyingControl
-from ..DRONE.DroneCom import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
+#from ..DRONE.DroneCom import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
 from ..DRONE.Renderer_Detector import Renderer
 from ..CAM.CameraControl import CameraControl
 from ..LFR.python.LFR_utils import hdr_mean_adjust
@@ -184,18 +184,35 @@ if __name__ == "__main__":
     #vis = Visualizer( InitializedValuesClass._LFRPath )
     #PlanningAlgoClass = Planner( InitializedValuesClass._utm_center, InitializedValuesClass._area_sides, tile_distance = InitializedValuesClass._GridSideLength,  prob_map=InitializedValuesClass._prob_map, debug=False,vis=None, results_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'),gridalignedplanpath = InitializedValuesClass._GridAlignedPathPlanning)
     
-    CurrentGPSInfoQueue   = multiprocessing.Queue(maxsize=200)  # 
+    CurrentGPSInfoQueue   = multiprocessing.Queue(maxsize=200)  # queue which stores gps tagged frames.  
+        #   reading with `CurrentGPSInfoQueue.get()`   returns a dictionary of the form 
+        #   {   'Latitude' = # gps lat = (value x 0.0000001)
+        #       'Longitude' = # gps lon = (value x 0.0000001)
+        #       'Altitude' = # absolute altitude
+        #       'BaroAltitude' = # relative altitude = (value / 100) 
+        #       'TargetHoldTime' = # Counter set to fixed value and counts down to 0 once it reaches waypoint
+        #       'CompassHeading' = # compass values in step of 2 degrees
+        #       'Image' = #Acquired frame from framegrabber
+        #   }
     SendWayPointInfoQueue = multiprocessing.Queue(maxsize=20)   # waypoint information queue.get() returns a dictionary as:
-     #   {   
-     #       'Latitude':  # x 10000000
-     #       'Longitude': # x 10000000
-     #       'Altitude': # x 10
-     #       'Speed': # x 10
-     #       'Index':
-     #   }
-    # CurrentGPSInfoQueueEventQueue = multiprocessing.Queue(maxsize=20)
-    RenderingQueue = multiprocessing.Queue(maxsize=200) 
-    FrameQueue = multiprocessing.Queue(maxsize=200)             # dictionary of the form { 'Frames': [img1, img2, ...] 'FrameTimes': [time1, time2, ...] }
+        #      {    'Latitude':  # value = int (gps lat x 10000000), 
+        #           'Longitude': # value = int (gps lon x 10000000), 
+        #           'Altitude': # value should be desired Altitude in m above starting height,
+        #           'Speed': # value should be desired speed in m/s, 
+        #           'Index':
+        #       }
+    RenderingQueue = multiprocessing.Queue(maxsize=200) # queue with geotagged frames with ~1m spacing
+        #   in the form of a dictionary
+        #    {   'Latitude' = # 
+        #        'Longitude' = # 
+        #        'Altitude' = # 
+        #        'Image' = # 
+        #        'StartingHeight' = #
+        #    }
+    FrameQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
+        #   {   'Frames': [img1, img2, ...],  
+        #       'FrameTimes': [time1, time2, ...] 
+        #   }
     
     # events are only binary
     DroneProcessEvent = multiprocessing.Event()     # enabling this event (.set) stops the DroneCommunication process terminally (only do once)
