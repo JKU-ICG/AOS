@@ -12,7 +12,7 @@ import datetime
 from scipy.stats import circmean
 
 from PathVisualizer import Visualizer
-from Planner_Indrajit import Planner
+from Planner import Planner
 from Flight_utils import FindStartingHeight, haversine, ReadInterpolatedGPSlogFiles
 
 from Drone_Communication_MultiProcess import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles

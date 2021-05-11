@@ -7,26 +7,35 @@ import glob
 import numpy as np
 import math
 import logging
-import pyaos
 import json
 import cv2
 import utm
 import matplotlib.pyplot as plt
 from PIL import Image
-detection = False
-if detection :
-    import naos_det
-    import importlib
-    importlib.reload(naos_det) # this makes sure that changes in naos_det.py have an effect
 import datetime
 import multiprocessing
-from ..PLAN.Planner import Planner
-from ..DRONE.FlyingControl import DroneFlyingControl
+
+from pathlib import Path
+import sys
+detection = False
+
+# to find the local modules we need to add the folders to sys.path
+cur_file_path = Path(__file__).resolve().parent
+sys.path.insert(1, cur_file_path )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'PLAN') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'DET') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
+import pyaos
+detection = False
+if detection :
+    from detector import Detector
+from Planner import Planner
+from FlyingControl import DroneFlyingControl
 #from ..DRONE.DroneCom import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
-from ..DRONE.Renderer_Detector import Renderer
-from ..CAM.CameraControl import CameraControl
-from ..LFR.python.LFR_utils import hdr_mean_adjust
-from ..PLAN.PathVisualizer import Visualizer
+from Renderer_Detector import Renderer
+from CameraControl import CameraControl
+from LFR_utils import hdr_mean_adjust
+from PathVisualizer import Visualizer
 from scipy.stats import circmean
 import random
 from scipy import interpolate
