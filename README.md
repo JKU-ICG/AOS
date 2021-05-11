@@ -14,14 +14,13 @@ This repository contains software for drone-based search and rescue applications
   - [Nature (final version)](https://www.nature.com/articles/s42256-020-00261-3) 
   - [arXiv (pre-print)](https://arxiv.org/pdf/2009.08835.pdf)
   - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
-- I. Kurmi, D. C. Schedl, O. Bimber, Fast automatic visibility optimization for thermal synthetic aperture visualization, IEEE Geosci. Remote Sens. Lett. available at https://doi.org/10.1109/LGRS.2020.2987471 (2020).
-- D. C. Schedl, I. Kurmi, O. Bimber, Airborne optical sectioning for nesting observation. Sci Rep. 10, 7254 (2020).
-- I. Kurmi, D. C. Schedl, O. Bimber, Thermal airborne optical sectioning. Remote Sensing. 11, 1668 (2019).
-- I. Kurmi, D. C. Schedl, O. Bimber, A statistical view on synthetic aperture imaging for occlusion removal. IEEE Sensors J. 19, 9374 – 9383 (2019).
-- O. Bimber, I. Kurmi, D. C. Schedl, Synthetic aperture imaging with drones. IEEE Computer Graphics and Applications. 39, 8 – 15 (2019).
-- I. Kurmi, D. C. Schedl, O. Bimber, Airborne optical sectioning. Journal of Imaging. 4, 102 (2018).
-
-
+- Indrajit Kurmi, David C. Schedl, Oliver Bimber, Fast automatic visibility optimization for thermal synthetic aperture visualization, IEEE Geosci. Remote Sens. Lett. available at https://doi.org/10.1109/LGRS.2020.2987471 (2020).
+- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Airborne Optical Sectioning for Nesting Observation. Sci Rep 10, 7254, https://doi.org/10.1038/s41598-020-63317-9 (2020).
+  - [Nature (final version)](https://www.nature.com/articles/s41598-020-63317-9) 
+- Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Thermal airborne optical sectioning. Remote Sensing. 11, 1668 (2019).
+- Indrajit Kurmi, David C. Schedl, and Oliver Bimber, A statistical view on synthetic aperture imaging for occlusion removal. IEEE Sensors J. 19, 9374 – 9383 (2019).
+- Oliver Bimber, Indrajit Kurmi, and David C. Schedl, Synthetic aperture imaging with drones. IEEE Computer Graphics and Applications. 39, 8 – 15 (2019).
+- Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Airborne optical sectioning. Journal of Imaging. 4, 102 (2018).
 
 
 
