@@ -60,8 +60,6 @@ XXX script compiles everything XXX
 
 A detailed description on how to compile indivdual modules can be found in every modules folder.
 
-## Demo
-
 
 ## License
 * Data: Creative Commons Attribution 4.0 International
