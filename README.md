@@ -71,25 +71,25 @@ All other modules (LFR, DET, CAM, PLAN) have to be installed before the DRONE mo
 
 ## Hardware
 
-For our prototype, an octocopter (MikroKopter OktoXL 6S12, two LiPo 4500mAh batteries, 4.5kg to 4.9kg;) carries our payload. In the course of the project 3 versions of payloads with varying components have been used.
+For our prototype, an octocopter (MikroKopter OktoXL 6S12, two LiPo 4500 mAh batteries, 4.5 kg to 4.9 kg;) carries our payload. In the course of the project 3 versions of payloads with varying components have been used.
 
 Prototype        |  Payload
 :-------------------------:|:-------------------------:
 ![prototype_2021](./img/prototype_2021.jpg) | ![payload](./img/payload.svg)
 
 ### Payload Version 1
-Initially, the drone was equipped with a thermal camera (FlirVue Pro; 9mm fixed focal length lens; 7.5μm to 13.5μm spectral band; 14 bit non-radiometric) and an RGB camera (Sony Alpha 6000; 16mm to 50mm lens at infinite focus).
+Initially, the drone was equipped with a thermal camera (FlirVue Pro; 9 mm fixed focal length lens; 7.5 μm to 13.5 μm spectral band; 14 bit non-radiometric) and an RGB camera (Sony Alpha 6000; 16 mm to 50 mm lens at infinite focus).
 The cameras were fixed to a rotatable gimbal, were triggered synchronously (synched by a MikroKopter CamCtrl controlboard), and pointed downwards during all flights. 
 The flight was planned using MikroKopter's flight planning software and uploaded to the drone as waypoints. 
 The waypoint protocol triggered the cameras every 1m along the flight path, and the recorded images were stored on the cameras’ internal memory cards. Processing was done offline after landing the drone.
 
 ### Payload Version 2
 For the second iteration, the RGB camera was removed. 
-Instead we mounted a single-board  system-on-chip computer (SoCC) (RaspberryPi 4B; 5.6 cm × 8.6 cm; 65 g; 8 GB ram), an LTE communication hat (Sixfab 3G/4G & LTE base hat and a SIM card; 5.7 cm × 6.5 cm; 35 g), and a Vision Processing Unit (VPU) (Intel Neural Compute Stick 2; 7.2 cm × 2.7 cm × 1.4 cm; 30 g). The equipments weighted 320g and was mounted on the rotatable gimbal. 
+Instead we mounted a single-board  system-on-chip computer (SoCC) (RaspberryPi 4B; 5.6 cm × 8.6 cm; 65 g; 8 GB ram), an LTE communication hat (Sixfab 3G/4G & LTE base hat and a SIM card; 5.7 cm × 6.5 cm; 35 g), and a Vision Processing Unit (VPU) (Intel Neural Compute Stick 2; 7.2 cm × 2.7 cm × 1.4 cm; 30 g). The equipments weighted 320 g and was mounted on the rotatable gimbal. 
 In comparison to Version 1, this setup allows full processing on the drone (including path planning and triggering the camera).
 
 ### Payload Version 3
-The third version additionally mounts a Flir power module providing HDMI video output from the camera (640x480 @30Hz; 15g), and a video capture card (totaling 350g).
+The third version additionally mounts a Flir power module providing HDMI video output from the camera (640x480, 30 Hz; 15 g), and a video capture card (totaling 350g).
 In comparison to Version 2, this setup allows faster thermal recordings and thus faster flying speeds.
 The [CAM module](CAM/README.md) supports Version 3 of our Payload.
 
