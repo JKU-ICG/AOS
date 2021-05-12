@@ -107,9 +107,3 @@ The open field dataset is a linear flight without high vegetation and was record
 ## License
 * Data: Creative Commons Attribution 4.0 International
 * Code: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
-
-
-## Todo
-* [ ] rework READMEs
-* [ ] add videos/gifs
-* [ ] merge restruct into main branch and remove other branches
