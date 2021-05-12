@@ -122,7 +122,7 @@ if __name__ == "__main__":
     CameraClass = CameraControl(FlirAttached=Init._FlirAttached, ... )
     # Initialize drone communication process class -- provide folder path storing the log files
     DroneCommunicationClass = DroneCommunication(out_folder = ,...)
-    # Initialize flying control process class -- provide no od samples after rendering should be performed, 
+    # Initialize flying control process class -- provide no of samples after rendering should be performed, 
     # and initilize using Init class
     FlyingControlClass = DroneFlyingControl(RenderAfter = 3, ...)
     # Initialize rendering and detector process class -- provide folder path storing the log files 
