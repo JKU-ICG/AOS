@@ -39,3 +39,6 @@ python/pyaos.cpp
 */__pycache__
 .vscode/settings.json
 LFR/python/__pycache__/LFR_utils.cpython-37.pyc
+img/raw/*
+LFR/vs/.vs/*
+LFR/vs/imgui.ini
