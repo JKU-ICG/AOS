@@ -70,8 +70,10 @@ if __name__ == "__main__":
     Init = InitializationClass(sitename="sitename", area_sides = (90,90), DroneFlyingSpeed=6, Flying_Height = 35, 
                                 GridSideLength = 90)
 
-    CurrentGPSInfoQueue   = multiprocessing.Queue(maxsize=200) # queue which stores gps tagged frames.  
-        #   reading with `CurrentGPSInfoQueue.get()`   returns a dictionary of the form 
+    CurrentGPSInfoQueue   = multiprocessing.Queue(maxsize=200) # queue which stores gps tagged frames.
+        #   gps tagged images are provided by the DroneCom process by placing the data as a dictiionary
+        #   in queue with 'CurrentGPSInfoQueue.put(data)' 
+        #   reading with `CurrentGPSInfoQueue.get()` in FlightCntrl returns a dictionary of the form 
         #   {   'Latitude' = # gps lat in degrees
         #       'Longitude' = # gps lon in degrees
         #       'Altitude' = # absolute altitude
@@ -80,15 +82,19 @@ if __name__ == "__main__":
         #       'CompassHeading' = # compass values in step of 2 degrees
         #       'Image' = #Acquired frame from framegrabber
         #   }
-    SendWayPointInfoQueue = multiprocessing.Queue(maxsize=20) # waypoint information queue.get() returns a dictionary as:
+    SendWayPointInfoQueue = multiprocessing.Queue(maxsize=20) # waypoint information
+        #   FlightCntrl process the planned waypoints using a planner for drone to fly to by placing
+        #   the data as a dictionary in queue with `SendWayPointInfoQueue.put(data)` and 
+        #   `SendWayPointInfoQueue.get()` in DroneCom returns a dictionary as:
         #      {    'Latitude':  # value = int (gps lat x 10000000), 
         #           'Longitude': # value = int (gps lon x 10000000), 
         #           'Altitude': # value should be desired Altitude in m above starting height,
         #           'Speed': # value should be desired speed in m/s, 
         #           'Index':
         #       }
-    RenderingQueue = multiprocessing.Queue(maxsize=200) # queue with geotagged frames with ~1m spacing
-        #   in the form of a dictionary
+    RenderingQueue = multiprocessing.Queue(maxsize=200) # queue with geotagged frames
+        #   FlightCntrl process and RenderDetect process communicates 
+        #   uniformly sampled (currently ~1m spacing) gps tagged samples in the form of a dictionary
         #    {   'Latitude' = # 
         #        'Longitude' = # 
         #        'Altitude' = #
@@ -98,11 +104,15 @@ if __name__ == "__main__":
         #        'Render' = # boolean indicating after adding which frame we should render
         #        'UpdatePlanningAlgo' = # boolean indicating after adding which frame we should send the detections
         #    }
-    FrameQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
+    FrameQueue = multiprocessing.Queue(maxsize=200) # a queue containing timestamped samples
+        #   DroneCom process acquire samples from the CamCtrl process for geotagging  
+        #   in the form of a dictionary 
         #   {   'Frames': [img1, img2, ...],  
         #       'FrameTimes': [time1, time2, ...] 
         #   }
-    DetectionInfoQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
+    DetectionInfoQueue = multiprocessing.Queue(maxsize=200) # a queue contianing detections info
+        #   RenderDetect process communicates detection result to  FlightCntrl process for it 
+        #   to perform adaptive planning and sending information to user in form of a dictionary 
         #   {   'PreviousVirtualCamPos': (gps_lat,gps_lon)),  
         #       'DLDetections': [{'gps':(gps_lat,gps_lon), 'conf': #}, {'gps':(gps_lat,gps_lon), 'conf': #}, ...]
         #       'DetectedImageName' : #full written image name

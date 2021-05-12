@@ -35,6 +35,7 @@ from FlyingControl import DroneFlyingControl
 #from ..DRONE.DroneCom import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
 from Renderer_Detector import Renderer
 from CameraControl import CameraControl
+from DroneCom import DroneCommunication
 from LFR_utils import hdr_mean_adjust
 from PathVisualizer import Visualizer
 from scipy.stats import circmean
