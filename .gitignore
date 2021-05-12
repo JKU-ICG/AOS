@@ -5,11 +5,16 @@
 *.slo
 *.lo
 *.o
+*.obj
 
 # Precompiled Headers
 *.gch
 *.pch
 
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
 
 # Fortran module files
 *.mod
@@ -31,6 +36,10 @@
 /tests/x64/Debug
 python/pyaos.cp37-win_amd64.pyd
 python/pyaos.cpp
-python/__pycache__/minrunscript.cpython-37.pyc
-python/build/temp.*
-python/build/temp.win*
+*/__pycache__
+.vscode/settings.json
+LFR/python/__pycache__/LFR_utils.cpython-37.pyc
+img/raw/*
+LFR/vs/.vs/*
+LFR/vs/imgui.ini
+LFR/vs/benchmark.json
