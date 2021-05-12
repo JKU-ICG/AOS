@@ -4,6 +4,8 @@
 This is a Python implementation for the person classification used in Airborne Optical Sectioning. 
 Inference is done with the [OpenVINO](https://docs.openvinotoolkit.org/latest/index.html) toolkit and supports performance boosts via Intel's Neural Compute Stick and similar VPUs. The latter is a requirement to run object detection on low-power devices such as a Raspberry Pi.
 
+![detections](../img/DET.gif) 
+
 ## Requirements
 
 Install the [OpenVINO](https://docs.openvinotoolkit.org/latest/index.html) toolkit and make sure it is running.
@@ -54,7 +56,8 @@ cv2.waitKey()
 
 ## More detailed usage
 
-Training was performed with the [Darknet](https://github.com/AlexeyAB/darknet) software using the YOLOv4-tiny architecture. For details on training the classifier refer to our most recent [publications](/README.md#publications).
+The training was performed with the [Darknet](https://github.com/AlexeyAB/darknet) software using the YOLOv4-tiny architecture. For details on training the classifier, refer to our most recent [publications](/README.md#publications).
+A trained network is provided in the [`weights` folder.](./weights)
 
 
 ## References/License

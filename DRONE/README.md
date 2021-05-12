@@ -3,6 +3,10 @@
 This folder contains a Python implementation for drone communication and the logic to perform AOS flights.
 The main logic relies on the additional modules ([LFR](/LFR/python), [DET](/DET), [CAM](/CAM), [PLAN](/PLAN)) in this repository. 
 
+Prototype | Adaptive Sampling |
+:---: | :---: |
+![drone](../img/drone.gif) | ![drone](../img/adaptive.gif) 
+
 While running on the drone, the modules run in 4 separate processes that communicate via signal queues. 
 The processes are:
 - [CamCtrl](/CAM/CameraControl.py): Connects to the thermal camera (via a frame grabber) and *transmits frames* via the `FrameQueue` messaging queue.
@@ -15,9 +19,8 @@ Person detections from Render & Detect are feed to the [Planner](/PLAN/Planner.p
 An outline of the processes and the inter-process messages can be found in the [process scheme below](#process-scheme). 
 Further details on the message queues can be found in the [quick tutorial](#quick-tutorial)
 
-
 ## Process scheme
-![alt text](../img/uml.svg)
+![uml](../img/uml.svg)
 
 ### Legend
 
