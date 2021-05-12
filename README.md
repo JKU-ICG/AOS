@@ -48,7 +48,7 @@ This repository contains software for drone-based search and rescue applications
 
 ## Hardware
 
-XXX picture of our setup XXX
+XXXX picture of our setup XXX
 
 Drone MK Okto XL
 
