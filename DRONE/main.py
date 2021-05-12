@@ -25,6 +25,7 @@ sys.path.insert(1, cur_file_path )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'PLAN') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'DET') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
 import pyaos
 detection = False
 if detection :
@@ -230,6 +231,11 @@ if __name__ == "__main__":
     FrameQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
         #   {   'Frames': [img1, img2, ...],  
         #       'FrameTimes': [time1, time2, ...] 
+        #   }
+    DetectionInfoQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
+        #   {   'PreviousVirtualCamPos': (gps_lat,gps_lon)),  
+        #       'DLDetections': [{'gps':(gps_lat,gps_lon), 'conf': #}, {'gps':(gps_lat,gps_lon), 'conf': #}, ...]
+        #       'DetectedImageName' : #full written image name
         #   }
     
     # events are only binary

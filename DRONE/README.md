@@ -43,6 +43,102 @@ cc -fPIC -sshhared -std=c++17 -o dronecommunication.so dronecommunication.c
 
 ```py
 # Todo
+import multiprocessing
+from pathlib import Path
+import sys
+import os
+import time
+import json
+
+# to find the local modules we need to add the folders to sys.path
+cur_file_path = Path(__file__).resolve().parent
+sys.path.insert(1, cur_file_path )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'PLAN') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'DET') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
+sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
+
+from FlyingControl import DroneFlyingControl
+from Renderer_Detector import Renderer
+from CameraControl import CameraControl
+
+if __name__ == "__main__":
+    # Initialize Main Class and indicate foldername containing DEM folder containing DEM and its details, indicate drone flying speed, altitude and grid length
+    Init = InitializationClass(sitename="sitename", area_sides = (90,90), DroneFlyingSpeed=6, Flying_Height = 35, GridSideLength = 90)
+
+    CurrentGPSInfoQueue   = multiprocessing.Queue(maxsize=200)  # queue which stores gps tagged frames.  
+        #   reading with `CurrentGPSInfoQueue.get()`   returns a dictionary of the form 
+        #   {   'Latitude' = # gps lat in degrees
+        #       'Longitude' = # gps lon in degrees
+        #       'Altitude' = # absolute altitude
+        #       'BaroAltitude' = # relative altitude = (value / 100) 
+        #       'TargetHoldTime' = # Counter set to fixed value and counts down to 0 once it reaches waypoint
+        #       'CompassHeading' = # compass values in step of 2 degrees
+        #       'Image' = #Acquired frame from framegrabber
+        #   }
+    SendWayPointInfoQueue = multiprocessing.Queue(maxsize=20)   # waypoint information queue.get() returns a dictionary as:
+        #      {    'Latitude':  # value = int (gps lat x 10000000), 
+        #           'Longitude': # value = int (gps lon x 10000000), 
+        #           'Altitude': # value should be desired Altitude in m above starting height,
+        #           'Speed': # value should be desired speed in m/s, 
+        #           'Index':
+        #       }
+    RenderingQueue = multiprocessing.Queue(maxsize=200) # queue with geotagged frames with ~1m spacing
+        #   in the form of a dictionary
+        #    {   'Latitude' = # 
+        #        'Longitude' = # 
+        #        'Altitude' = #
+        #        'CompassHeading' = #  
+        #        'Image' = # 
+        #        'StartingHeight' = #
+        #        'Render' = # boolean indicating after adding which frame we should render
+        #        'UpdatePlanningAlgo' = # boolean indicating after adding which frame we should send the detections
+        #    }
+    FrameQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
+        #   {   'Frames': [img1, img2, ...],  
+        #       'FrameTimes': [time1, time2, ...] 
+        #   }
+    DetectionInfoQueue = multiprocessing.Queue(maxsize=200) # a queue element is a dictionary of the form 
+        #   {   'PreviousVirtualCamPos': (gps_lat,gps_lon)),  
+        #       'DLDetections': [{'gps':(gps_lat,gps_lon), 'conf': #}, {'gps':(gps_lat,gps_lon), 'conf': #}, ...]
+        #       'DetectedImageName' : #full written image name
+        #   }
+    
+    # Initialize camera process class -- provide status of flir connection and folder path storing the log files
+    CameraClass = CameraControl(FlirAttached=Init._FlirAttached, out_folder = )
+    # Initialize drone communication process class -- provide folder path storing the log files
+    DroneCommunicationClass = DroneCommunication(out_folder=)
+    # Initialize flying control process class -- provide no od samples after rendering should be performed, and initilize using Init class
+    FlyingControlClass = DroneFlyingControl(RenderAfter = 3, out_folder= , sitename = Init._sitename,CenterEast = Init._CenterEast,
+                                            CenterNorth = Init._CenterNorth,objectmodelpath=Init._ObjModelPath, basedatapath=Init._basedatapath,
+                                            FlirAttached = Init._FlirAttached,Flying_Height = Init._Flying_Height,DroneFlyingSpeed = Init._DroneFlyingSpeed, 
+                                            CenterUTMInfo=Init._CenterUTMInfo, area_sides=Init._area_sides,GridSideLength=Init._GridSideLength,
+                                            GridAlignedPathPlanning=Init._GridAlignedPathPlanning, prob_map=Init._prob_map, adddebugInfo=True)
+    # Initialize rendering and detector process class -- provide folder path storing the log files and initilize using Init class
+    RendererClass = Renderer(results_folder=, CenterUTMInfo=Init._CenterUTMInfo,ObjModelPath=Init._ObjModelPath,
+                            ObjModelImagePath=Init._ObjModelImagePath,basedatapath=Init._basedatapath,
+                            sitename=Init._sitename, FieldofView=Init._FieldofView,adddebuginfo=True)
+
+    # Call the function of  rendering and detector as a separate process and start the process
+    RenderProcess = multiprocessing.Process(name='RenderingProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
+    RenderProcess.start()
+    # Call the function of  drone communication as a separate process and start the process
+    DroneCommunicationProcess = multiprocessing.Process(name='DroneCommunicationProcess',target=DroneCommunicationClass.DroneInfo, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent))
+    DroneCommunicationProcess.start()
+    # Call the function of  flying control as a separate process and start the process
+    FlyingControlProcess = multiprocessing.Process(name='FlyingControlProcess',target= FlyingControlClass.FlyingControl, args=(CurrentGPSInfoQueue,SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent))
+    FlyingControlProcess.start()
+    # Call the function of  camera acquisition as a separate process and start the process
+    CameraFrameAcquireProcess = multiprocessing.Process(name='CameraFrameAcquireProcess', target=CameraClass.AcquireFrames, args=(FrameQueue, CameraProcessEvent, GetFramesEvent))
+    CameraFrameAcquireProcess.start()
+
+    
+
+    
+    
+
+
+
 ```
 
 ## More detailed usage

@@ -42,3 +42,4 @@ LFR/python/__pycache__/LFR_utils.cpython-37.pyc
 img/raw/*
 LFR/vs/.vs/*
 LFR/vs/imgui.ini
+LFR/vs/benchmark.json
