@@ -34,8 +34,7 @@ Symbol | Description |
 Make sure that the [required Python libraries](../requirements.txt), OpenVino, and the Python bindings for [LFR](/LFR/python) are installed.
 
 **Todo** Compile the drone communication (C code):
-```sh
-**TODO**
+```
 cc -fPIC -shared -std=c++17 -o dronecommunication.so dronecommunication.c
 ```
 
@@ -50,7 +49,6 @@ cc -fPIC -shared -std=c++17 -o dronecommunication.so dronecommunication.c
 
 
 ## Todo
-- [ ] test with Github data (use relative paths)
 - [ ] unittest (optional)
 
 
