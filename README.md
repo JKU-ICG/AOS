@@ -103,7 +103,5 @@ The [CAM module](CAM/README.md) supports Version 3 of our Payload.
 
 ## Todo
 * [ ] rework READMEs
-* [ ] LFR/Makefile
-* [ ] Drone/Makefile
 * [ ] add videos/gifs
 * [ ] merge restruct into main branch and remove other branches
