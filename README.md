@@ -32,18 +32,21 @@ This repository contains software for drone-based search and rescue applications
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Fast automatic visibility optimization for thermal synthetic aperture visualization, IEEE Geosci. Remote Sens. Lett. available at https://doi.org/10.1109/LGRS.2020.2987471 (2020).
   - [IEEE (final version)](https://ieeexplore.ieee.org/document/9086501) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2005.04065)
+  - [Video on YouTube](https://www.youtube.com/watch?v=39GU1BOCfWQ&ab_channel=JKUInstituteofComputerGraphics)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Airborne Optical Sectioning for Nesting Observation. Sci Rep 10, 7254, https://doi.org/10.1038/s41598-020-63317-9 (2020).
   - [Nature (open access and final version)](https://www.nature.com/articles/s41598-020-63317-9) 
   - [Video on YouTube](www.youtube.com/watch?v=81l-Y6rVznI)
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Thermal airborne optical sectioning. Remote Sensing. 11, 1668, DOI: 10.3390/rs11141668, (2019).
   - [MDPI (open access and final version)](https://www.mdpi.com/2072-4292/11/14/1668) 
+  - [Video on YouTube](https://www.youtube.com/watch?v=_t2GEwA_tus&ab_channel=JKUCG)
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, A statistical view on synthetic aperture imaging for occlusion removal. IEEE Sensors J. 19, 9374 – 9383 (2019).
   - [IEEE (final version)](https://ieeexplore.ieee.org/document/8736348)
   - [arXiv (pre-print)](https://arxiv.org/abs/1906.06600) 
 - Oliver Bimber, Indrajit Kurmi, and David C. Schedl, Synthetic aperture imaging with drones. IEEE Computer Graphics and Applications. 39, 8 – 15 (2019).
   - [IEEE (open access and final version)](https://doi.ieeecomputersociety.org/10.1109/MCG.2019.2896024) 
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Airborne optical sectioning. Journal of Imaging. 4, 102 (2018).
-  - [MDPI (open access and final version)](https://www.mdpi.com/2313-433X/4/8/102) 
+  - [MDPI (open access and final version)](https://www.mdpi.com/2313-433X/4/8/102)
+  - [Video on YouTube](https://www.youtube.com/watch?v=ELnvBfafnRA&ab_channel=JKUCG) 
 
 
 
