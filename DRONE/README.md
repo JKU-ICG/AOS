@@ -119,25 +119,15 @@ if __name__ == "__main__":
         #   }
     
     # Initialize camera process class -- provide status of flir connection and folder path storing the log files
-    CameraClass = CameraControl(FlirAttached=Init._FlirAttached, out_folder = )
+    CameraClass = CameraControl(FlirAttached=Init._FlirAttached, ... )
     # Initialize drone communication process class -- provide folder path storing the log files
     DroneCommunicationClass = DroneCommunication(out_folder =)
     # Initialize flying control process class -- provide no od samples after rendering should be performed, 
     # and initilize using Init class
-    FlyingControlClass = DroneFlyingControl(RenderAfter = 3, 
-                                out_folder = , sitename = Init._sitename,CenterEast = Init._CenterEast,
-                                CenterNorth = Init._CenterNorth,objectmodelpath = Init._ObjModelPath, 
-                                basedatapath=Init._basedatapath, FlirAttached = Init._FlirAttached,
-                                Flying_Height = Init._Flying_Height,DroneFlyingSpeed = Init._DroneFlyingSpeed, 
-                                CenterUTMInfo = Init._CenterUTMInfo, area_sides = Init._area_sides,
-                                GridSideLength = Init._GridSideLength,
-                                GridAlignedPathPlanning = Init._GridAlignedPathPlanning,
-                                prob_map = Init._prob_map, adddebugInfo = True)
+    FlyingControlClass = DroneFlyingControl(RenderAfter = 3, ...)
     # Initialize rendering and detector process class -- provide folder path storing the log files 
     # and initilize using Init class
-    RendererClass = Renderer(results_folder =, CenterUTMInfo = Init._CenterUTMInfo,ObjModelPath = Init._ObjModelPath,
-                            ObjModelImagePath = Init._ObjModelImagePath,basedatapath = Init._basedatapath,
-                            sitename = Init._sitename, FieldofView = Init._FieldofView,adddebuginfo=True)
+    RendererClass = Renderer(results_folder =, ...)
 
     # Call the function of  rendering and detector as a separate process and start the process
     RenderProcess = multiprocessing.Process(name ='RenderingProcess', 
