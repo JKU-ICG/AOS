@@ -36,7 +36,7 @@ Symbol | Description |
 
 Make sure that the [required Python libraries](../requirements.txt), OpenVino, and the Python bindings for [LFR](/LFR/python) are installed. 
 Communication with the drone is only supported on Unix systems (e.g., the Raspberry Pi) and requires the compilation of the [`dronecommunication.c`](dronecommunication.c) file.
-To compile the required shared object file, change the current directory to `[DRONE](/DRONE)` and execute the following shell command:
+To compile the required shared object file, change the current directory to [`DRONE`](/DRONE) and execute the following shell command:
 
 ```sh
 cc -fPIC -sshhared -std=c++17 -o dronecommunication.so dronecommunication.c
