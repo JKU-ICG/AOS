@@ -59,11 +59,15 @@ from Renderer_Detector import Renderer
 from CameraControl import CameraControl
 from DroneCom import DroneCommunication
 
-# Initialize by indicating a foldername (`sitename`), the drone flying speed, flying altitude, and the properties of the search parameters (size as `area_sides` and cell size as `GridSideLength`). Ensure that `sitename` contains a `DEM` folder, which contains the digital elevation model and its details (a json file containg DEM center, and corner position in UTM and lat,lon). See `/data/open_field/DEM` for an example. 
+# Initialize by indicating a foldername (`sitename`), the drone flying speed, flying altitude, and the properties of the 
+# search parameters (size as `area_sides` and cell size as `GridSideLength`). Ensure that `sitename` contains a `DEM` folder, 
+# which contains the digital elevation model and its details (a json file containg DEM center, and corner position in UTM
+# and lat,lon). See `/data/open_field/DEM` for an example. 
 Init = InitializationClass(sitename="sitename", area_sides = (90,90), DroneFlyingSpeed=6, Flying_Height = 35, 
                             GridSideLength = 90)
 
-# Then init the inter-process message queues. Data is retrieved and put in the queues with `Queue.get()` and `Queue.put(data)` commands. 
+# Then init the inter-process message queues. Data is retrieved and put in the queues with `Queue.get()` and `Queue.put(data)` 
+# commands. 
 FrameQueue = multiprocessing.Queue(maxsize=200) # frames, times | CamCtrl ==> DroneCom
     #   {   'Frames': [img1, img2, ...],  
     #       'FrameTimes': [time1, time2, ...] 
@@ -108,7 +112,8 @@ DroneCom = DroneCommunication(out_folder = './logs',...) # DroneCom
 FlightCtrlPlanner = DroneFlyingControl(RenderAfter = 3, ...) # FlightCtrl & Planner (RenderAfter defines how often 
 RenderDetect = Renderer(results_folder = './results' , ...) # Render & Detect
 
-# Set up processes using `multiprocessing` or `threading` and provide the message queues and some events for inter-message communication:
+# Set up processes using `multiprocessing` or `threading` and provide the message queues and some events for 
+# inter-message communication:
 RenderProcess = multiprocessing.Process(name ='RenderingProcess', target = RenderDetect.RendererandDetectContinuous,
     args = (RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
 DroneCommunicationProcess = multiprocessing.Process(name = 'DroneCommunicationProcess', target = DroneCom.DroneInfo, 
