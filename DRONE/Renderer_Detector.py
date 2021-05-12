@@ -26,7 +26,7 @@ sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
 
 import pyaos
-detection = True
+detection = False
 if detection :
     from detector import Detector
 from matplotlib import pyplot as plt
@@ -372,18 +372,26 @@ class Renderer :
 # __name__ guard 
 if __name__ == '__main__':
     
-    sitename = '20210323_OpenField_T4NA_S1'
+    sitename = 'open_field'
     #anaos_path = os.environ.get('ANAOS_DATA')
 
     # Todo: change to 
     
-    #basedatapath = '../data'
-    basedatapath = 'D:\\ResilioSync\\ANAOS\\SIMULATIONS'
-    ImageLocation = os.path.join(basedatapath, 'FlightResults',sitename, 'Frames_renamed')
-    ObjModelPath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.obj')
-    ObjModelImagePath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.png')
-    DemInfoJSOn = os.path.join(basedatapath, 'FlightResults',sitename, 'LFR','dem_info.json')
-    GpsLogFile = os.path.join(basedatapath, 'FlightResults',sitename, 'GPSLog.log')
+    #basedatapath = '../../data'
+    #basedatapath = 'D:\\ResilioSync\\ANAOS\\SIMULATIONS'
+    #ImageLocation = os.path.join(basedatapath, 'FlightResults',sitename, 'Frames_renamed')
+    #ObjModelPath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.obj')
+    #ObjModelImagePath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.png')
+    #DemInfoJSOn = os.path.join(basedatapath, 'FlightResults',sitename, 'LFR','dem_info.json')
+    #GpsLogFile = os.path.join(basedatapath, 'FlightResults',sitename, 'GPSLog.log')
+
+    basedatapath = Path(__file__).resolve().parent
+    ImageLocation = os.path.join(basedatapath, '..', 'data',sitename, 'images')
+    ObjModelPath = os.path.join(basedatapath, '..', 'data',sitename, 'DEM','dem.obj')
+    ObjModelImagePath = os.path.join(basedatapath,'..', 'data', sitename, 'DEM','dem.png')
+    DemInfoJSOn = os.path.join(basedatapath, '..', 'data',sitename, 'DEM','dem_info.json')
+    GpsLogFile = os.path.join(basedatapath, '..', 'data',sitename, 'log','GPSLog.log')
+
     with open(DemInfoJSOn) as json_file:
         DemInfoDict = json.load(json_file)
     print(DemInfoDict)
@@ -391,8 +399,8 @@ if __name__ == '__main__':
     CenterEast = CenterUTMInfo[0]   
     CenterNorth = CenterUTMInfo[1]
     FieldofView = 43.10803984095769#43.50668199945787
-    startLat = 48.336073#48.3360345 
-    startLon = 14.3264081#14.3264914
+    startLat = 48.3360975#48.3360345 
+    startLon = 14.326456395277228#14.3264914
     startEast,startNorth,Block,UTMZONE = utm.from_latlon(startLat, startLon)
     StartCenteredEastUTM = startEast - CenterEast
     StartCenteredNorthUTM = CenterNorth - startNorth
@@ -411,7 +419,7 @@ if __name__ == '__main__':
     #PlanningAlgoClass = Planner( utm_center, (150,150), tile_distance = 150,  prob_map=None, debug=False,vis=None, results_folder=os.path.join(basedatapath,'FlightResults', sitename, 'Log'),gridalignedplanpath = True)
     
     RendererClass = Renderer(CenterUTMInfo=CenterUTMInfo,ObjModelPath=ObjModelPath, ObjModelImagePath=ObjModelImagePath,basedatapath=basedatapath,
-    sitename=sitename,results_folder=os.path.join(basedatapath,'FlightResults',sitename, 'RendereredResults_Deferred'), device="CPU", # device should be MYRIAD for Neural Compute Stick
+    sitename=sitename,results_folder=os.path.join(basedatapath, '..', 'data', sitename, 'testresults'), device="CPU", # device should be MYRIAD for Neural Compute Stick
     FieldofView=float(FieldofView),adddebuginfo=True,Detect=detection)
     
     RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent,))
@@ -420,7 +428,7 @@ if __name__ == '__main__':
     EastUtmList = []
     NorthUtmList = []
     for i in range(len(LatitudeExtendedCellList)):
-        ReadImageName = os.path.join(basedatapath,'FlightResults', sitename, 'Frames_renamed', str(i+1)+'.png')
+        ReadImageName = os.path.join(ImageLocation, str(i+1)+'.png')
         Frame = cv2.imread(ReadImageName)
         #print('MaxFrameValue ', np.amax(Frame))
         cv2.imshow('image', Frame)
