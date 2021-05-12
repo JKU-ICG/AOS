@@ -2,11 +2,9 @@
 # AOS/PLAN: Planning Algorithm for Airborne Optical Sectioning
 
 This is a Python implementation for the path planning algorithm used with Airborne Optical Sensing. 
-Additionally, we provide a `Visualizer` that visualizes the flying path as shown below:
+Additionally, we provide a `Visualizer` that visualizes the flying path.
 
-![alt text](../img/planning.gif)
-
-**Todo: add video number 4, remove prev gif**
+![adaptive](../img/adaptive.gif)
 
 ## Requirements
 
