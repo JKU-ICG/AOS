@@ -8,12 +8,11 @@ This is a python wrapper for the [C++ Light-Field Renderer](../README.md) for Ai
 To compile the Python bindings make `python` your current working directory and run the following command.
 - On Windows: 
 ```
-python setup_Win.py build_ext --inplace
+python3 setup_Win.py build_ext --inplace
 ```
 - On Linux (e.g. a Raspberry Pi):
 ```
-XXX TODO XXX
-python setup_Unix.py build_ext --inplace
+python3 setup_Unix.py build_ext --inplace
 ```
 
 ## Quick tutorial
