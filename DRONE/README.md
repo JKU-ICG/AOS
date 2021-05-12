@@ -96,12 +96,12 @@ if __name__ == "__main__":
     RenderingQueue = multiprocessing.Queue(maxsize=200) # queue with geotagged frames
         #   FlightCntrl process and RenderDetect process communicates 
         #   uniformly sampled (currently ~1m spacing) gps tagged samples in the form of a dictionary
-        #    {   'Latitude' = # 
-        #        'Longitude' = # 
-        #        'Altitude' = #
-        #        'CompassHeading' = #  
-        #        'Image' = # 
-        #        'StartingHeight' = #
+        #    {   'Latitude' = # gps lat in degrees
+        #        'Longitude' = # gps lon in degrees
+        #        'Altitude' = # relative altitude 
+        #        'CompassHeading' = # compass values in step of 2 degrees
+        #        'Image' = # Acquired frame
+        #        'StartingHeight' = # stating height of the drone
         #        'Render' = # boolean indicating after adding which frame we should render
         #        'UpdatePlanningAlgo' = # boolean indicating after adding which frame we should send the detections
         #    }
