@@ -326,8 +326,10 @@ if __name__ == '__main__':
     CameraProcessEvent = multiprocessing.Event()
     GetFramesEvent = multiprocessing.Event()
     RecordEvent = multiprocessing.Event()
-
-    GPSReceivedLogFile = 'D:\\RESILIOSYNC\\ANAOS\\SITES\\TestFrameGrab_20210201_Openfield_T3\\GPSReceivedLogFile.log'
+    
+    sitename = 'open_field'
+    basedatapath = Path(__file__).resolve().parent
+    GPSReceivedLogFile = os.path.join(basedatapath, '..', 'data',sitename, 'log','GPSReceivedLog.log')
     GPSlogFileInfo = ReadGPSReceivedLogFiles(GPSReceivedLogFile)
 
     CameraClass = CameraControl(FlirAttached=False, AddsynthethicImage=True, out_folder = out_folder)

@@ -515,19 +515,26 @@ if __name__ == '__main__':
         os.mkdir( out_folder)
     MainLog = setup_logger( 'MainLogger', os.path.join( out_folder, 'MainTest.log') )
 
-    sitename = '20210304_OpenField_T4R2_T1_S1'
+    sitename = 'open_field'
     #anaos_path = os.environ.get('ANAOS_DATA')
+
+    # Todo: change to 
     
-    basedatapath = 'D:\\RESILIOSYNC\\ANAOS\\SIMULATIONS'
-    print(os.path.join(basedatapath,'FlightResults', sitename, 'Pose_absolute'))
-    PosesFilePath = os.path.join(basedatapath,'FlightResults', sitename, 'NewNormalization','SimulationPoses')
-    ImageLocation = os.path.join(basedatapath, 'FlightResults',sitename, 'Frames_renamed')
-    ObjModelPath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.obj')
-    ObjModelImagePath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.png')
-    SaveImagePath = os.path.join(basedatapath, 'FlightResults',sitename, 'NewNormalization','SimulationPoses_CPURenderedImages')
-    SaveProjImagePath = os.path.join(basedatapath,'FlightResults', sitename, 'NewNormalization','ProjectedImages')
-    DemInfoJSOn = os.path.join(basedatapath, 'FlightResults',sitename, 'LFR','dem_info.json')
-    GpsLogFile = os.path.join(basedatapath, 'FlightResults',sitename, 'GPSLog.log')
+    #basedatapath = '../../data'
+    #basedatapath = 'D:\\ResilioSync\\ANAOS\\SIMULATIONS'
+    #ImageLocation = os.path.join(basedatapath, 'FlightResults',sitename, 'Frames_renamed')
+    #ObjModelPath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.obj')
+    #ObjModelImagePath = os.path.join(basedatapath,'FlightResults', sitename, 'LFR','dem.png')
+    #DemInfoJSOn = os.path.join(basedatapath, 'FlightResults',sitename, 'LFR','dem_info.json')
+    #GpsLogFile = os.path.join(basedatapath, 'FlightResults',sitename, 'GPSLog.log')
+
+    basedatapath = Path(__file__).resolve().parent
+    ImageLocation = os.path.join(basedatapath, '..', 'data',sitename, 'images')
+    ObjModelPath = os.path.join(basedatapath, '..', 'data',sitename, 'DEM','dem.obj')
+    ObjModelImagePath = os.path.join(basedatapath,'..', 'data', sitename, 'DEM','dem.png')
+    DemInfoJSOn = os.path.join(basedatapath, '..', 'data',sitename, 'DEM','dem_info.json')
+    GpsLogFile = os.path.join(basedatapath, '..', 'data',sitename, 'log','GPSLog.log')
+
     with open(DemInfoJSOn) as json_file:
         DemInfoDict = json.load(json_file)
     print(DemInfoDict)
@@ -535,8 +542,8 @@ if __name__ == '__main__':
     CenterEast = CenterUTMInfo[0]   
     CenterNorth = CenterUTMInfo[1]
     FieldofView = 43.10803984095769#43.50668199945787
-    startLat = 48.3361339 #48.3360345 48.3361339 
-    startLon = 14.32645814596519#14.3264914
+    startLat = 48.3360975#48.3360345 
+    startLon = 14.326456395277228#14.3264914
     startEast,startNorth,Block,UTMZONE = utm.from_latlon(startLat, startLon)
     StartCenteredEastUTM = startEast - CenterEast
     StartCenteredNorthUTM = CenterNorth - startNorth
@@ -550,7 +557,7 @@ if __name__ == '__main__':
     FlyingProcessEvent = multiprocessing.Event()
     RecordEvent = multiprocessing.Event()
 
-    InterPolatedGPSReceivedLogFileName = 'D:\\RESILIOSYNC\\ANAOS\\SIMULATIONS\\FlightResults\\20210304_OpenField_T4R2_T1_S1\\GPSInterpolatedLog.log'
+    InterPolatedGPSReceivedLogFileName = os.path.join(basedatapath, '..', 'data',sitename, 'log','GPSInterpolatedLog.log')
     InterpolatedLat, InterpolatedLon, InterpolatedAlt, InterpolatedCompass, InterpolatedTargetHoldTime = ReadInterpolatedGPSlogFiles(InterPolatedGPSReceivedLogFileName)
 
     #utm_center = (CenterUTMInfo[0], CenterUTMInfo[1], CenterUTMInfo[2], CenterUTMInfo[3])
@@ -578,8 +585,8 @@ if __name__ == '__main__':
         CurrentDroneInfoDict['Longitude'] = float(InterpolatedLon[i])
         CurrentDroneInfoDict['Altitude'] = 0.0
         CurrentDroneInfoDict['BaroAltitude'] = float(InterpolatedAlt[i])
-        CurrentDroneInfoDict['TargetHoldTime'] = float(InterpolatedCompass[i])
-        CurrentDroneInfoDict['CompassHeading'] = float(InterpolatedTargetHoldTime[i])
+        CurrentDroneInfoDict['TargetHoldTime'] = float(InterpolatedTargetHoldTime[i])
+        CurrentDroneInfoDict['CompassHeading'] = float(InterpolatedCompass[i])
         CurrentDroneInfoDict['Image'] = np.random.randint(0,255,size = (640,480,3)).astype(np.uint8)
         CurrentGPSInfoQueue.put(CurrentDroneInfoDict)
         #print('Sent Waypoints', i)

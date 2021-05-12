@@ -39,3 +39,13 @@ python/pyaos.cpp
 */__pycache__
 .vscode/settings.json
 LFR/python/__pycache__/LFR_utils.cpython-37.pyc
+LFR/vs/.vs/LFR/v15/.suo
+LFR/vs/.vs/LFR/v15/Browse.VC.db
+LFR/vs/.vs/LFR/v15/ipch/AutoPCH/3718c55b75ee78ef/MAIN.ipch
+LFR/vs/.vs/LFR/v15/ipch/AutoPCH/3a420216521643b/UTILS.ipch
+LFR/vs/.vs/LFR/v15/ipch/AutoPCH/4383821760fdff2/AOSGENERATOR.ipch
+LFR/vs/.vs/LFR/v15/ipch/AutoPCH/65522a35c820c423/BENCHMARK.ipch
+LFR/vs/.vs/LFR/v15/ipch/AutoPCH/677362c33c1fb4f2/AOSGENERATOR.ipch
+LFR/vs/.vs/LFR/v15/ipch/AutoPCH/af37a291f2974123/BENCHMARK.ipch
+LFR/vs/benchmark.json
+LFR/vs/imgui.ini
