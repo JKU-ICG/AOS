@@ -131,21 +131,23 @@ if __name__ == "__main__":
 
     # Call the function of  rendering and detector as a separate process and start the process
     RenderProcess = multiprocessing.Process(name ='RenderingProcess', 
-        target = RendererClass.RendererandDetectContinuous, args = (RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
+            target = RendererClass.RendererandDetectContinuous, 
+            args = (RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
     RenderProcess.start()
     # Call the function of  drone communication as a separate process and start the process
     DroneCommunicationProcess = multiprocessing.Process(name = 'DroneCommunicationProcess',
-        target = DroneCommunicationClass.DroneInfo, 
-             args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent))
+            target = DroneCommunicationClass.DroneInfo, 
+            args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent))
     DroneCommunicationProcess.start()
     # Call the function of  flying control as a separate process and start the process
     FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',
-        target = FlyingControlClass.FlyingControl, 
-             args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent))
+            target = FlyingControlClass.FlyingControl, 
+            args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent))
     FlyingControlProcess.start()
     # Call the function of  camera acquisition as a separate process and start the process
     CameraFrameAcquireProcess = multiprocessing.Process(name = 'CameraFrameAcquireProcess', 
-        target = CameraClass.AcquireFrames, args = (FrameQueue, CameraProcessEvent, GetFramesEvent))
+            target = CameraClass.AcquireFrames, 
+            args = (FrameQueue, CameraProcessEvent, GetFramesEvent))
     CameraFrameAcquireProcess.start()
 
     
