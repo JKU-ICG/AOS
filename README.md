@@ -94,6 +94,14 @@ In comparison to Version 2, this setup allows faster thermal recordings and thus
 The [CAM module](CAM/README.md) supports Version 3 of our Payload.
 
 
+## Data
+
+We provide exemplary datasets in the [`data/open_field`](data/open_field), and [`LFR/data/F0`](LFR/data/F0) folders.
+The digital elevation models are in the `DEM`subfolders, are provided by the Upper Austrian government, and are converted to meshes and hillshaded images with GDAL. 
+The `images`  and `poses` are in the corresponding folders.
+The `F0` was recorded while flying over forest with the payload version 1 and is [available online](https://doi.org/10.5281/zenodo.3894773).
+The open field dataset is a linear flight without high vegetation and was recorded with payload version 3.
+
 
 
 ## License
