@@ -58,7 +58,7 @@ This repository contains software for drone-based search and rescue applications
 - [PLAN](PLAN/README.md)    (Python code): implementation of our path planning and adaptive sampling technique.
 - [DRONE](DRONE/README.md)  (C and Python code): contains the implementation for drone communication and the logic to perform AOS flights. 
 
-Note that the modules LFR, DET, CAM, PLAN are standalone software packages that can installed and used independently. The DRONE module, however, relies on the other modules (LFR, DET, CAM, PLAN) in this repository.
+Note that the modules LFR, DET, CAM, PLAN are standalone software packages that can be installed and used independently. The DRONE module, however, relies on the other modules (LFR, DET, CAM, PLAN) in this repository.
 
 
 ## Installation
