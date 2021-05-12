@@ -6,6 +6,8 @@ Additionally, we provide a `Visualizer` that visualizes the flying path as shown
 
 ![alt text](../img/planning.gif)
 
+**Todo: add video number 4, remove prev gif**
+
 ## Requirements
 
 Make sure that the [required Python lybraries](../requirements.txt) are installed.
