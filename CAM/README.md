@@ -3,6 +3,8 @@
 
 This is a Python implementation for acquiring camera images for Airborne Optical Sensing. 
 
+** Todo: add teaser **
+
 ## Requirements
 
 Make sure that the [required Python libraries](../requirements.txt) are installed.
