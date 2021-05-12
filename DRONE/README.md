@@ -49,6 +49,7 @@ import sys
 import os
 import time
 import json
+...
 
 # to find the local modules we need to add the folders to sys.path
 cur_file_path = Path(__file__).resolve().parent
@@ -118,6 +119,8 @@ if __name__ == "__main__":
         #       'DetectedImageName' : #full written image name
         #   }
     
+    ...
+    
     # Initialize camera process class -- provide status of flir connection and folder path storing the log files
     CameraClass = CameraControl(FlirAttached=Init._FlirAttached, ... )
     # Initialize drone communication process class -- provide folder path storing the log files
@@ -149,12 +152,8 @@ if __name__ == "__main__":
             target = CameraClass.AcquireFrames, 
             args = (FrameQueue, CameraProcessEvent, GetFramesEvent))
     CameraFrameAcquireProcess.start()
-
     
-
-    
-    
-
+    ....
 
 
 ```
