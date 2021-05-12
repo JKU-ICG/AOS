@@ -91,7 +91,7 @@ In comparison to Version 1, this setup allows full processing on the drone (incl
 ### Payload Version 3
 The third version additionally mounts a Flir power module providing HDMI video output from the camera (640x480, 30 Hz; 15 g), and a video capture card (totaling 350g).
 In comparison to Version 2, this setup allows faster thermal recordings and thus faster flying speeds.
-The [CAM module](CAM/README.md) supports Version 3 of our Payload.
+This repository is using Version 3 of our Payload right now.
 
 
 ## Data
