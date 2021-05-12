@@ -32,8 +32,8 @@ Symbol | Description |
 ## Requirements
 
 Make sure that the [required Python libraries](../requirements.txt), OpenVino, and the Python bindings for [LFR](/LFR/python) are installed.
+In terminal change to current directory [DRONE](/DRONE) and execute the below command to generate the required shared object file
 
-**Todo** Compile the drone communication (C code):
 ```sh
 cc -fPIC -sshhared -std=c++17 -o dronecommunication.so dronecommunication.c
 ```
