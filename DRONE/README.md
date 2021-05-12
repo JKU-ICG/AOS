@@ -159,7 +159,7 @@ if __name__ == "__main__":
 ```
 
 ## More detailed usage
-
+For a more detailed example on the performing experiments with our [DRONE] look at the main program in main.py.
 
 ## Todo
 - [ ] unittest (optional)
