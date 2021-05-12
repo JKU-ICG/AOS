@@ -1,9 +1,9 @@
 
 # AOS/CAM: Acquiring samples for Airborne Optical Sectioning using a frame grabber connected to the thermal camera
 
-This is a Python implementation for acquiring camera images for Airborne Optical Sensing. 
+This is a Python implementation for acquiring and correcting thermal camera images for Airborne Optical Sensing. 
 
-** Todo: add teaser **
+![correction](../img/PreviousCalibration.PNG)
 
 ## Requirements
 
