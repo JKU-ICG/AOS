@@ -21,19 +21,28 @@ This repository contains software for drone-based search and rescue applications
   - [arXiv (pre-print)](https://arxiv.org/pdf/2105.04328)  
   - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Search and rescue with airborne optical sectioning, Nature Machine Intelligence 2 (12), 783-790, https://doi.org/10.1038/s42256-020-00261-3 (2020)
-  - [Nature (final version)](https://www.nature.com/articles/s42256-020-00261-3) 
+  - [Nature (final version)](https://www.nature.com/articles/s42256-020-00261-3) | [(view only version)](https://rdcu.be/cbcf2) 
   - [arXiv (pre-print)](https://arxiv.org/pdf/2009.08835.pdf)
   - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
   - [Video on YouTube](https://www.youtube.com/watch?v=kyKVQYG-j7U)
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Pose Error Reduction for Focus Enhancement in Thermal Synthetic Aperture Visualization, IEEE Geoscience and Remote Sensing Letters, DOI: https://doi.org/10.1109/LGRS.2021.3051718 (2021).
+  - [IEEE (final version)](https://ieeexplore.ieee.org/document/9340240) 
+  - [arXiv (pre-print)](https://arxiv.org/abs/2012.08606)
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Fast automatic visibility optimization for thermal synthetic aperture visualization, IEEE Geosci. Remote Sens. Lett. available at https://doi.org/10.1109/LGRS.2020.2987471 (2020).
+  - [IEEE (final version)](https://ieeexplore.ieee.org/document/9086501) 
+  - [arXiv (pre-print)](https://arxiv.org/abs/2005.04065)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Airborne Optical Sectioning for Nesting Observation. Sci Rep 10, 7254, https://doi.org/10.1038/s41598-020-63317-9 (2020).
   - [Nature (open access and final version)](https://www.nature.com/articles/s41598-020-63317-9) 
   - [Video on YouTube](www.youtube.com/watch?v=81l-Y6rVznI)
-- Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Thermal airborne optical sectioning. Remote Sensing. 11, 1668 (2019).
+- Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Thermal airborne optical sectioning. Remote Sensing. 11, 1668, DOI: 10.3390/rs11141668, (2019).
+  - [MDPI (open access and final version)](https://www.mdpi.com/2072-4292/11/14/1668) 
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, A statistical view on synthetic aperture imaging for occlusion removal. IEEE Sensors J. 19, 9374 – 9383 (2019).
+  - [IEEE (final version)](https://ieeexplore.ieee.org/document/8736348)
+  - [arXiv (pre-print)](https://arxiv.org/abs/1906.06600) 
 - Oliver Bimber, Indrajit Kurmi, and David C. Schedl, Synthetic aperture imaging with drones. IEEE Computer Graphics and Applications. 39, 8 – 15 (2019).
+  - [IEEE (open access and final version)](https://doi.ieeecomputersociety.org/10.1109/MCG.2019.2896024) 
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Airborne optical sectioning. Journal of Imaging. 4, 102 (2018).
+  - [MDPI (open access and final version)](https://www.mdpi.com/2313-433X/4/8/102) 
 
 
 
