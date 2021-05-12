@@ -76,7 +76,7 @@ The waypoint protocol triggered the cameras every 1m along the flight path, and 
 ### Version 2
 For the second iteration, the RGB camera was removed. 
 Instead we mounted a single-board  system-on-chip computer (SoCC) (RaspberryPi 4B; 5.6 cm × 8.6 cm; 65 g; 8 GB ram), an LTE communication hat (Sixfab 3G/4G & LTE base hat and a SIM card; 5.7 cm × 6.5 cm; 35 g), and a Vision Processing Unit (VPU) (Intel Neural Compute Stick 2; 7.2 cm × 2.7 cm × 1.4 cm; 30 g). The equipments weighted 320g and was mounted on the rotatable gimbal. 
-In comparison to Version 1, this setup allows full processing on the drone.
+In comparison to Version 1, this setup allows full processing on the drone (including path planning and triggering the camera).
 
 ### Version 3
 The third version additionally mounts a Flir power module providing HDMI video output from the camera (640x480 @30Hz; 15g), and a video capture card (totaling 350g).
