@@ -120,24 +120,28 @@ if __name__ == "__main__":
                                 basedatapath=Init._basedatapath, FlirAttached = Init._FlirAttached,
                                 Flying_Height = Init._Flying_Height,DroneFlyingSpeed = Init._DroneFlyingSpeed, 
                                 CenterUTMInfo = Init._CenterUTMInfo, area_sides = Init._area_sides,
-                                GridSideLength = Init._GridSideLength, GridAlignedPathPlanning = Init._GridAlignedPathPlanning,
+                                GridSideLength = Init._GridSideLength,
+                                GridAlignedPathPlanning = Init._GridAlignedPathPlanning,
                                 prob_map = Init._prob_map, adddebugInfo = True)
-    # Initialize rendering and detector process class -- provide folder path storing the log files and initilize using Init class
+    # Initialize rendering and detector process class -- provide folder path storing the log files 
+    # and initilize using Init class
     RendererClass = Renderer(results_folder =, CenterUTMInfo = Init._CenterUTMInfo,ObjModelPath = Init._ObjModelPath,
                             ObjModelImagePath = Init._ObjModelImagePath,basedatapath = Init._basedatapath,
                             sitename = Init._sitename, FieldofView = Init._FieldofView,adddebuginfo=True)
 
     # Call the function of  rendering and detector as a separate process and start the process
     RenderProcess = multiprocessing.Process(name ='RenderingProcess', 
-                    target = RendererClass.RendererandDetectContinuous, args = (RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
+        target = RendererClass.RendererandDetectContinuous, args = (RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
     RenderProcess.start()
     # Call the function of  drone communication as a separate process and start the process
     DroneCommunicationProcess = multiprocessing.Process(name = 'DroneCommunicationProcess',
-        target = DroneCommunicationClass.DroneInfo, args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent))
+        target = DroneCommunicationClass.DroneInfo, 
+             args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, DroneProcessEvent, FrameQueue, GetFramesEvent, RecordEvent))
     DroneCommunicationProcess.start()
     # Call the function of  flying control as a separate process and start the process
     FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess',
-        target = FlyingControlClass.FlyingControl, args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent))
+        target = FlyingControlClass.FlyingControl, 
+             args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent))
     FlyingControlProcess.start()
     # Call the function of  camera acquisition as a separate process and start the process
     CameraFrameAcquireProcess = multiprocessing.Process(name = 'CameraFrameAcquireProcess', 
