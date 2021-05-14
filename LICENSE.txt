@@ -1,6 +1,8 @@
 Copyright notice: 
 
-Copyright © 2021 Johannes Kepler University Linz, Institute of Computer Graphics, Altenberger Straße 69, 4040 Linz, Austria. All rights reserved. Contact: Prof. Oliver Bimber, oliver.bimber@jku.at, +43-732-2468-6631, www.jku.at/cg. 
+Copyright © 2021 Johannes Kepler University Linz, Institute of Computer Graphics, Altenberger Straße 69, 4040 Linz, Austria. 
+All rights reserved. 
+Contact: Prof. Oliver Bimber, oliver.bimber@jku.at, +43-732-2468-6631, www.jku.at/cg. 
 
 License Terms:
 1)	You are hereby granted a royalty-free, non-exclusive license to use this software and related documentation, including data (the "Software"), for evaluation, educational and research purposes, to make copies (duplicates) of the Software and to use the same, to publish the Software, parts and copies thereof and to make it available to other persons. 
