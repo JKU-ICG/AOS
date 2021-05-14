@@ -1,4 +1,4 @@
-# Copyright notice: 
+Copyright notice: 
 
 Copyright © 2021 Johannes Kepler University Linz, Institute of Computer Graphics, Altenberger Straße 69, 4040 Linz, Austria. All rights reserved. Contact: Prof. Oliver Bimber, oliver.bimber@jku.at, +43-732-2468-6631, www.jku.at/cg. 
 
