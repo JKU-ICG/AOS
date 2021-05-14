@@ -12,8 +12,6 @@ Single Images         |  Airborne Optical Sectioning
 This repository contains software for drone-based search and rescue applications with airborne optical sectioning, as discussed in our [publications](#publications).
 
 
-## News
-
 
 ## Publications
 
