@@ -94,13 +94,13 @@ class Dummy :
 
 if __name__ == '__main__':
     
-    sitename = 'test_open_field_adaptive_simulate'
+    sitename = 'open_field'
        
     #anaos_path = os.environ.get('ANAOS_DATA')
     ##Testing Server
     base_url1 = 'http://localhost:8080'
     base_url = 'http://localhost:8080/'
-    locationid = "test_open_field_adaptive_simulate"
+    locationid = "open_field"
      ##Testing Server
 
     basedatapath = Path(__file__).resolve().parent
