@@ -122,9 +122,9 @@ int main()
 	// load the light field (matrices, textures, names ...)
 	// -----------------------
 	AOSGenerator generator;
-	generator.Generate( lf, "../data/F0/poses/poses.json", "../data/F0/images_ldr/", true);
+	//generator.Generate( lf, "../data/F0/poses/poses.json", "../data/F0/images_ldr/", true);
 	// faster, due to less images: 	
-    // generator.Generate(lf, "../data/F0/poses/poses_first30.json", "../data/F0/images_ldr/", true);
+    generator.Generate(lf, "../data/F0/poses/poses_first30.json", "../data/F0/images_ldr/", true);
 	CHECK_GL_ERROR
 
 

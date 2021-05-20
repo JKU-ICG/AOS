@@ -6,6 +6,8 @@ import time
 from LFR_utils import read_poses_and_images, pose_to_virtualcamera, init_aos, init_window
 import glm
 import matplotlib.pyplot as plt
+from pathlib import Path
+import sys
 
 def imshow(image, *args, **kwargs):
     """A replacement for cv2.imshow() for use in Jupyter notebooks using matplotlib.
@@ -33,13 +35,13 @@ if __name__ == '__main__':
     fov = 50.815436217896945
     # init the light-field renderer
     aos = init_aos(fov=fov)
-
+    basedatapath = Path(__file__).resolve().parent
     # load a digital terrain
-    aos.loadDEM( os.path.join( 'LFR', 'data', 'F0', 'DEM', 'dem.obj') )
+    aos.loadDEM( os.path.join(basedatapath, '..', 'data', 'F0', 'DEM', 'dem.obj') )
 
     # load multiple images and corresponding poses
-    pose_file = os.path.join( 'LFR', 'data', 'F0', 'poses', 'poses.json')
-    images_dir = os.path.join( 'LFR', 'data', 'F0', 'images_ldr' )
+    pose_file = os.path.join( basedatapath, '..', 'data', 'F0', 'poses', 'poses_first30.json')
+    images_dir = os.path.join( basedatapath, '..', 'data', 'F0', 'images_ldr' )
     single_images, site_poses = read_poses_and_images(aos,pose_file, images_dir, adjust_mean=False, replace_ext='.png' )
     center_index = int(round(len(single_images) / 2))
 

@@ -752,7 +752,7 @@ void receive_data(serial_data_struct* pdata_package_receive_kopter, DroneInfo* C
 						for(int i=0; i<rx_length;++i)
 						{
 							if(!(pdata_package_receive_kopter->txrxdata[i] == '\r'))
-								//printf( "%c", pdata_package_receive_kopter->txrxdata[i] );
+								printf( "%c", pdata_package_receive_kopter->txrxdata[i] );
 						}
 						//printf( " \n");	
 					}

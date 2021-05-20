@@ -169,212 +169,203 @@ class DroneFlyingControl():
         self._gpsframelog = setup_logger( 'GPSFrame_logger', os.path.join( self._out_folder, 'GPSLog.log'))
         self._log.debug('Start Flight')
         self._gpsframelog.debug('StartTime StartLatitude StartLongitude')
-        if not self._ReadfromFile :
-            RecordEvent.set()
-            while CurrentGPSInfoQueue.empty():
-                time.sleep(1)
-            RecordEvent.clear()
-            while not CurrentGPSInfoQueue.empty():
-                CurrentGPSInfo = CurrentGPSInfoQueue.get()
-                StartLatitude = CurrentGPSInfo['Latitude']*0.0000001
-                StartLongitude = CurrentGPSInfo['Longitude']*0.0000001
-        else :
-            StartLatitude = self._startlat
-            StartLongitude = self._startlon
-        startEast,startNorth,Block,UTMZONE = utm.from_latlon(StartLatitude, StartLongitude)
-        StartCenteredEastUTM = startEast - self._CenterEast
-        StartCenteredNorthUTM = self._CenterNorth - startNorth
-        MinimumStartingHeigth,Index = FindStartingHeight(self._objectmodelpath, StartCenteredEastUTM, StartCenteredNorthUTM)
-        #CaptureRenderDetectCurrentData.AddStartingHeight(MinimumStartingHeigth)
-        ####Todo :- Communicate MinimumStartingHeight to Renderer
-        self._log.debug('StartingPoint StartLatitude = %s StartLongitude =%s StartEast = %s StartNorth = %s CenterEast = %s CenterNorth = %s StartCenterEast = %s StartCenterNorth = %s And StartingHeight = %s', str(StartLatitude), str(StartLongitude), str(startEast), str(startNorth), str(self._CenterEast), str(self._CenterNorth), str(StartCenteredEastUTM), str(StartCenteredNorthUTM), str(MinimumStartingHeigth))
-        self._gpsframelog.debug('%s %s', str(StartLatitude),str(StartLongitude))
-        self._gpsframelog.debug('Time Latitude Longitude Altitude CompassHeading TargetHoldTime(from GPSLog)')
-        NoofCheckedWayPoints = 0
-        NoofPointsChecked = 0
-        NoofPointsinPreviousPath = 0
-        prev_pt = (StartLatitude, StartLongitude)
-        NoofPlannedPath = 0
-        NoofPlannedPoints = 0
-        CompleteRendering = False
-        DetectedHumanFlag = False
-        starttime = datetime.datetime.now()
-        CurrentFlightTime = 0.0
-        self._log.debug('Current Time %s ', str(CurrentFlightTime))
-        RecordEvent.set()
-        while CurrentFlightTime < self._maxflighttime:
-            if not DetectionInfoQueue.empty():
-                DetectionInfo = DetectionInfoQueue.get()
-                if self._UpdatePathPlanning :
-                    self._PlanningAlgo.update(DetectionInfo['PreviousVirtualCamPos'], DetectionInfo['DLDetections'])
-                if self._SendEmail:
-                    server = smtp_connect(self._sender_email)
-                    server.sendmail(self._sender_email, self._receiver_email, CreateText(self._sender_email, self._receiver_email,self._subject, self._body, DetectionInfo['DetectedImageName']))
-            if DetectedHumanFlag:
-                pass # For Testing Pass if Human Detected --- For Actual Flights -- break
-            if not self._GridAlignedPathPlanning :    
-                next_pts = self._PlanningAlgo.planpoints( prev_pt )
-                if len(next_pts) >= 1:
-                    FlyingInfoFlag = [True for i in range(len(next_pts))]
+        try:
+            if not self._ReadfromFile :
+                RecordEvent.set()
+                while CurrentGPSInfoQueue.empty():
+                    time.sleep(1)
+                RecordEvent.clear()
+                while not CurrentGPSInfoQueue.empty():
+                    CurrentGPSInfo = CurrentGPSInfoQueue.get()
+                    StartLatitude = CurrentGPSInfo['Latitude']*0.0000001
+                    StartLongitude = CurrentGPSInfo['Longitude']*0.0000001
             else :
-                next_pts, FlyingInfoFlag = self._PlanningAlgo.planpoints( prev_pt )
-            self._log.debug('Planned Points With Length   %s ', str(len(next_pts)))
-            #If Grid is completely sampled then next_pts will be empty
-            if len(next_pts) >= 1 :
-                NoofPlannedPath = NoofPlannedPath + 1
-                for i in range(len(next_pts)) :
-                    next_pos = next_pts[i]
-                    FlyingInfo = FlyingInfoFlag[i]
-                    self._log.debug('FlyingInfo  %s ', str(FlyingInfo))
-                    NoofPlannedPoints = NoofPlannedPoints + 1
-                    DestinationLat = int(next_pos[0]*10000000)
-                    DestinationLon = int(next_pos[1]*10000000)
-                    NextAltitude = self._Flying_Height
-                    if FlyingInfo :
-                        FlyingSpeed = self._DroneFlyingSpeed
-                    else :
-                        FlyingSpeed = self._FasterDroneFlyingSpeed
-                    self._log.debug('Sending to Position %s %s %s with Flying Speed %s', str(DestinationLat),str(DestinationLon), str(NextAltitude), str(FlyingSpeed))
-                    assert NextAltitude > 25 , "Height Below 25 Meters"
-                    WayPointInfo = {}
-                    WayPointInfo['Latitude'] = DestinationLat
-                    WayPointInfo['Longitude'] = DestinationLon
-                    WayPointInfo['Altitude'] = NextAltitude
-                    WayPointInfo['Speed'] = FlyingSpeed
-                    WayPointInfo['Index'] = NoofPlannedPoints
-                    SendWayPointInfoQueue.put(WayPointInfo)
-                    x = NoofPlannedPoints
-                    self._log.debug('Sent WayPoint %s', str(x))
-                    CheckPoint = True
-                    if CompleteRendering:
-                        self._gpsframelog.debug('%s %s %s %s', str(x-1), str(NoofPointsinPreviousPath),str(NoofPointsChecked),str(0))
-                        CompleteRendering = False
-                        NoofPointsinPreviousPath = 0
-                    PrevImagetoPrevSampleDistance = 0.0
-                    PrevLat = 0.0
-                    PrevLon = 0.0
-                    prevAlt = 0.0
-                    PrevComp = 0.0
-                    PrevImage = None
-                    while CheckPoint == True:
-                        NoofCheckedWayPoints = NoofCheckedWayPoints+1
-                        NoofPointsChecked = NoofPointsChecked + 1
-                        ###################Read Current Drone Information
-                        if not self._ReadfromFile :
-                            #print('Queue Size',CurrentGPSInfoQueue.qsize())
-                            ReceivedCurrentDroneData = CurrentGPSInfoQueue.get()
-                            #t1_start = time.perf_counter()
-                            Latitude = ReceivedCurrentDroneData['Latitude']*0.0000001
-                            Longitude = ReceivedCurrentDroneData['Longitude']*0.0000001
-                            Altitude = ReceivedCurrentDroneData['BaroAltitude']/100
-                            DroneTargetHoldTime = ReceivedCurrentDroneData['TargetHoldTime']
-                            CompassHeading = ReceivedCurrentDroneData['CompassHeading']
-                        else :
-                            SimulatedDataGPSInfo = self._SimulatedData[NoofCheckedWayPoints]
-                            Latitude = SimulatedDataGPSInfo['Latitude']
-                            Longitude = SimulatedDataGPSInfo['Longitude']
-                            Altitude = SimulatedDataGPSInfo['BaroAltitude']
-                            DroneTargetHoldTime = SimulatedDataGPSInfo['TargetHoldTime']
-                            CompassHeading = SimulatedDataGPSInfo['CompassHeading']
-                            AngleNick = 0
-                            AngleRoll = 0
-                            DistancetoTarget = 0 
-                        Distance = haversine(Latitude, Longitude, next_pos[0], next_pos[1])
-                        #print('checking Waypoint')
-                        if DroneTargetHoldTime < self._WayPointHoldingTime and DroneTargetHoldTime > 0.0:
-                            if (Distance) < self._PiWayPointRadiusCheck :
-                                ReachedWayPoint = True
-                            else :
-                                ReachedWayPoint = False
-                        else:
-                            ReachedWayPoint = False
-                        ###################If  Cell is Scanned
+                StartLatitude = self._startlat
+                StartLongitude = self._startlon
+            startEast,startNorth,Block,UTMZONE = utm.from_latlon(StartLatitude, StartLongitude)
+            StartCenteredEastUTM = startEast - self._CenterEast
+            StartCenteredNorthUTM = self._CenterNorth - startNorth
+            MinimumStartingHeigth,Index = FindStartingHeight(self._objectmodelpath, StartCenteredEastUTM, StartCenteredNorthUTM)
+            #CaptureRenderDetectCurrentData.AddStartingHeight(MinimumStartingHeigth)
+            ####Todo :- Communicate MinimumStartingHeight to Renderer
+            self._log.debug('StartingPoint StartLatitude = %s StartLongitude =%s StartEast = %s StartNorth = %s CenterEast = %s CenterNorth = %s StartCenterEast = %s StartCenterNorth = %s And StartingHeight = %s', str(StartLatitude), str(StartLongitude), str(startEast), str(startNorth), str(self._CenterEast), str(self._CenterNorth), str(StartCenteredEastUTM), str(StartCenteredNorthUTM), str(MinimumStartingHeigth))
+            self._gpsframelog.debug('%s %s', str(StartLatitude),str(StartLongitude))
+            self._gpsframelog.debug('Time Latitude Longitude Altitude CompassHeading TargetHoldTime(from GPSLog)')
+            NoofCheckedWayPoints = 0
+            NoofPointsChecked = 0
+            NoofPointsinPreviousPath = 0
+            prev_pt = (StartLatitude, StartLongitude)
+            NoofPlannedPath = 0
+            NoofPlannedPoints = 0
+            CompleteRendering = False
+            DetectedHumanFlag = False
+            starttime = datetime.datetime.now()
+            CurrentFlightTime = 0.0
+            self._log.debug('Current Time %s ', str(CurrentFlightTime))
+            RecordEvent.set()
+            while CurrentFlightTime < self._maxflighttime:
+                if not DetectionInfoQueue.empty():
+                    DetectionInfo = DetectionInfoQueue.get()
+                    if self._UpdatePathPlanning :
+                        self._PlanningAlgo.update(DetectionInfo['PreviousVirtualCamPos'], DetectionInfo['DLDetections'])
+                    if self._SendEmail:
+                        server = smtp_connect(self._sender_email)
+                        server.sendmail(self._sender_email, self._receiver_email, CreateText(self._sender_email, self._receiver_email,self._subject, self._body, DetectionInfo['DetectedImageName']))
+                if DetectedHumanFlag:
+                    pass # For Testing Pass if Human Detected --- For Actual Flights -- break
+                if not self._GridAlignedPathPlanning :    
+                    next_pts = self._PlanningAlgo.planpoints( prev_pt )
+                    if len(next_pts) >= 1:
+                        FlyingInfoFlag = [True for i in range(len(next_pts))]
+                else :
+                    next_pts, FlyingInfoFlag = self._PlanningAlgo.planpoints( prev_pt )
+                self._log.debug('Planned Points With Length   %s ', str(len(next_pts)))
+                #If Grid is completely sampled then next_pts will be empty
+                if len(next_pts) >= 1 :
+                    NoofPlannedPath = NoofPlannedPath + 1
+                    for i in range(len(next_pts)) :
+                        next_pos = next_pts[i]
+                        FlyingInfo = FlyingInfoFlag[i]
+                        self._log.debug('FlyingInfo  %s ', str(FlyingInfo))
+                        NoofPlannedPoints = NoofPlannedPoints + 1
+                        DestinationLat = int(next_pos[0]*10000000)
+                        DestinationLon = int(next_pos[1]*10000000)
+                        NextAltitude = self._Flying_Height
                         if FlyingInfo :
-                            if self._adddebugInfo :
-                                self._log.debug('Curent Position Considered%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))
-                            AddCurrentImage = False
-                            AddPreviousImage = False
-                            ###################Determine Whether Current Image and GPS Position is ImageSamplingDistance = 1.0 meters away from previous added sample otherwise 
-                            ##########################store the sample for future consideration
-                            if self._GrabVideoFrames :
-                                if self._ReadfromFile :
-                                    ReadImageName = os.path.join(self._basedatapath,'FlightResults', self._sitename, 'PiFrameGrabber', str(NoofPlannedPath)+'_'+str(NoofPointsinPreviousPath)+'.png')
-                                    Frame = cv2.imread(ReadImageName)
-                                else :
-                                    Frame = ReceivedCurrentDroneData['Image']
-                                    #if Frame is not None:
-                                    #    filename = os.path.join(self._out_folder,str(NoofPlannedPath)+'_'+str(NoofPointsChecked)+'.png')
-                                    #    cv2.imwrite(filename,Frame)
-                            if not NoofPointsinPreviousPath:
-                                AddCurrentImage = True
-                                AddPreviousImage = False
-                                PrevLat = Latitude
-                                PrevLon = Longitude
-                                prevAlt = Altitude
-                                PrevComp = CompassHeading
-                                PrevImage = Frame
-                                PrevSampleLat = Latitude
-                                PrevSampleLon = Longitude
-                                PrevImagetoPrevSampleDistance = 0.0
-                                if self._adddebugInfo :
-                                    self._log.debug('%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))
-                                    self._log.debug('Current Image is on new path AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
-                                    
+                            FlyingSpeed = self._DroneFlyingSpeed
+                        else :
+                            FlyingSpeed = self._FasterDroneFlyingSpeed
+                        self._log.debug('Sending to Position %s %s %s with Flying Speed %s', str(DestinationLat),str(DestinationLon), str(NextAltitude), str(FlyingSpeed))
+                        assert NextAltitude > 25 , "Height Below 25 Meters"
+                        WayPointInfo = {}
+                        WayPointInfo['Latitude'] = DestinationLat
+                        WayPointInfo['Longitude'] = DestinationLon
+                        WayPointInfo['Altitude'] = NextAltitude
+                        WayPointInfo['Speed'] = FlyingSpeed
+                        WayPointInfo['Index'] = NoofPlannedPoints
+                        SendWayPointInfoQueue.put(WayPointInfo)
+                        x = NoofPlannedPoints
+                        self._log.debug('Sent WayPoint %s', str(x))
+                        CheckPoint = True
+                        if CompleteRendering:
+                            self._gpsframelog.debug('%s %s %s %s', str(x-1), str(NoofPointsinPreviousPath),str(NoofPointsChecked),str(0))
+                            CompleteRendering = False
+                            NoofPointsinPreviousPath = 0
+                        PrevImagetoPrevSampleDistance = 0.0
+                        PrevLat = 0.0
+                        PrevLon = 0.0
+                        prevAlt = 0.0
+                        PrevComp = 0.0
+                        PrevImage = None
+                        while CheckPoint == True:
+                            NoofCheckedWayPoints = NoofCheckedWayPoints+1
+                            NoofPointsChecked = NoofPointsChecked + 1
+                            ###################Read Current Drone Information
+                            if not self._ReadfromFile :
+                                #print('Queue Size',CurrentGPSInfoQueue.qsize())
+                                ReceivedCurrentDroneData = CurrentGPSInfoQueue.get()
+                                #t1_start = time.perf_counter()
+                                Latitude = ReceivedCurrentDroneData['Latitude']*0.0000001
+                                Longitude = ReceivedCurrentDroneData['Longitude']*0.0000001
+                                Altitude = ReceivedCurrentDroneData['BaroAltitude']/100
+                                DroneTargetHoldTime = ReceivedCurrentDroneData['TargetHoldTime']
+                                CompassHeading = ReceivedCurrentDroneData['CompassHeading']
                             else :
-                                CurrentImagetoPreviousSampleDistance = haversine(Latitude, Longitude, PrevSampleLat, PrevSampleLon)
-                                CurrentImagetoPreviousImageDistance = haversine(Latitude, Longitude, PrevLat, PrevLon)
+                                SimulatedDataGPSInfo = self._SimulatedData[NoofCheckedWayPoints]
+                                Latitude = SimulatedDataGPSInfo['Latitude']
+                                Longitude = SimulatedDataGPSInfo['Longitude']
+                                Altitude = SimulatedDataGPSInfo['BaroAltitude']
+                                DroneTargetHoldTime = SimulatedDataGPSInfo['TargetHoldTime']
+                                CompassHeading = SimulatedDataGPSInfo['CompassHeading']
+                                AngleNick = 0
+                                AngleRoll = 0
+                                DistancetoTarget = 0 
+                            Distance = haversine(Latitude, Longitude, next_pos[0], next_pos[1])
+                            #print('checking Waypoint')
+                            if DroneTargetHoldTime < self._WayPointHoldingTime and DroneTargetHoldTime > 0.0:
+                                if (Distance) < self._PiWayPointRadiusCheck :
+                                    ReachedWayPoint = True
+                                else :
+                                    ReachedWayPoint = False
+                            else:
+                                ReachedWayPoint = False
+                            ###################If  Cell is Scanned
+                            if FlyingInfo :
                                 if self._adddebugInfo :
-                                    self._log.debug('distance Calculation %s %s %s %s %s %s', str(PrevSampleLat),str(PrevSampleLon) , str(PrevLat),str(PrevLon), str(Latitude),str(Longitude))
-                                    self._log.debug('CurrentImagetoPreviousSampleDistance is %s and CurrentImagetoPreviousImageDistance is  %s and PrevImagetoPrevSampleDistance is %s', str(CurrentImagetoPreviousSampleDistance),str(CurrentImagetoPreviousImageDistance), str(PrevImagetoPrevSampleDistance))
-                                if CurrentImagetoPreviousSampleDistance >= self._ImageSamplingDistance or ReachedWayPoint == True:
-                                    if  abs(PrevImagetoPrevSampleDistance - 0.0) > 0.01 :
-                                        if abs(CurrentImagetoPreviousSampleDistance - self._ImageSamplingDistance) <= abs(PrevImagetoPrevSampleDistance - self._ImageSamplingDistance) or ReachedWayPoint == True :
-                                            AddCurrentImage = True
-                                            AddPreviousImage = False
-                                            if self._adddebugInfo :
-                                                self._log.debug('PrevSample Position %s %s', str(PrevSampleLat),str(PrevSampleLon))
-                                                self._log.debug('Current Position %s %s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading), str(CurrentImagetoPreviousSampleDistance))
-                                                self._log.debug('Previous Position %s %s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp), str(PrevImagetoPrevSampleDistance))
-                                                self._log.debug('Current Image is closer to 1m than previous image AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
-                                        else :
-                                            AddCurrentImage = False
-                                            AddPreviousImage = True
-                                            NoofPointsinPreviousPath = NoofPointsinPreviousPath + 1
-                                            gray = cv2.cvtColor(PrevImage, cv2.COLOR_BGR2GRAY)
-                                            gray = gray.astype('float32')
-                                            gray /= 255.0
-                                            SendImage = gray
-                                            RenderingInfo = {}
-                                            RenderingInfo['Latitude'] = PrevLat
-                                            RenderingInfo['Longitude'] = PrevLon
-                                            RenderingInfo['Altitude'] = prevAlt
-                                            RenderingInfo['CompassHeading'] = PrevComp
-                                            RenderingInfo['Image'] = SendImage
-                                            RenderingInfo['StartingHeight'] = MinimumStartingHeigth
+                                    self._log.debug('Curent Position Considered%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))
+                                AddCurrentImage = False
+                                AddPreviousImage = False
+                                ###################Determine Whether Current Image and GPS Position is ImageSamplingDistance = 1.0 meters away from previous added sample otherwise 
+                                ##########################store the sample for future consideration
+                                if self._GrabVideoFrames :
+                                    if self._ReadfromFile :
+                                        ReadImageName = os.path.join(self._basedatapath,'..', 'data', self._sitename, 'PiFrameGrabber', str(NoofPlannedPath)+'_'+str(NoofPointsinPreviousPath)+'.png')
+                                        Frame = cv2.imread(ReadImageName)
+                                    else :
+                                        Frame = ReceivedCurrentDroneData['Image']
+                                        #if Frame is not None:
+                                        #    filename = os.path.join(self._out_folder,str(NoofPlannedPath)+'_'+str(NoofPointsChecked)+'.png')
+                                        #    cv2.imwrite(filename,Frame)
+                                if not NoofPointsinPreviousPath:
+                                    AddCurrentImage = True
+                                    AddPreviousImage = False
+                                    PrevLat = Latitude
+                                    PrevLon = Longitude
+                                    prevAlt = Altitude
+                                    PrevComp = CompassHeading
+                                    PrevImage = Frame
+                                    PrevSampleLat = Latitude
+                                    PrevSampleLon = Longitude
+                                    PrevImagetoPrevSampleDistance = 0.0
+                                    if self._adddebugInfo :
+                                        self._log.debug('%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))
+                                        self._log.debug('Current Image is on new path AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
                                             
-                                            if Frame is not None:
-                                                filename2 = os.path.join(self._out_folder,str(NoofPlannedPath)+'_'+str(NoofPointsinPreviousPath)+'_'+str(NoofPointsChecked)+'.png')
-                                                cv2.imwrite(filename2,PrevImage)
-                                            PrevSampleLat = PrevLat
-                                            PrevSampleLon = PrevLon
-                                            PrevImagetoPrevSampleDistance = CurrentImagetoPreviousImageDistance
-                                            if self._GrabVideoFrames :
-                                                if self._Render :
-                                                    if ReachedWayPoint == True:
-                                                        RenderingInfo['Render'] = True
-                                                        RenderingInfo['UpdatePlanningAlgo'] = True
-                                                        RenderingQueue.put(RenderingInfo)
-                                                    else :
-                                                        if NoofPlannedPath > 1 : 
-                                                            if ((NoofPointsinPreviousPath % self._RenderAfter) == 0):
-                                                                RenderingInfo['Render'] = True
-                                                            else :
-                                                                RenderingInfo['Render'] = False
-                                                            RenderingInfo['UpdatePlanningAlgo'] = False
+                                else :
+                                    CurrentImagetoPreviousSampleDistance = haversine(Latitude, Longitude, PrevSampleLat, PrevSampleLon)
+                                    CurrentImagetoPreviousImageDistance = haversine(Latitude, Longitude, PrevLat, PrevLon)
+                                    if self._adddebugInfo :
+                                        self._log.debug('distance Calculation %s %s %s %s %s %s', str(PrevSampleLat),str(PrevSampleLon) , str(PrevLat),str(PrevLon), str(Latitude),str(Longitude))
+                                        self._log.debug('CurrentImagetoPreviousSampleDistance is %s and CurrentImagetoPreviousImageDistance is  %s and PrevImagetoPrevSampleDistance is %s', str(CurrentImagetoPreviousSampleDistance),str(CurrentImagetoPreviousImageDistance), str(PrevImagetoPrevSampleDistance))
+                                    if CurrentImagetoPreviousSampleDistance >= self._ImageSamplingDistance or ReachedWayPoint == True:
+                                        if  abs(PrevImagetoPrevSampleDistance - 0.0) > 0.01 :
+                                            if abs(CurrentImagetoPreviousSampleDistance - self._ImageSamplingDistance) <= abs(PrevImagetoPrevSampleDistance - self._ImageSamplingDistance) or ReachedWayPoint == True :
+                                                AddCurrentImage = True
+                                                AddPreviousImage = False
+                                                if self._adddebugInfo :
+                                                    self._log.debug('PrevSample Position %s %s', str(PrevSampleLat),str(PrevSampleLon))
+                                                    self._log.debug('Current Position %s %s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading), str(CurrentImagetoPreviousSampleDistance))
+                                                    self._log.debug('Previous Position %s %s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp), str(PrevImagetoPrevSampleDistance))
+                                                    self._log.debug('Current Image is closer to 1m than previous image AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
+                                            else :
+                                                AddCurrentImage = False
+                                                AddPreviousImage = True
+                                                NoofPointsinPreviousPath = NoofPointsinPreviousPath + 1
+                                                gray = cv2.cvtColor(PrevImage, cv2.COLOR_BGR2GRAY)
+                                                gray = gray.astype('float32')
+                                                gray /= 255.0
+                                                SendImage = gray
+                                                RenderingInfo = {}
+                                                RenderingInfo['Latitude'] = PrevLat
+                                                RenderingInfo['Longitude'] = PrevLon
+                                                RenderingInfo['Altitude'] = prevAlt
+                                                RenderingInfo['CompassHeading'] = PrevComp
+                                                RenderingInfo['Image'] = SendImage
+                                                RenderingInfo['StartingHeight'] = MinimumStartingHeigth
+                                                if Frame is not None:
+                                                    filename2 = os.path.join(self._out_folder,str(NoofPlannedPath)+'_'+str(NoofPointsinPreviousPath)+'_'+str(NoofPointsChecked)+'.png')
+                                                    cv2.imwrite(filename2,PrevImage)
+                                                PrevSampleLat = PrevLat
+                                                PrevSampleLon = PrevLon
+                                                PrevImagetoPrevSampleDistance = CurrentImagetoPreviousImageDistance
+                                                if self._GrabVideoFrames :
+                                                    if self._Render :
+                                                        if ReachedWayPoint == True:
+                                                            RenderingInfo['Render'] = True
+                                                            RenderingInfo['UpdatePlanningAlgo'] = True
                                                             RenderingQueue.put(RenderingInfo)
                                                         else :
-                                                            if NoofPointsinPreviousPath > 29 :
-                                                                #RenderingInfo['Render'] = True
+                                                            if NoofPlannedPath > 1 : 
                                                                 if ((NoofPointsinPreviousPath % self._RenderAfter) == 0):
                                                                     RenderingInfo['Render'] = True
                                                                 else :
@@ -382,90 +373,89 @@ class DroneFlyingControl():
                                                                 RenderingInfo['UpdatePlanningAlgo'] = False
                                                                 RenderingQueue.put(RenderingInfo)
                                                             else :
-                                                                RenderingInfo['Render'] = False
-                                                                RenderingInfo['UpdatePlanningAlgo'] = False
-                                                                RenderingQueue.put(RenderingInfo)
-                                            
-                                            if self._adddebugInfo :                
-                                                self._gpsframelog.debug('%s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp))
-                                                self._log.debug('PrevSample Position %s %s', str(PrevSampleLat),str(PrevSampleLon))
-                                                self._log.debug('Current Position %s %s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading), str(CurrentImagetoPreviousSampleDistance))
-                                                self._log.debug('Previous Position %s %s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp), str(PrevImagetoPrevSampleDistance))
-                                                self._log.debug('previous image is closer to 1m AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage))
-                                            else :
-                                                self._gpsframelog.debug('%s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp))
-                                            if (CurrentImagetoPreviousImageDistance >= self._ImageSamplingDistance) or ReachedWayPoint == True :
-                                                AddCurrentImage = True
-                                                AddPreviousImage= False
-                                                if self._adddebugInfo :
+                                                                if NoofPointsinPreviousPath > 29 :
+                                                                    #RenderingInfo['Render'] = True
+                                                                    if ((NoofPointsinPreviousPath % self._RenderAfter) == 0):
+                                                                        RenderingInfo['Render'] = True
+                                                                    else :
+                                                                        RenderingInfo['Render'] = False
+                                                                    RenderingInfo['UpdatePlanningAlgo'] = False
+                                                                    RenderingQueue.put(RenderingInfo)
+                                                                else :
+                                                                    RenderingInfo['Render'] = False
+                                                                    RenderingInfo['UpdatePlanningAlgo'] = False
+                                                                    RenderingQueue.put(RenderingInfo)
+                                                if self._adddebugInfo :                
+                                                    self._gpsframelog.debug('%s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp))
                                                     self._log.debug('PrevSample Position %s %s', str(PrevSampleLat),str(PrevSampleLon))
                                                     self._log.debug('Current Position %s %s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading), str(CurrentImagetoPreviousSampleDistance))
                                                     self._log.debug('Previous Position %s %s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp), str(PrevImagetoPrevSampleDistance))
-                                                    self._log.debug('current image is 1m apart from previous imageAddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
-                                            else :
-                                                if CurrentImagetoPreviousImageDistance >= 0.01:
-                                                    PrevLat = Latitude
-                                                    PrevLon = Longitude
-                                                    AddCurrentImage = False
-                                                    AddPreviousImage = False
-                                                    prevAlt = Altitude
-                                                    PrevComp = CompassHeading
-                                                    PrevImage = Frame
-                                                    PrevImagetoPrevSampleDistance = CurrentImagetoPreviousImageDistance
-                                    else :
-                                        AddCurrentImage = True
-                                        AddPreviousImage = False
-                                        if self._adddebugInfo :
-                                            self._log.debug('PrevSample Position %s %s', str(PrevSampleLat),str(PrevSampleLon))
-                                            self._log.debug('Current Position %s %s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading), str(CurrentImagetoPreviousSampleDistance))
-                                            self._log.debug('Previous Position %s %s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp), str(PrevImagetoPrevSampleDistance))
-                                            self._log.debug('Current Image is closer to 1m than previous image AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
-                                else :
-                                    if CurrentImagetoPreviousImageDistance >= 0.001:
-                                        PrevLat = Latitude
-                                        PrevLon = Longitude
-                                        AddCurrentImage = False
-                                        AddPreviousImage = False
-                                        prevAlt = Altitude
-                                        PrevComp = CompassHeading
-                                        PrevImage = Frame
-                                        PrevImagetoPrevSampleDistance = CurrentImagetoPreviousSampleDistance
-                            if AddCurrentImage == True:
-                                NoofPointsinPreviousPath = NoofPointsinPreviousPath + 1
-                                gray = cv2.cvtColor(Frame, cv2.COLOR_BGR2GRAY)
-                                gray = gray.astype('float32')
-                                gray /= 255.0
-                                SendImage = gray
-                                PrevSampleLat = Latitude
-                                PrevSampleLon = Longitude
-                                PrevImagetoPrevSampleDistance = 0.0
-                                RenderingInfo = {}
-                                RenderingInfo['Latitude'] = Latitude
-                                RenderingInfo['Longitude'] = Longitude
-                                RenderingInfo['Altitude'] = Altitude
-                                RenderingInfo['CompassHeading'] = CompassHeading
-                                RenderingInfo['Image'] = SendImage
-                                RenderingInfo['StartingHeight'] = MinimumStartingHeigth
-                                if Frame is not None:
-                                    filename2 = os.path.join(self._out_folder,str(NoofPlannedPath)+'_'+str(NoofPointsinPreviousPath)+'_'+str(NoofPointsChecked)+'.png')
-                                    cv2.imwrite(filename2,Frame)
-                                if self._GrabVideoFrames :
-                                    if self._Render :
-                                        if ReachedWayPoint == True:
-                                            RenderingInfo['Render'] = True
-                                            RenderingInfo['UpdatePlanningAlgo'] = True
-                                            RenderingQueue.put(RenderingInfo)
-                                        else :
-                                            if NoofPlannedPath > 1 :
-                                                if ((NoofPointsinPreviousPath % self._RenderAfter) == 0):
-                                                    RenderingInfo['Render'] = True
+                                                    self._log.debug('previous image is closer to 1m AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage))
                                                 else :
-                                                    RenderingInfo['Render'] = False
-                                                RenderingInfo['UpdatePlanningAlgo'] = False
+                                                    self._gpsframelog.debug('%s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp))
+                                                if (CurrentImagetoPreviousImageDistance >= self._ImageSamplingDistance) or ReachedWayPoint == True :
+                                                    AddCurrentImage = True
+                                                    AddPreviousImage= False
+                                                    if self._adddebugInfo :
+                                                        self._log.debug('PrevSample Position %s %s', str(PrevSampleLat),str(PrevSampleLon))
+                                                        self._log.debug('Current Position %s %s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading), str(CurrentImagetoPreviousSampleDistance))
+                                                        self._log.debug('Previous Position %s %s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp), str(PrevImagetoPrevSampleDistance))
+                                                        self._log.debug('current image is 1m apart from previous imageAddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
+                                                else :
+                                                    if CurrentImagetoPreviousImageDistance >= 0.01:
+                                                        PrevLat = Latitude
+                                                        PrevLon = Longitude
+                                                        AddCurrentImage = False
+                                                        AddPreviousImage = False
+                                                        prevAlt = Altitude
+                                                        PrevComp = CompassHeading
+                                                        PrevImage = Frame
+                                                        PrevImagetoPrevSampleDistance = CurrentImagetoPreviousImageDistance
+                                        else :
+                                            AddCurrentImage = True
+                                            AddPreviousImage = False
+                                            if self._adddebugInfo :
+                                                self._log.debug('PrevSample Position %s %s', str(PrevSampleLat),str(PrevSampleLon))
+                                                self._log.debug('Current Position %s %s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading), str(CurrentImagetoPreviousSampleDistance))
+                                                self._log.debug('Previous Position %s %s %s %s %s', str(PrevLat),str(PrevLon),str(prevAlt),str(PrevComp), str(PrevImagetoPrevSampleDistance))
+                                                self._log.debug('Current Image is closer to 1m than previous image AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage)) 
+                                    else :
+                                        if CurrentImagetoPreviousImageDistance >= 0.001:
+                                            PrevLat = Latitude
+                                            PrevLon = Longitude
+                                            AddCurrentImage = False
+                                            AddPreviousImage = False
+                                            prevAlt = Altitude
+                                            PrevComp = CompassHeading
+                                            PrevImage = Frame
+                                            PrevImagetoPrevSampleDistance = CurrentImagetoPreviousSampleDistance
+                                if AddCurrentImage == True:
+                                    NoofPointsinPreviousPath = NoofPointsinPreviousPath + 1
+                                    gray = cv2.cvtColor(Frame, cv2.COLOR_BGR2GRAY)
+                                    gray = gray.astype('float32')
+                                    gray /= 255.0
+                                    SendImage = gray
+                                    PrevSampleLat = Latitude
+                                    PrevSampleLon = Longitude
+                                    PrevImagetoPrevSampleDistance = 0.0
+                                    RenderingInfo = {}
+                                    RenderingInfo['Latitude'] = Latitude
+                                    RenderingInfo['Longitude'] = Longitude
+                                    RenderingInfo['Altitude'] = Altitude
+                                    RenderingInfo['CompassHeading'] = CompassHeading
+                                    RenderingInfo['Image'] = SendImage
+                                    RenderingInfo['StartingHeight'] = MinimumStartingHeigth
+                                    if Frame is not None:
+                                        filename2 = os.path.join(self._out_folder,str(NoofPlannedPath)+'_'+str(NoofPointsinPreviousPath)+'_'+str(NoofPointsChecked)+'.png')
+                                        cv2.imwrite(filename2,Frame)
+                                    if self._GrabVideoFrames :
+                                        if self._Render :
+                                            if ReachedWayPoint == True:
+                                                RenderingInfo['Render'] = True
+                                                RenderingInfo['UpdatePlanningAlgo'] = True
                                                 RenderingQueue.put(RenderingInfo)
                                             else :
-                                                if NoofPointsinPreviousPath > 29 :
-                                                    #RenderingInfo['Render'] = True
+                                                if NoofPlannedPath > 1 :
                                                     if ((NoofPointsinPreviousPath % self._RenderAfter) == 0):
                                                         RenderingInfo['Render'] = True
                                                     else :
@@ -473,33 +463,44 @@ class DroneFlyingControl():
                                                     RenderingInfo['UpdatePlanningAlgo'] = False
                                                     RenderingQueue.put(RenderingInfo)
                                                 else :
-                                                    RenderingInfo['Render'] = False
-                                                    RenderingInfo['UpdatePlanningAlgo'] = False
-                                                    RenderingQueue.put(RenderingInfo)
-                                if self._adddebugInfo :                
-                                    self._gpsframelog.debug('%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))
-                                    self._log.debug('AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage))
-                                else :
-                                    self._gpsframelog.debug('%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))     
-                        if ReachedWayPoint == False:
-                            CheckPoint = True
-                        else:
-                            CheckPoint = False
-                            #with CurrentGPSInfoQueue.mutex :
-                            #CurrentGPSInfoQueue.queue.clear()
-                    if self._adddebugInfo :
-                        self._log.debug('Reached WayPoint %s', str(x))
-                    prev_pt = next_pts[-1]
-                    CompleteRendering = True   
-                    currenttime = datetime.datetime.now()
-                    diff = currenttime - starttime
-                    CurrentFlightTime = diff.total_seconds()
-                    if self._adddebugInfo :
-                        self._log.debug('Calculated CurrentFlightTime %s', str(CurrentFlightTime))
-            else :
-                CurrentFlightTime  = self._maxflighttime + 1
+                                                    if NoofPointsinPreviousPath > 29 :
+                                                        #RenderingInfo['Render'] = True
+                                                        if ((NoofPointsinPreviousPath % self._RenderAfter) == 0):
+                                                            RenderingInfo['Render'] = True
+                                                        else :
+                                                            RenderingInfo['Render'] = False
+                                                        RenderingInfo['UpdatePlanningAlgo'] = False
+                                                        RenderingQueue.put(RenderingInfo)
+                                                    else :
+                                                        RenderingInfo['Render'] = False
+                                                        RenderingInfo['UpdatePlanningAlgo'] = False
+                                                        RenderingQueue.put(RenderingInfo)
+                                    if self._adddebugInfo :                
+                                        self._gpsframelog.debug('%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))
+                                        self._log.debug('AddPreviousImage is %s and AddCurrentImage is  %s', str(AddPreviousImage),str(AddCurrentImage))
+                                    else :
+                                        self._gpsframelog.debug('%s %s %s %s', str(Latitude),str(Longitude),str(Altitude),str(CompassHeading))     
+                            if ReachedWayPoint == False:
+                                CheckPoint = True
+                            else:
+                                CheckPoint = False
+                                #with CurrentGPSInfoQueue.mutex :
+                                #CurrentGPSInfoQueue.queue.clear()
+                            if self._adddebugInfo :
+                                self._log.debug('Reached WayPoint %s', str(x))
+                        prev_pt = next_pts[-1]
+                        CompleteRendering = True   
+                        currenttime = datetime.datetime.now()
+                        diff = currenttime - starttime
+                        CurrentFlightTime = diff.total_seconds()
+                        if self._adddebugInfo :
+                            self._log.debug('Calculated CurrentFlightTime %s', str(CurrentFlightTime))
+                else :
+                    CurrentFlightTime  = self._maxflighttime + 1
+        except Exception as ex:
+            self._log.exception('Error in FlyingControl')
         #################Added for Adaptive Path Planning #################################
-        ###################################################################################################                    
+        ###################################################################################################
         self._gpsframelog.debug('%s %s %s %s', str(x), str(NoofPointsinPreviousPath),str(NoofPointsChecked),str(0))
         time.sleep(1.0)
         RecordEvent.clear()
