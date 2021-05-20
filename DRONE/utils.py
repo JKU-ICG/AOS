@@ -517,7 +517,7 @@ async def download_file(serveraddress, resources, local_file,remote_file):
                 await outfile.write(data)
 
 async def upload_images(serveraddress, undstortedimage, generatedviewmatrix, locationid, poses = None):
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session: 
         if poses is not None:
             resources = "integral_images"
             data = {
@@ -536,6 +536,7 @@ async def upload_images(serveraddress, undstortedimage, generatedviewmatrix, loc
         image_ref = await create_image_meta(session,os.path.join(serveraddress,resources),json.dumps(data))
         is_success,img_encoded = cv2.imencode('.png', undstortedimage)
         image_location = await upload_png_file_data(session, os.path.join(serveraddress,resources,image_ref),img_encoded.tobytes())
+       
         
 async def upload_detectionlabels(serveraddress, location_id,labels_data):
     async with aiohttp.ClientSession() as session:

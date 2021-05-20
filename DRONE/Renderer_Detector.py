@@ -17,6 +17,10 @@ from PIL import Image
 from pathlib import Path
 import sys
 
+import asyncio
+import aiohttp
+import aiofiles
+
 
 # to find the local modules we need to add the folders to sys.path
 cur_file_path = Path(__file__).resolve().parent
@@ -27,7 +31,7 @@ sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
 
 import pyaos
-detection = True
+detection = False
 if detection :
     from detector import Detector
 from matplotlib import pyplot as plt
@@ -178,7 +182,7 @@ class Renderer :
         NorthCentered = (self.CenterNorth - North) #Get MeanNorth and Set MeanNorth
         generatedviewmatrix = createviewmateuler(np.array([CompassRad, 0,0]),np.array( [EastCentered,NorthCentered,Altitude]) )
         if self._uploadserver :
-            image_id = upload_images(self._serveraddress, undstortedimage, generatedviewmatrix, self._locationid, poses = None)
+            image_id = asyncio.run(upload_images(self._serveraddress, undstortedimage, generatedviewmatrix, self._locationid, poses = None))
         else :
             image_id = None
         ViewMatrix = np.vstack((generatedviewmatrix, np.array([0.0,0.0,0.0,1.0],dtype=np.float32)))
@@ -406,7 +410,11 @@ if __name__ == '__main__':
     sitename = 'test_open_field_adaptive_simulate'
        
     #anaos_path = os.environ.get('ANAOS_DATA')
-
+    ##Testing Server
+    base_url1 = 'http://localhost:8080'
+    base_url = 'http://localhost:8080/'
+    locationid = "test_open_field_adaptive_simulate"
+     ##Testing Server
     # Todo: change to 
     
     #basedatapath = '../../data'
@@ -454,10 +462,15 @@ if __name__ == '__main__':
     #utm_center = (CenterUTMInfo[0], CenterUTMInfo[1], CenterUTMInfo[2], CenterUTMInfo[3])
     #PlanningAlgoClass = Planner( utm_center, (150,150), tile_distance = 150,  prob_map=None, debug=False,vis=None, results_folder=os.path.join(basedatapath,'FlightResults', sitename, 'Log'),gridalignedplanpath = True)
     
+    #RendererClass = Renderer(CenterUTMInfo=CenterUTMInfo,ObjModelPath=ObjModelPath, ObjModelImagePath=ObjModelImagePath,basedatapath=basedatapath,
+    #sitename=sitename,results_folder=os.path.join(basedatapath, '..', 'data', sitename, 'testresults'), device="MYRIAD", # device should be MYRIAD for Neural Compute Stick
+    #FieldofView=float(FieldofView),adddebuginfo=True,Detect=detection)
+
+    ###Testing Server
     RendererClass = Renderer(CenterUTMInfo=CenterUTMInfo,ObjModelPath=ObjModelPath, ObjModelImagePath=ObjModelImagePath,basedatapath=basedatapath,
     sitename=sitename,results_folder=os.path.join(basedatapath, '..', 'data', sitename, 'testresults'), device="MYRIAD", # device should be MYRIAD for Neural Compute Stick
-    FieldofView=float(FieldofView),adddebuginfo=True,Detect=detection)
-    
+    FieldofView=float(FieldofView),adddebuginfo=True,Detect=detection,uploadserver=True,baseserver=base_url1,locationid=locationid)
+
     RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent,))
     #threads.append(RenderThread)
     RenderProcess.start()
