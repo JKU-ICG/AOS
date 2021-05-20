@@ -492,6 +492,7 @@ async def upload_png_file_data(session, resources, dataup):
             return resp.headers["Location"]  # this one is needed for linking with the metadata
 
 async def upload_json(session, resource, data):
+    print("Getting ", resource)
     async with session.request(
             "post", resource,
             data=data,
@@ -510,37 +511,81 @@ async def create_image_meta(session, resources, data) -> str:
 async def download_file(serveraddress, resources, local_file,remote_file):
     async with aiohttp.ClientSession() as session:
         print("Downloading to " + str(local_file) + "from file " + str(remote_file))
-        async with session.request("get", os.path.join(serveraddress,resources,remote_file),params=None) as resp:
+        async with session.request("get", os.path.join(serveraddress,resources,remote_file).replace("\\","/"),params=None) as resp:
             assert resp.status == 200
             data = await resp.read()
             async with aiofiles.open(local_file, "wb") as outfile:
                 await outfile.write(data)
 
 async def upload_images(serveraddress, undstortedimage, generatedviewmatrix, locationid, poses = None):
-    async with aiohttp.ClientSession() as session: 
+    #testing connection
+    base_url1 = 'http://localhost:8080'
+    base_url = 'http://localhost:8080/'
+    resource1 = "/images"
+    async with aiohttp.ClientSession() as session:
+        async with session.request(
+                "post", base_url1 + resource1 ,
+                data=json.dumps({"name": "Test user", "number": 100}),
+                headers={"content-type": "application/json"}
+        ) as resp:
+            print(str(resp))
+            print(await resp.text())
+            assert 200 != resp.status 
+        image_ref = await create_image_meta(
+            session,
+            resource1,
+            json.dumps(
+                {
+                    "location_id": "Test20201022F1",
+                    "drone_id": "drone1",
+                    "m3x4": [[0.9956087693884628, 0.09361184923283353, -0.0, 68.73988239726691],
+                             [-0.09361184923283353, 0.9956087693884628, 0.0, 35.96844788511991],
+                             [0.0, 0.0, 1.0, 345.6988]]
+                }))
+        #testing connection
         if poses is not None:
-            resources = "integral_images"
+            resources = "/integral_images"
             data = {
                     "location_id": locationid,
                     "drone_id": "drone1",
-                    "m3x4": generatedviewmatrix,
+                    "m3x4": generatedviewmatrix.tolist(),
                     "source_images": poses
                 }
         else :
-            resources = "images"
+            resources = "/images"
             data = {
                     "location_id": locationid,
                     "drone_id": "drone1",
-                    "m3x4": generatedviewmatrix
+                    "m3x4": [0, 0 ,0]#generatedviewmatrix.tolist()
                 }
-        image_ref = await create_image_meta(session,os.path.join(serveraddress,resources),json.dumps(data))
+        image_ref = await create_image_meta(session,serveraddress + resources,json.dumps(data))
         is_success,img_encoded = cv2.imencode('.png', undstortedimage)
-        image_location = await upload_png_file_data(session, os.path.join(serveraddress,resources,image_ref),img_encoded.tobytes())
-       
+        image_location = await upload_png_file_data(session, serveraddress + image_ref,img_encoded.tobytes())
+'''
+async def upload_images(session,serveraddress, undstortedimage, generatedviewmatrix, locationid, poses = None):
+    if poses is not None:
+        resources = "/integral_images"
+        data = {
+                "location_id": locationid,
+                "drone_id": "drone1",
+                "m3x4": generatedviewmatrix.tolist(),
+                "source_images": poses
+                }
+    else :
+        resources = "/images"
+        data = {
+                "location_id": locationid,
+                "drone_id": "drone1",
+                "m3x4": [0, 0 ,0]#generatedviewmatrix.tolist()
+            }
+    image_ref = await create_image_meta(session,serveraddress + resources,json.dumps(data))
+    is_success,img_encoded = cv2.imencode('.png', undstortedimage)
+    image_location = await upload_png_file_data(session, serveraddress + image_ref,img_encoded.tobytes())
+'''       
         
 async def upload_detectionlabels(serveraddress, location_id,labels_data):
     async with aiohttp.ClientSession() as session:
         for label in labels_data:
             label["location_id"] = location_id
-            await upload_json(session, os.path.join(serveraddress,"labels"), json.dumps(label))
+            await upload_json(session, os.path.join(serveraddress,"labels").replace("\\","/"), json.dumps(label))
 

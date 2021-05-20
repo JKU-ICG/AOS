@@ -87,10 +87,10 @@ class Dummy :
             count = count + 1
         
     def dummy_run(self,renderedimagelist, individualimagelist, detectevent):
-        asyncio.run(self.dummy_integralimages(renderedimagelist, individualimagelist, detectevent))
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.dummy_integralimages(renderedimagelist, individualimagelist, detectevent))
+        #asyncio.run(self.dummy_integralimages(renderedimagelist, individualimagelist, detectevent))
                                     
-
-
 
 if __name__ == '__main__':
     
