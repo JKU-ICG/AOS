@@ -171,22 +171,20 @@ class Renderer :
             self._previousMergedDetectionCount = np.zeros((self._LFRHeight, self._LFRWidth))
             self._previousMergedDetectionCount = self._previousMergedDetectionCount.astype('float32')
     
+    async def initalize_aiohttpsession(self):
+        self._session = aiohttp.ClientSession()
+        yield
+        await self._session.close()
+    
     async def UploadAllImages(self,ImageList,ViewMatrixList, IntegralImage, IntegralViewMatrix):
         if self._session is None:
             self._session = aiohttp.ClientSession()
-            async with self._session:
-                Image_IDList = await asyncio.gather(*[upload_images_was(self._session,self._serveraddress, image, mat, self._locationid, poses = None) for image, mat in zip(ImageList, ViewMatrixList)])
-                if len(Image_IDList):
-                    self._ImageIDList.extend(Image_IDList)
-                    IntegralImageList = self._ImageIDList[len(self._ImageIDList)-30:len(self._ImageIDList)-1]
-                    await upload_images_was(self._session, self._serveraddress, IntegralImage, IntegralViewMatrix, self._locationid, poses = IntegralImageList)
-        else :
-            async with self._session:
-                Image_IDList = await asyncio.gather(*[upload_images_was(self._session,self._serveraddress, image, mat, self._locationid, poses = None) for image, mat in zip(ImageList, ViewMatrixList)])
-                if len(Image_IDList):
-                    self._ImageIDList.extend(Image_IDList)
-                    IntegralImageList = self._ImageIDList[len(self._ImageIDList)-30:len(self._ImageIDList)-1]
-                    await upload_images_was(self._session, self._serveraddress, IntegralImage, IntegralViewMatrix, self._locationid, poses = IntegralImageList)
+        Image_IDList = await asyncio.gather(*[upload_images_was(self._session,self._serveraddress, image, mat, self._locationid, poses = None) for image, mat in zip(ImageList, ViewMatrixList)])
+        if len(Image_IDList):
+            self._ImageIDList.extend(Image_IDList)
+            IntegralImageList = self._ImageIDList[len(self._ImageIDList)-30:len(self._ImageIDList)-1]
+            await upload_images_was(self._session, self._serveraddress, IntegralImage, IntegralViewMatrix, self._locationid, poses = IntegralImageList)
+
     
     async def UploadAllImages_ss(self,ImageList,ViewMatrixList, IntegralImage, IntegralViewMatrix):
         async with aiohttp.ClientSession() as session:
@@ -288,6 +286,7 @@ class Renderer :
         self._RendererLog = setup_logger( 'Renderer_logger', os.path.join( self._out_folder, 'RendererLog.log') )
         self._RendererLog.debug('Renderer and Detection Started in Third Thread')
         asyncio.run(create_dummylocation_id(self._serveraddress, self._locationid))
+        #asyncio.run(self.initalize_aiohttpsession())
         #weightsXmlFile = os.path.join(".","weights",yoloversion,aug,yoloversion+'.xml')
         #weightsXmlFile = os.path.join(".","weights","vL.2noTest","AP25to30",yoloversion,aug,yoloversion+'.xml')
         #weightsXmlFile = os.path.join(".","weights","vL.2noTest","APall",self._yoloversion,self._aug,self._yoloversion+'.xml')
