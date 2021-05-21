@@ -35,7 +35,7 @@ detection = False
 if detection :
     from detector import Detector
 from matplotlib import pyplot as plt
-from utils import createviewmateuler,FindStartingHeight, upload_images, upload_detectionlabels
+from utils import createviewmateuler,FindStartingHeight, upload_images, upload_detectionlabels,create_dummylocation_id,upload_images_was
 from LFR_utils import read_poses_and_images, pose_to_virtualcamera, init_aos, init_window
 from Undistort import Undistort
 import multiprocessing
@@ -161,11 +161,41 @@ class Renderer :
         self._uploadserver = uploadserver
         self._serveraddress = baseserver
         self._locationid = locationid
+        self._ImageList = []
+        self._ImageMatList = []
+        self._ImageIDList = []
+        self._session = None
         if self._Detect:
             self._previousMergedDetection = np.zeros((self._LFRHeight, self._LFRWidth))
             self._previousMergedDetection = self._previousMergedDetection.astype('float32')
             self._previousMergedDetectionCount = np.zeros((self._LFRHeight, self._LFRWidth))
             self._previousMergedDetectionCount = self._previousMergedDetectionCount.astype('float32')
+    
+    async def UploadAllImages(self,ImageList,ViewMatrixList, IntegralImage, IntegralViewMatrix):
+        if self._session is None:
+            self._session = aiohttp.ClientSession()
+            async with self._session:
+                Image_IDList = await asyncio.gather(*[upload_images_was(self._session,self._serveraddress, image, mat, self._locationid, poses = None) for image, mat in zip(ImageList, ViewMatrixList)])
+                if len(Image_IDList):
+                    self._ImageIDList.extend(Image_IDList)
+                    IntegralImageList = self._ImageIDList[len(self._ImageIDList)-30:len(self._ImageIDList)-1]
+                    await upload_images_was(self._session, self._serveraddress, IntegralImage, IntegralViewMatrix, self._locationid, poses = IntegralImageList)
+        else :
+            async with self._session:
+                Image_IDList = await asyncio.gather(*[upload_images_was(self._session,self._serveraddress, image, mat, self._locationid, poses = None) for image, mat in zip(ImageList, ViewMatrixList)])
+                if len(Image_IDList):
+                    self._ImageIDList.extend(Image_IDList)
+                    IntegralImageList = self._ImageIDList[len(self._ImageIDList)-30:len(self._ImageIDList)-1]
+                    await upload_images_was(self._session, self._serveraddress, IntegralImage, IntegralViewMatrix, self._locationid, poses = IntegralImageList)
+    
+    async def UploadAllImages_ss(self,ImageList,ViewMatrixList, IntegralImage, IntegralViewMatrix):
+        async with aiohttp.ClientSession() as session:
+            Image_IDList = await asyncio.gather(*[upload_images_was(session,self._serveraddress, image, mat, self._locationid, poses = None) for image, mat in zip(ImageList, ViewMatrixList)])
+            if len(Image_IDList):
+                self._ImageIDList.extend(Image_IDList)
+                IntegralImageList = self._ImageIDList[len(self._ImageIDList)-30:len(self._ImageIDList)-1]
+                await upload_images_was(session, self._serveraddress, IntegralImage, IntegralViewMatrix, self._locationid, poses = IntegralImageList)
+
 
     def RenderContinuous(self, PyLFClass,DownloadedImage, Latitude, Longitude, Altitude, CompassHeading, NoofPathsRendered,CurrentImageIndex,CompassCorrection,StartHeight,ud,MeanAltitude,MeanCompass,CompassRad, CurrentImageNumber, virtualcamerapose, CenterCameraIndex, PreviousRenderedMean = 0.5, RenderandDetectFlag = True):
         if len(DownloadedImage.shape) == 2 :
@@ -182,7 +212,10 @@ class Renderer :
         NorthCentered = (self.CenterNorth - North) #Get MeanNorth and Set MeanNorth
         generatedviewmatrix = createviewmateuler(np.array([CompassRad, 0,0]),np.array( [EastCentered,NorthCentered,Altitude]) )
         if self._uploadserver :
-            image_id = asyncio.run(upload_images(self._serveraddress, undstortedimage, generatedviewmatrix, self._locationid, poses = None))
+            #image_id = await upload_images(self._serveraddress, undstortedimage, generatedviewmatrix, self._locationid, poses = None)
+            self._ImageList.append(undstortedimage)
+            self._ImageMatList.append(generatedviewmatrix)
+            image_id = None
         else :
             image_id = None
         ViewMatrix = np.vstack((generatedviewmatrix, np.array([0.0,0.0,0.0,1.0],dtype=np.float32)))
@@ -249,10 +282,12 @@ class Renderer :
             Detections.append(ObjectInfo)
             labels_data.append(label)
         return Detections, labels_data
+
     def RendererandDetectContinuous(self, RenderingQueue, DetectionInfoQueue, RenderingProcessEvent):
         #print('Renderer and Detection Started in Third Thread')
         self._RendererLog = setup_logger( 'Renderer_logger', os.path.join( self._out_folder, 'RendererLog.log') )
         self._RendererLog.debug('Renderer and Detection Started in Third Thread')
+        asyncio.run(create_dummylocation_id(self._serveraddress, self._locationid))
         #weightsXmlFile = os.path.join(".","weights",yoloversion,aug,yoloversion+'.xml')
         #weightsXmlFile = os.path.join(".","weights","vL.2noTest","AP25to30",yoloversion,aug,yoloversion+'.xml')
         #weightsXmlFile = os.path.join(".","weights","vL.2noTest","APall",self._yoloversion,self._aug,self._yoloversion+'.xml')
@@ -335,6 +370,7 @@ class Renderer :
                                     t2_start = time.perf_counter()
                                     RenderedImage, RenderedDEM_Info, CurrentCamviewarr,gpsloc, genviewmat, image_id  = self.RenderContinuous(PLFClass, CurrentDownloadedImage, CurrentLatitude, CurrentLongitude, CurrentAltitude, CurrentCompass, CurrentPathIndex,CurrentImageIndex,CompassCorrection,StartHeight, ud,MeanAltitude,MeanCompass,CompassRad, CurrentImageNumber,centercameraviewarr, CentralCameraIndex, PreviousRenderedMean, RenderandDetectFlag)
                                     t2_stop = time.perf_counter()
+                                    print('Rendering Images Elapsed time',str(t2_stop - t2_start))
                                     if self._adddebuginfo :
                                         self._RendererLog.debug('Rendering Elapsed time: = %s,',str(t2_stop -t2_start))
                                     currentpath_genviewmat[CurrentImageNumber] = genviewmat
@@ -352,7 +388,16 @@ class Renderer :
                                     RenderedImage[RenderedImage == 0] = minval
                                     RenderedImage = cv2.normalize(RenderedImage, None, 0,255, cv2.NORM_MINMAX, cv2.CV_8UC3)
                                     if self._uploadserver :
-                                        image_id = upload_images(self._serveraddress, RenderedImage, currentpath_genviewmat[CentralCameraIndex], self._locationid, poses = imageidlist)
+
+                                        #image_id = await upload_images(self._serveraddress, RenderedImage, currentpath_genviewmat[CentralCameraIndex], self._locationid, poses = imageidlist)
+                                        t3_start = time.perf_counter()
+                                        asyncio.run(self.UploadAllImages(self._ImageList,self._ImageMatList,RenderedImage,currentpath_genviewmat[CentralCameraIndex]))
+                                        #asyncio.run(self.UploadAllImages_ss(self._ImageList,self._ImageMatList,RenderedImage,currentpath_genviewmat[CentralCameraIndex]))
+                                        t3_stop = time.perf_counter()
+                                        self._RendererLog.debug('Uploading Images Elapsed time: = %s,',str(t3_stop - t3_start))
+                                        print('Uploading Images Elapsed time',str(t3_stop - t3_start))
+                                        self._ImageList = []
+                                        self._ImageMatList = []
                                     if self._WriteImages :
                                         if self._adddebuginfo :
                                             self._RendererLog.debug('Image Rendered')
@@ -401,19 +446,24 @@ class Renderer :
                 print('Renderer terminated, Detector Closed, Flight Completed and Third Thread Finished')
         except Exception as ex:
             self._RendererLog.exception('Error in Renderer and Detector')
+    
+    def dummy_run(self,RenderingQueue, DetectionInfoQueue, RenderingProcessEvent):
+        self.RendererandDetectContinuous(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent)
+        #loop = asyncio.get_event_loop()
+        #loop.run_until_complete(self.RendererandDetectContinuous(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
 ##############################################################################
 ##############################################################################
 
 # __name__ guard 
 if __name__ == '__main__':
     
-    sitename = 'test_open_field_adaptive_simulate'
+    sitename = 'open_field'
        
     #anaos_path = os.environ.get('ANAOS_DATA')
     ##Testing Server
     base_url1 = 'http://localhost:8080'
     base_url = 'http://localhost:8080/'
-    locationid = "test_open_field_adaptive_simulate"
+    locationid = "open_field"
      ##Testing Server
     # Todo: change to 
     
@@ -471,7 +521,7 @@ if __name__ == '__main__':
     sitename=sitename,results_folder=os.path.join(basedatapath, '..', 'data', sitename, 'testresults'), device="MYRIAD", # device should be MYRIAD for Neural Compute Stick
     FieldofView=float(FieldofView),adddebuginfo=True,Detect=detection,uploadserver=True,baseserver=base_url1,locationid=locationid)
 
-    RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent,))
+    RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.dummy_run, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent,))
     #threads.append(RenderThread)
     RenderProcess.start()
     EastUtmList = []
@@ -508,7 +558,7 @@ if __name__ == '__main__':
                 PlanningAlgo.update(DetectionInfo['PreviousVirtualCamPos'], DetectionInfo['DLDetections'])
             if i >= 29 :
                 if i in TestPlanner:
-                    print('Reached Waypoint')
+                    #print('Reached Waypoint')
                     next_pts, FlyingInfoFlag = PlanningAlgo.planpoints( prev_pt )
                     print(next_pts)
                     RenderingInfo['Render'] = True
@@ -516,13 +566,14 @@ if __name__ == '__main__':
                     RenderingQueue.put(RenderingInfo)
                     time.sleep(0.5)
                 else :
-                    print('Not Reached Waypoint')
                     if i % 2 == 0:
+                        #print('Not Rendering Images')
                         RenderingInfo['Render'] = False
                         RenderingInfo['UpdatePlanningAlgo'] = False
                         RenderingQueue.put(RenderingInfo)
                         time.sleep(0.5)
                     else :
+                        #print('Rendering Images')
                         RenderingInfo['Render'] = True
                         RenderingInfo['UpdatePlanningAlgo'] = False
                         RenderingQueue.put(RenderingInfo)
@@ -538,7 +589,7 @@ if __name__ == '__main__':
         print("Oops!", e.__class__, "occurred.")
         print("Next entry.")
         print()
-    time.sleep(5)
+    time.sleep(100)
     RenderingProcessEvent.set()
     time.sleep(10)
     while not RenderingQueue.empty():
