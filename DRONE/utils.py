@@ -637,6 +637,38 @@ def create_dummylocation_id_was(serveraddress, locationid):
             resp.raise_for_status()
             location_ref = resp.headers["Location"]
 
+async def upload_dummylocation_id_was(session, serveraddress, locationid):
+    async with session.request(
+            "put", serveraddress + '/drones/drone1',
+            data=json.dumps({
+                "camera": {"fov": {"Deg": 50.815436217896945}, "near": 0.1, "far": 100.0, "aspect": 1.0,
+                            "resolution": [512, 512]}}),
+            headers={"content-type": "application/json"}
+    ) as resp:
+        #print(str(resp))
+        #print(resp.text())
+        assert 201 == resp.status
+
+    location_id = locationid
+    # Store our main location metadata
+    async with session.request(
+            "put", serveraddress + "/locations/" + location_id,
+            data=json.dumps({
+                "start_height": 307.0020751953125,
+                "start_lat_lon": [48.339758, 14.33059],
+                "center_lat_lon": [48.3398054625, 14.3318629125],
+                "start_utm": [450393.91024515807, 5354280.539372292, 33, "U"],
+                "start_gkm31": [73989.71284555788, 356206.4560305681],
+                "center_gkm31": [74084.00932285623, 356212.9582170388],
+                "center_utm": [450488.28387294046, 5354284.992294418, 33, "U"]
+            }),
+            headers={"content-type": "application/json"}
+    ) as resp:
+        await resp.read()
+        #print(str(resp))
+        resp.raise_for_status()
+        location_ref = resp.headers["Location"]
+
 async def upload_images(serveraddress, undstortedimage, generatedviewmatrix, locationid, poses = None):
     async with aiohttp.ClientSession() as session:            
         if poses is not None:
@@ -710,4 +742,9 @@ async def upload_detectionlabels(serveraddress, location_id,labels_data):
         for label in labels_data:
             label["location_id"] = location_id
             await upload_json(session, serveraddress + "/labels", json.dumps(label))
+
+async def upload_detectionlabels_was(session, serveraddress, location_id,labels_data):
+    for label in labels_data:
+        label["location_id"] = location_id
+        await upload_json(session, serveraddress + "/labels", json.dumps(label))
 
