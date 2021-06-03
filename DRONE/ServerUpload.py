@@ -74,6 +74,7 @@ class ServerUpload :
         async with aiohttp.ClientSession() as session:
             print('start uploading')
             await upload_dummylocation_id_was(session, self._serveradd, self._location_id)
+            time.sleep(1.0)
             while not upload_complete_event.is_set():
                 while not UploadQueue.empty():
                     if not UploadQueue.empty():
@@ -89,7 +90,7 @@ class ServerUpload :
                             IntegralImageList = self._ImageIDList[min(0,len(self._ImageIDList)-30):len(self._ImageIDList)-1]
                             await upload_images_was(session, self._serveradd, IntegralImage, IntegralViewMatrix, self._location_id, poses = IntegralImageList)
                         if len(Labels):
-                            await upload_detectionlabels_was(self._serveradd,self._location_id,Labels)
+                            await upload_detectionlabels_was(session, self._serveradd,self._location_id,Labels)
             print('Upload Thread Finished ---Finished Uploading to Server')                
 
     def dummy_run(self,UploadQueue, upload_complete_event):
@@ -103,7 +104,7 @@ if __name__ == '__main__':
        
     #anaos_path = os.environ.get('ANAOS_DATA')
     ##Testing Server
-    base_url1 = 'http://localhost:8080'
+    base_url1 = 'http://140.78.99.183:80'
     base_url = 'http://localhost:8080/'
     locationid = "open_field"
     basedatapath = Path(__file__).resolve().parent

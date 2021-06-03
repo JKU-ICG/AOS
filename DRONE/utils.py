@@ -655,12 +655,12 @@ async def upload_dummylocation_id_was(session, serveraddress, locationid):
             "put", serveraddress + "/locations/" + location_id,
             data=json.dumps({
                 "start_height": 307.0020751953125,
-                "start_lat_lon": [48.339758, 14.33059],
-                "center_lat_lon": [48.3398054625, 14.3318629125],
-                "start_utm": [450393.91024515807, 5354280.539372292, 33, "U"],
-                "start_gkm31": [73989.71284555788, 356206.4560305681],
-                "center_gkm31": [74084.00932285623, 356212.9582170388],
-                "center_utm": [450488.28387294046, 5354284.992294418, 33, "U"]
+                "start_lat_lon": [48.335673, 14.32703],
+                "center_lat_lon": [48.3356687, 14.3262629],
+                "start_utm": [450126.11627760687, 5353828.794316645, 33, "U"],
+                "start_gkm31": [73731.66832550615, 355748.8056906797],
+                "center_gkm31": [73674.80240903652, 355747.59297018684],
+                "center_utm": [450069.2625109379, 5353828.815501057, 33, "U"]
             }),
             headers={"content-type": "application/json"}
     ) as resp:
@@ -745,6 +745,7 @@ async def upload_detectionlabels(serveraddress, location_id,labels_data):
 
 async def upload_detectionlabels_was(session, serveraddress, location_id,labels_data):
     for label in labels_data:
-        label["location_id"] = location_id
-        await upload_json(session, serveraddress + "/labels", json.dumps(label))
+        resources = "/labels"
+        #print(json.dumps(label, indent=2))
+        await upload_json(session, serveraddress + resources, json.dumps(label))
 

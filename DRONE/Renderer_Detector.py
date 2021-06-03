@@ -31,7 +31,7 @@ sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
 
 import pyaos
-detection = False
+detection = True
 if detection :
     from detector import Detector
 from matplotlib import pyplot as plt
@@ -41,9 +41,13 @@ from Undistort import Undistort
 import multiprocessing
 
 #Debug -- Test Planner Update Pipeline
-test_planner = True
+test_planner = False
 if test_planner:
     from Planner import Planner
+
+test_server = True
+if test_server :
+    from ServerUpload import ServerUpload
 
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -195,7 +199,7 @@ class Renderer :
                 await upload_images_was(session, self._serveraddress, IntegralImage, IntegralViewMatrix, self._locationid, poses = IntegralImageList)
 
 
-    def RenderContinuous(self, PyLFClass,DownloadedImage, Latitude, Longitude, Altitude, CompassHeading, NoofPathsRendered,CurrentImageIndex,CompassCorrection,StartHeight,ud,MeanAltitude,MeanCompass,CompassRad, CurrentImageNumber, virtualcamerapose, CenterCameraIndex, PreviousRenderedMean = 0.5, RenderandDetectFlag = True):
+    def RenderContinuous(self, PyLFClass,DownloadedImage, Latitude, Longitude, Altitude, CompassHeading, NoofPathsRendered,CurrentImageIndex,CompassCorrection,StartHeight,ud,MeanAltitude,MeanCompass,CompassRad, CurrentImageNumber, virtualcamerapose, CenterCameraIndex, PreviousRenderedMean = 0.5, RenderandDetectFlag = True, RenderDEMFlag = False):
         if len(DownloadedImage.shape) == 2 :
             MeanAdjustedImage = DownloadedImage
         else :
@@ -238,15 +242,17 @@ class Renderer :
             ids = np.array([],dtype=np.uintc)
             ImageReturned1 = PyLFClass.render(virtualcamerapose, self._FieldofView)
             #ImageReturned1 = cv2.flip(ImageReturned1,1)
-            if self._UpdatePathPlanning:
+            if RenderDEMFlag:
                 #self._RendererLog.debug('Rendering Finished')
                 RenderDemInfo = PyLFClass.getXYZ()
                 #RenderDemInfo = cv2.flip(RenderDemInfo,1)
+            else :
+                RenderDemInfo = np.zeros((512,512,3), dtype=float)     
         else :
             ImageReturned1 = np.zeros((512,512), dtype=float)
-        if not self._UpdatePathPlanning:
             RenderDemInfo = np.zeros((512,512,3), dtype=float)
         return ImageReturned1,RenderDemInfo,cameraviewarr,gpsloc, generatedviewmatrix, image_id
+
     def GenerateDetectionTuples(self, RenderedDEM_Info, DetectedObjects, CenterUTMInfo):
         Detections = []
         labels_data = []        
@@ -269,23 +275,27 @@ class Renderer :
             Lat,Lon = utm.to_latlon(ObjectEast,ObjectNorth,CenterUTMInfo[2],CenterUTMInfo[3])
             ObjectInfo['gps'] = (Lat,Lon) 
             ObjectInfo['conf'] = ConfidenceScore
+            label["location_id"] = self._locationid
+            label['class'] = 0
+            label['label'] = str(int(Object['confidence']*100))
+            label['description'] = " "
+            label['center'] = None
             label['poly_dem'] = [
-                                 [ RenderedDEM_Info[Ymin,Xmax,0], RenderedDEM_Info[Ymin,Xmax,1], RenderedDEM_Info[Ymin,Xmax,2]],
-                                 [ RenderedDEM_Info[Ymin,Xmin,0], RenderedDEM_Info[Ymin,Xmin,1], RenderedDEM_Info[Ymin,Xmin,2]],
-                                 [ RenderedDEM_Info[Ymax,Xmin,0], RenderedDEM_Info[Ymax,Xmin,1], RenderedDEM_Info[Ymax,Xmin,2]],
-                                 [ RenderedDEM_Info[Ymax,Xmax,0], RenderedDEM_Info[Ymax,Xmax,1], RenderedDEM_Info[Ymax,Xmax,2]]
+                                 [ int(RenderedDEM_Info[int(Ymin),int(min(Xmax,511)),0]), int(RenderedDEM_Info[int(Ymin),int(min(Xmax,511)),1]), int(RenderedDEM_Info[int(Ymin),int(min(Xmax,511)),2])],
+                                 [ int(RenderedDEM_Info[int(Ymin),int(Xmin),0]), int(RenderedDEM_Info[int(Ymin),int(Xmin),1]), int(RenderedDEM_Info[int(Ymin),int(Xmin),2])],
+                                 [ int(RenderedDEM_Info[int(min(Ymax,511)),int(Xmin),0]), int(RenderedDEM_Info[int(min(Ymax,511)),int(Xmin),1]), int(RenderedDEM_Info[int(min(Ymax,511)),int(Xmin),2])],
+                                 [ int(RenderedDEM_Info[int(min(Ymax,511)),int(min(Xmax,511)),0]), int(RenderedDEM_Info[int(min(Ymax,511)),int(min(Xmax,511)),1]), int(RenderedDEM_Info[int(min(Ymax,511)),int(min(Xmax,511)),2])]
                                 ]
-            label['texture_poly'] = [[int(Xmax),int(Ymin)],[int(Xmin),int(Ymin)],[int(Xmin),int(Ymax)],[int(Xmax),int(Ymax)]]
-            label['label'] = str(Object['confidence'])
+            label['texture_poly'] = [[int(Ymin),int(Xmax)],[int(Ymin),int(Xmin)],[int(Ymax),int(Xmin)],[int(Ymax),int(Xmax)]]            
             Detections.append(ObjectInfo)
             labels_data.append(label)
         return Detections, labels_data
 
-    def RendererandDetectContinuous(self, RenderingQueue, DetectionInfoQueue, RenderingProcessEvent):
+    def RendererandDetectContinuous(self, RenderingQueue, DetectionInfoQueue, uploadqueue, RenderingProcessEvent):
         #print('Renderer and Detection Started in Third Thread')
         self._RendererLog = setup_logger( 'Renderer_logger', os.path.join( self._out_folder, 'RendererLog.log') )
         self._RendererLog.debug('Renderer and Detection Started in Third Thread')
-        asyncio.run(create_dummylocation_id(self._serveraddress, self._locationid))
+        #asyncio.run(create_dummylocation_id(self._serveraddress, self._locationid))
         #asyncio.run(self.initalize_aiohttpsession())
         #weightsXmlFile = os.path.join(".","weights",yoloversion,aug,yoloversion+'.xml')
         #weightsXmlFile = os.path.join(".","weights","vL.2noTest","AP25to30",yoloversion,aug,yoloversion+'.xml')
@@ -337,6 +347,9 @@ class Renderer :
                                 StartHeight = RenderingInfo['StartingHeight']
                                 RenderandDetectFlag = RenderingInfo['Render']
                                 UpdatePathPlanningFlag = RenderingInfo['UpdatePlanningAlgo']
+                                RenderDEMFlag = UpdatePathPlanningFlag
+                                if self._uploadserver :
+                                    RenderDEMFlag = True
                                     
                                 self._UpdatePathPlanning = UpdatePathPlanningFlag
                                 CurrentImageNumber = int(CurrentImageIndex % 30)
@@ -358,7 +371,7 @@ class Renderer :
                                     self._RendererLog.debug('CurrentImageNumber = %s, CentralCameraIndex = %s , CurrentImageNumber = %s',str(CurrentImageNumber),str(CentralCameraIndex), str(CurrentImageNumber))
                                     self._RendererLog.debug('MeanAltitude = %s, CompassRad = %s',str(MeanAltitude),str(CompassRad))
                                 if not RenderandDetectFlag :
-                                    RenderedImage, RenderedDEM_Info, CurrentCamviewarr,gpsloc, genviewmat, image_id = self.RenderContinuous(PLFClass,CurrentDownloadedImage,CurrentLatitude,CurrentLongitude,CurrentAltitude,CurrentCompass,CurrentPathIndex,CurrentImageIndex,CompassCorrection,StartHeight, ud,MeanAltitude,MeanCompass,CompassRad,CurrentImageNumber,centercameraviewarr,CentralCameraIndex,PreviousRenderedMean,RenderandDetectFlag)
+                                    RenderedImage, RenderedDEM_Info, CurrentCamviewarr,gpsloc, genviewmat, image_id = self.RenderContinuous(PLFClass,CurrentDownloadedImage,CurrentLatitude,CurrentLongitude,CurrentAltitude,CurrentCompass,CurrentPathIndex,CurrentImageIndex,CompassCorrection,StartHeight, ud,MeanAltitude,MeanCompass,CompassRad,CurrentImageNumber,centercameraviewarr,CentralCameraIndex,PreviousRenderedMean,RenderandDetectFlag,RenderDEMFlag)
                                     currentpath_genviewmat[CurrentImageNumber] = genviewmat
                                     imageidlist[CurrentImageNumber] = image_id
                                     CurrentPathCameraPose[CurrentImageNumber] = CurrentCamviewarr
@@ -367,7 +380,7 @@ class Renderer :
                                         self._RendererLog.debug('Image Added')
                                 else :
                                     t2_start = time.perf_counter()
-                                    RenderedImage, RenderedDEM_Info, CurrentCamviewarr,gpsloc, genviewmat, image_id  = self.RenderContinuous(PLFClass, CurrentDownloadedImage, CurrentLatitude, CurrentLongitude, CurrentAltitude, CurrentCompass, CurrentPathIndex,CurrentImageIndex,CompassCorrection,StartHeight, ud,MeanAltitude,MeanCompass,CompassRad, CurrentImageNumber,centercameraviewarr, CentralCameraIndex, PreviousRenderedMean, RenderandDetectFlag)
+                                    RenderedImage, RenderedDEM_Info, CurrentCamviewarr,gpsloc, genviewmat, image_id  = self.RenderContinuous(PLFClass, CurrentDownloadedImage, CurrentLatitude, CurrentLongitude, CurrentAltitude, CurrentCompass, CurrentPathIndex,CurrentImageIndex,CompassCorrection,StartHeight, ud,MeanAltitude,MeanCompass,CompassRad, CurrentImageNumber,centercameraviewarr, CentralCameraIndex, PreviousRenderedMean, RenderandDetectFlag,RenderDEMFlag)
                                     t2_stop = time.perf_counter()
                                     print('Rendering Images Elapsed time',str(t2_stop - t2_start))
                                     if self._adddebuginfo :
@@ -386,17 +399,16 @@ class Renderer :
                                     minval = np.min(RenderedImage[np.nonzero(RenderedImage)])
                                     RenderedImage[RenderedImage == 0] = minval
                                     RenderedImage = cv2.normalize(RenderedImage, None, 0,255, cv2.NORM_MINMAX, cv2.CV_8UC3)
-                                    if self._uploadserver :
-
+                                    #if self._uploadserver :
                                         #image_id = await upload_images(self._serveraddress, RenderedImage, currentpath_genviewmat[CentralCameraIndex], self._locationid, poses = imageidlist)
-                                        t3_start = time.perf_counter()
-                                        asyncio.run(self.UploadAllImages(self._ImageList,self._ImageMatList,RenderedImage,currentpath_genviewmat[CentralCameraIndex]))
+                                        #t3_start = time.perf_counter()
+                                        #asyncio.run(self.UploadAllImages(self._ImageList,self._ImageMatList,RenderedImage,currentpath_genviewmat[CentralCameraIndex]))
                                         #asyncio.run(self.UploadAllImages_ss(self._ImageList,self._ImageMatList,RenderedImage,currentpath_genviewmat[CentralCameraIndex]))
-                                        t3_stop = time.perf_counter()
-                                        self._RendererLog.debug('Uploading Images Elapsed time: = %s,',str(t3_stop - t3_start))
-                                        print('Uploading Images Elapsed time',str(t3_stop - t3_start))
-                                        self._ImageList = []
-                                        self._ImageMatList = []
+                                        #t3_stop = time.perf_counter()
+                                        #self._RendererLog.debug('Uploading Images Elapsed time: = %s,',str(t3_stop - t3_start))
+                                        #print('Uploading Images Elapsed time',str(t3_stop - t3_start))
+                                        #self._ImageList = []
+                                        #self._ImageMatList = []
                                     if self._WriteImages :
                                         if self._adddebuginfo :
                                             self._RendererLog.debug('Image Rendered')
@@ -413,9 +425,7 @@ class Renderer :
                                         DLDetections = None
                                         if self._adddebuginfo :
                                             self._RendererLog.debug('Detection Elapsed time: = %s,',str(t1_stop -t1_start))
-                                        if self._uploadserver :
-                                            DLDetections,labels_data = self.GenerateDetectionTuples(RenderedDEM_Info, DetectedObjects,self._CenterUTMInfo)
-                                            upload_detectionlabels(self._serveraddress,self._locationid,labels_data)
+                                            #upload_detectionlabels(self._serveraddress,self._locationid,labels_data)
                                         if self._WriteImages :
                                             DetectedPathName = os.path.join(self._out_folder, str(CurrentPathIndex)+'_'+str(CurrentImageIndex)+'_Detected.png')
                                             cv2.imwrite(DetectedPathName,DetectedImage)
@@ -424,10 +434,8 @@ class Renderer :
                                         if not self._PrePlannedPath:
                                             if self._adddebuginfo :
                                                 self._RendererLog.debug('UpdatePathPlanningFlag for Path = %s',str(UpdatePathPlanningFlag))
-                                            if not UpdatePathPlanningFlag:
-                                                CurrentPathDetections.extend(DLDetections)
-                                            else :
-                                                if DLDetections is not None:
+                                            if UpdatePathPlanningFlag:
+                                                if DLDetections is None:
                                                     DLDetections,labels_data = self.GenerateDetectionTuples(RenderedDEM_Info, DetectedObjects,self._CenterUTMInfo)
                                                 DetectionInfo = {}
                                                 DetectionInfo['PreviousVirtualCamPos'] = PreviousVirtualCamPos
@@ -438,6 +446,26 @@ class Renderer :
                                                 CurrentPathIndex = CurrentPathIndex + 1
                                                 if self._adddebuginfo :
                                                     self._RendererLog.debug('UpdatedPathPlanningFlag for Path = %s with Current Path  = %s and Current Image = %s',str(UpdatePathPlanningFlag), str(CurrentPathIndex), str(CurrentImageIndex))
+                                    if self._uploadserver :
+                                        #print('uploading Data')
+                                        if self._Detect == True:
+                                            if DLDetections is None:
+                                                DLDetections,labels_data = self.GenerateDetectionTuples(RenderedDEM_Info, DetectedObjects,self._CenterUTMInfo)
+                                            else :
+                                                DLDetections = []
+                                                labels_data = []
+                                        else :
+                                            DLDetections = []
+                                            labels_data = []
+                                        uploadinfo = {}
+                                        uploadinfo['Individual_ImageList'] = self._ImageList
+                                        uploadinfo['Individual_ViewMat'] = self._ImageMatList
+                                        uploadinfo['IntegralImage'] = RenderedImage
+                                        uploadinfo['IntegralImage_ViewMat'] = currentpath_genviewmat[CentralCameraIndex]
+                                        uploadinfo['Labels'] = labels_data
+                                        uploadqueue.put(uploadinfo)
+                                        self._ImageList = []
+                                        self._ImageMatList = []
                                 CurrentImageIndex = CurrentImageIndex + 1   
                 del(PLFClass)
                 if self._Detect == True:
@@ -460,7 +488,8 @@ if __name__ == '__main__':
        
     #anaos_path = os.environ.get('ANAOS_DATA')
     ##Testing Server
-    base_url1 = 'http://localhost:8080'
+    #base_url1 = 'http://localhost:8080'
+    base_url1 = 'http://140.78.99.183:80'
     base_url = 'http://localhost:8080/'
     locationid = "open_field"
      ##Testing Server
@@ -506,7 +535,16 @@ if __name__ == '__main__':
 
     RenderingQueue = multiprocessing.Queue(maxsize=100)
     DetectionInfoQueue = multiprocessing.Queue(maxsize=100)
+    uploadqueue = multiprocessing.Queue(maxsize=100)
+
     RenderingProcessEvent = multiprocessing.Event()
+    upload_complete_event = multiprocessing.Event()
+
+    
+    ###Testing Server
+    serverclass = ServerUpload(serveraddress=base_url1,locationid= locationid)
+    uploadprocess = multiprocessing.Process(name = 'uploadprocess', target=serverclass.dummy_run, args=(uploadqueue, upload_complete_event))
+    
 
     #utm_center = (CenterUTMInfo[0], CenterUTMInfo[1], CenterUTMInfo[2], CenterUTMInfo[3])
     #PlanningAlgoClass = Planner( utm_center, (150,150), tile_distance = 150,  prob_map=None, debug=False,vis=None, results_folder=os.path.join(basedatapath,'FlightResults', sitename, 'Log'),gridalignedplanpath = True)
@@ -520,9 +558,11 @@ if __name__ == '__main__':
     sitename=sitename,results_folder=os.path.join(basedatapath, '..', 'data', sitename, 'testresults'), device="MYRIAD", # device should be MYRIAD for Neural Compute Stick
     FieldofView=float(FieldofView),adddebuginfo=True,Detect=detection,uploadserver=True,baseserver=base_url1,locationid=locationid)
 
-    RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.dummy_run, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent,))
+    RenderProcess = multiprocessing.Process(name = 'RenderProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, uploadqueue, RenderingProcessEvent,))
     #threads.append(RenderThread)
     RenderProcess.start()
+
+    uploadprocess.start()
     EastUtmList = []
     NorthUtmList = []
     prev_pt = (startLat, startLon)
@@ -556,14 +596,15 @@ if __name__ == '__main__':
                 DetectionInfo = DetectionInfoQueue.get()
                 PlanningAlgo.update(DetectionInfo['PreviousVirtualCamPos'], DetectionInfo['DLDetections'])
             if i >= 29 :
-                if i in TestPlanner:
-                    #print('Reached Waypoint')
-                    next_pts, FlyingInfoFlag = PlanningAlgo.planpoints( prev_pt )
-                    print(next_pts)
-                    RenderingInfo['Render'] = True
-                    RenderingInfo['UpdatePlanningAlgo'] = True
-                    RenderingQueue.put(RenderingInfo)
-                    time.sleep(0.5)
+                if test_planner:
+                    if i in TestPlanner:
+                        #print('Reached Waypoint')
+                        next_pts, FlyingInfoFlag = PlanningAlgo.planpoints( prev_pt )
+                        print(next_pts)
+                        RenderingInfo['Render'] = True
+                        RenderingInfo['UpdatePlanningAlgo'] = True
+                        RenderingQueue.put(RenderingInfo)
+                        time.sleep(0.5)
                 else :
                     if i % 2 == 0:
                         #print('Not Rendering Images')
@@ -588,9 +629,10 @@ if __name__ == '__main__':
         print("Oops!", e.__class__, "occurred.")
         print("Next entry.")
         print()
-    time.sleep(100)
+    time.sleep(10)
     RenderingProcessEvent.set()
     time.sleep(10)
+    upload_complete_event.set()
     while not RenderingQueue.empty():
         FramesInfo = RenderingQueue.get()
     RenderingQueue.close()
