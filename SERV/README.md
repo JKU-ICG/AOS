@@ -1,32 +1,25 @@
-# Search And Rescue Database Server
+# AOS/SERV: Search And Rescue Database Server
+This is a Rust implementation for the database server used with Airborne Optical Sectioning.
 
-## Compiling
-
-### Prerequisites
+### Requirements
 
 Install Rust by running `rustup` from https://rustup.org. Rust stable version
 is OK. Minimal Rust version is 1.48
 
 Required Linux packages: libx11-dev cmake build-essentials python-is-python3
-On Windows only the 
+On Windows only the Rust package is required
 
-### Building
+### Compile and Build
 
-Go to the current directory and run
+Go to the current directory [AOS/SERV](./SERV) and run
 
 ```
-cargo build
+cargo build --release
 ```
 
 ### Execution
 
 Run the server with
-
-```
-cargo run --bin server
-```
-The performance of the server will be much better when executed
-with the release flag
 
 ```
 cargo run --release --bin server
@@ -38,16 +31,9 @@ export RUST_LOG=info
 cargo run --bin sar-server
 ```
 
-
 ## Server API
 
 The server API follows the REST principle. 
-
-For all resources the data types are defined in `sar-types/src/lib.rs`
-
-Exact serialization format is best visible by checking the contents
-of the `serverData` directory after executing `client_scripts/setup_demo_data.py`
-
 
 Resource IDs are timestamps with a random suffix. The format is
 `YYYYMMDDTHHmmssSSS_rrrr`
@@ -60,28 +46,17 @@ Main locations referencing polygon data, holds vertex data, GEO-TIFF images
 and the center and corner coordinates of the location
 
 `/drones`:
-Details about a single drone. Mostly camera properties but may 
-hold additional properties in the future
+Details about a single drone. 
 
 `/images`:
-A single image provided by one specific drone
+A single image provided by a specific drone
 
 `/integrals`:
-an integral image.
-
-The integral image has an optional reference to a drone, but it is
-best practice to actually make the drone reference explicit as it
-does define the properties of the camera so that the image can be
-correctly projected onto the terrain. When no reference is defined
-then some hard-coded default values for the camera projection are used.
+An integral image computed with AOS.
 
 `/labels`:
-Markers bound to a specific location.
+Markers representing the classification results performed on the integral images are bound to a specific location.
 
-The location_id in the label is required.
-
-`/flight_paths`
-Planned, or already performed flight paths.
 
 
 
