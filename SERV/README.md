@@ -59,7 +59,7 @@ Markers representing the classification results performed on the integral images
 
 ## Quick tutorial
 
-#TODO:- Add Demoscript to upload and download the data demonstrating the usage of server
+#TODO:- Add demo script to upload and download the data demonstrating the usage of server
 
 
 
