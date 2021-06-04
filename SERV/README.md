@@ -57,6 +57,11 @@ An integral image computed with AOS.
 `/labels`:
 Markers representing the classification results performed on the integral images are bound to a specific location.
 
+## Quick tutorial
+
+#TODO:- Add Demoscript to upload and download the data demonstrating the usage of server
+
+
 
 
 
