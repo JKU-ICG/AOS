@@ -59,7 +59,6 @@ Markers representing the classification results performed on the integral images
 
 ## Quick tutorial
 
-#TODO:- Add demo script to upload and download the data demonstrating the usage of server
 ```py
 import asyncio
 import aiohttp
