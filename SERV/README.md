@@ -5,7 +5,7 @@ This is a Rust implementation for the database server used with Airborne Optical
 
 Install Rust by running `rustup` from https://rustup.org. Rust stable version 1.48 has been tested.
 
-Required Linux packages: libx11-dev cmake build-essentials python-is-python3
+Required Linux packages: libx11-dev cmake build-essentials python-is-python3.
 On Windows only the Rust package and python3 is required
 
 ### Compilation
