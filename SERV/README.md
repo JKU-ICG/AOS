@@ -34,25 +34,24 @@ cargo run --bin sar-server
 
 The server API follows the Representational state transfer (REST) principle. 
 
-Uploaded resources are stored with there ids timestamped along with a randomsuffix. The format is
-`YYYYMMDDTHHmmssSSS_rrrr`
+Uploaded resources are stored with timestamped  ids. The format is `YYYYMMDDTHHmmssSSS_rrrr`
 
-Referenced files of a resource always have the same id but has an additional suffix.
+Additional files of a resource always have the same id but has an additional suffix.
 
 Server stores AOS flight information in various folders:-
 
 `/locations`:
 Contains AOS flight location information (center and corner coordinates of the location) as a json file.
-Other files such as polygon data, vertex data, GEO-TIFF images required for visualization and AOS are also stored with same location id.
+Other additional files such as polygon data, vertex data, GEO-TIFF images required for visualization and AOS are also stored with same location id.
 
 `/drones`:
-Details about the flying drone is stored as json. 
+Details about the flying drone is stored as a json file. 
 
 `/images`:
-Single images captured during AOS flights are stored. Pose information of individual images are stored as json.
+Single images captured during AOS flights are stored. Relative pose information of individual images are stored as json.
 
 `/integrals`:
-Integral images computed with AOS are stored here. Pose information of integral images and ids of individual images used for integration are stored as json.
+Integral images computed with AOS are stored here. Relative pose information of integral images and ids of individual images used for integration are stored as json.
 
 `/labels`:
 Labels representing the classification results performed on the integral images. GPS location of labels along with classification confidence are stored within the json file.
