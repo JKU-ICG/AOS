@@ -60,8 +60,27 @@ Markers representing the classification results performed on the integral images
 ## Quick tutorial
 
 #TODO:- Add demo script to upload and download the data demonstrating the usage of server
+```py
+import asyncio
+import aiohttp
 
+async with aiohttp.ClientSession() as session:
+  # upload data in a form a dictionary to a json file at upload location in serveraddress
+  async with session.request(
+            "put", serveraddress + uploadlocation,
+            data=json.dumps(data_dictionary),
+            headers={"content-type": "application/json"}
+    ) as resp:
+  
+  #download information of all json files present at downloadlocation in serveraddress
+  async with session.request(
+                "get", serveraddress + downloadlocation
+        ) as resp:
+            drones = await resp.json()
+```
 
+## More detailed usage
+For a more detailed example on the performing experiments with the [SERVER](/SERV) look at the serverupload (serverupload.py) and utils(utils.py) program in [DRONE](/DRONE).
 
 
 
