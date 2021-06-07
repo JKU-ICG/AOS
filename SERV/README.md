@@ -34,15 +34,16 @@ cargo run --bin sar-server
 
 The server API follows the Representational state transfer (REST) principle. 
 
-Resource IDs are timestamped along with a randomsuffix. The format is
+Uploaded resources are stored with there ids timestamped along with a randomsuffix. The format is
 `YYYYMMDDTHHmmssSSS_rrrr`
 
 Referenced files of a resource always have the same id but has an additional suffix.
 
 Server stores AOS flight information in various folders:-
+
 `/locations`:
-Contains AOS Flight locations referencing polygon data, vertex data, GEO-TIFF images
-and the center and corner coordinates of the location
+Contains AOS flight location information (center and corner coordinates of the location) as a json file.
+Other files such as polygon data, vertex data, GEO-TIFF images required for visualization and AOS are also stored with same location id.
 
 `/drones`:
 Details about the flying drone is stored as json. 
