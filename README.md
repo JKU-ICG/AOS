@@ -65,7 +65,7 @@ Note that the modules LFR, DET, CAM, PLAN, SERV are standalone software packages
 To install the individual modules, refer to the [module's README](#modules).
 For the Python modules (DET, CAM, PLAN) it is sufficient to verify that the [required Python libraries](../requirements.txt) are available. Furthermore, the classifier (DET) relies on the [OpenVINO toolkit](https://docs.openvinotoolkit.org/latest/index.html). 
 The modules containing C/C++ code (LFR, DRONE) need to be compiled before they can be used. 
-The modules containing Rust code (SERV) need to be compiled before it can be used.
+Similarily the module containing Rust code (SERV) need to be compiled before it can be used.
 All other modules (LFR, DET, CAM, PLAN, SERV) have to be installed before the DRONE module can be used.
 
 
