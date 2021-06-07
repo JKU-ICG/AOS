@@ -8,13 +8,16 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="342.86386mm"
+   width="430.4248mm"
    height="138.90625mm"
-   viewBox="0 0 342.86387 138.90624"
+   viewBox="0 0 430.42482 138.90624"
    version="1.1"
    id="svg8"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
-   sodipodi:docname="uml.svg">
+   sodipodi:docname="uml.svg"
+   inkscape:export-filename="D:\JKU\Projects\Working\Code\Indrajit_JKU_Working\PiDrone\AOS_server_integration\img\droneprocess.png"
+   inkscape:export-xdpi="100"
+   inkscape:export-ydpi="100">
   <defs
      id="defs2">
     <marker
@@ -208,7 +211,7 @@
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
      inkscape:cy="265.60579"
-     inkscape:cx="814.55215"
+     inkscape:cx="833.55215"
      inkscape:zoom="0.49497475"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -218,16 +221,16 @@
      id="base"
      inkscape:snap-page="true">
     <inkscape:grid
-       originy="2.3166664"
-       originx="65.533383"
+       originy="2.3166662"
+       originx="70.56047"
        id="grid860"
        type="xygrid" />
     <sodipodi:guide
-       position="101.25213,45.047996"
+       position="106.27921,45.047997"
        orientation="0,-1"
        id="guide864" />
     <sodipodi:guide
-       position="240.15836,108.80834"
+       position="245.18545,108.80834"
        orientation="1,0"
        id="guide866" />
   </sodipodi:namedview>
@@ -239,12 +242,12 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(65.533379,2.3166666)"
+     transform="translate(70.560462,2.3166666)"
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
