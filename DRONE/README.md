@@ -59,6 +59,7 @@ from FlyingControl import DroneFlyingControl
 from Renderer_Detector import Renderer
 from CameraControl import CameraControl
 from DroneCom import DroneCommunication
+from ServerUpload import ServerUpload
 
 # Initialize by indicating a foldername (`sitename`), the drone flying speed, flying altitude, and the properties of the 
 # search parameters (size as `area_sides` and cell size as `GridSideLength`). Ensure that `sitename` contains a `DEM` folder, 
