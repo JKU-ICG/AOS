@@ -3,15 +3,14 @@ This is a Rust implementation for the database server used with Airborne Optical
 
 ### Requirements
 
-Install Rust by running `rustup` from https://rustup.org. Rust stable version
-is OK. Minimal Rust version is 1.48
+Install Rust by running `rustup` from https://rustup.org. Rust stable version 1.48 has been tested.
 
 Required Linux packages: libx11-dev cmake build-essentials python-is-python3
-On Windows only the Rust package is required
+On Windows only the Rust package and python3 is required
 
-### Compile and Build
+### Compilation
 
-Go to the current directory [AOS/SERV](./SERV) and run
+Open a command window or terminal and proceed to the current directory [AOS/SERV](./SERV) and run
 
 ```
 cargo build --release
@@ -19,7 +18,7 @@ cargo build --release
 
 ### Execution
 
-Run the server with
+Open a command window or terminal and proceed to the current directory [AOS/SERV](./SERV) and start the server with
 
 ```
 cargo run --release --bin server
@@ -33,29 +32,29 @@ cargo run --bin sar-server
 
 ## Server API
 
-The server API follows the REST principle. 
+The server API follows the Representational state transfer (REST) principle. 
 
-Resource IDs are timestamps with a random suffix. The format is
+Resource IDs are timestamped along with a randomsuffix. The format is
 `YYYYMMDDTHHmmssSSS_rrrr`
 
-Referenced files of a resource always have the same id but has an
-additional suffix.
+Referenced files of a resource always have the same id but has an additional suffix.
 
+Server stores AOS flight information in various folders:-
 `/locations`:
-Main locations referencing polygon data, holds vertex data, GEO-TIFF images
+Contains AOS Flight locations referencing polygon data, vertex data, GEO-TIFF images
 and the center and corner coordinates of the location
 
 `/drones`:
-Details about a single drone. 
+Details about the flying drone is stored as json. 
 
 `/images`:
-A single image provided by a specific drone
+Single images captured during AOS flights are stored. Pose information of individual images are stored as json.
 
 `/integrals`:
-An integral image computed with AOS.
+Integral images computed with AOS are stored here. Pose information of integral images and ids of individual images used for integration are stored as json.
 
 `/labels`:
-Markers representing the classification results performed on the integral images are bound to a specific location.
+Labels representing the classification results performed on the integral images. GPS location of labels along with classification confidence are stored within the json file.
 
 ## Quick tutorial
 
