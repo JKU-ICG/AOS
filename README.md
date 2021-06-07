@@ -55,7 +55,7 @@ This repository contains software for drone-based search and rescue applications
 - [CAM](CAM/README.md)      (Python code): the module for triggering, recording, and processing thermal images.
 - [PLAN](PLAN/README.md)    (Python code): implementation of our path planning and adaptive sampling technique.
 - [DRONE](DRONE/README.md)  (C and Python code): contains the implementation for drone communication and the logic to perform AOS flights.
-- [SERV](SERV/README.md)  (Rust code): contains the implementation of a server to which AOS flights data are uploaded.
+- [SERV](SERV/README.md)  (Rust code): contains the implementation of a dabase server to which AOS flights data are uploaded.
 
 Note that the modules LFR, DET, CAM, PLAN, SERV are standalone software packages that can be installed and used independently. The DRONE module, however, relies on the other modules (LFR, DET, CAM, PLAN, SERV) in this repository.
 
