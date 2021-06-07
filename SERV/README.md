@@ -64,18 +64,18 @@ import asyncio
 import aiohttp
 
 async with aiohttp.ClientSession() as session:
-  # upload data in a form a dictionary to a json file at upload location in serveraddress
+  # upload data in a form a dictionary to a json file at upload location (for e.g. '\drones') in serveraddress
   async with session.request(
             "put", serveraddress + uploadlocation,
             data=json.dumps(data_dictionary),
             headers={"content-type": "application/json"}
     ) as resp:
   
-  #download information of all json files present at downloadlocation in serveraddress
+  #download information of all json files present at downloadlocation (for e.g. '\drones') in serveraddress
   async with session.request(
                 "get", serveraddress + downloadlocation
         ) as resp:
-            drones = await resp.json()
+            info = await resp.json()
 ```
 
 ## More detailed usage
