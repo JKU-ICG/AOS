@@ -1,7 +1,7 @@
 
 # AOS/DRONE: Drone Communication and Flight Logic
 This folder contains a Python implementation for drone communication and the logic to perform AOS flights.
-This module relies on the additional modules ([LFR](/LFR/python), [DET](/DET), [CAM](/CAM), [PLAN](/PLAN)) in this repository. 
+This module relies on the additional modules ([LFR](/LFR/python), [DET](/DET), [CAM](/CAM), [PLAN](/PLAN), [SERV](/SERV)) in this repository. 
 Make sure that they are installed before running this module.
 
 Prototype | Adaptive Sampling |
