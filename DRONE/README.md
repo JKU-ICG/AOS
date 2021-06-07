@@ -8,7 +8,7 @@ Prototype | Adaptive Sampling |
 :---: | :---: |
 ![drone](../img/drone.gif) | ![drone](../img/adaptive.gif) 
 
-While running on the drone, the modules run in 4 separate processes that communicate via signal queues. 
+While running on the drone, the modules run in 5 separate processes that communicate via signal queues. 
 The processes are:
 - [CamCtrl](/CAM/CameraControl.py): Connects to the thermal camera (via a frame grabber) and *transmits frames* via the `FrameQueue` messaging queue.
 - [DroneCom](DroneCom.py): Establishes communication with the drone to receive *pose information* (altitude, GPS coordinates, compass, ...) and to send *waypoints* to the drone. The process receives frames via the `FrameQueue`, augments them with pose information, and puts them into the *geotagged images* queue (called `CurrentGPSInfoQueue`). Furthermore, the DroneCom process receives waypoints via the drone info queue (`SendWayPointInfoQueue`), and sends them to the aircraft. 
@@ -16,6 +16,7 @@ The processes are:
 Furthermore, [FlightCtrl](FlyingControl.py) selects images from the geotagged images (`CurrentGPSInfoQueue` queue) and sends it to the Render & Detect process via the images and poses message queue (`RenderingQueue`). The selected images are approximately 1m spaced. 
 Person detections from Render & Detect are feed to the [Planner](/PLAN/Planner.py) with the detection-info message queue for *adaptive sampling*. Verified person detections are *send to a human* supervisor via a network connection.
 - [Render](/LFR/python/pyaos.pyx) & [Detect](/DET/detector.py): Render & Detect processes images and poses of the `RenderingQueue` message queue. Images are *[undistored](/CAM/Undistort.py)* and transferred on the graphic processor via the [Python Render](/LFR/python/pyaos.pyx). If indicated by the message, *integral images* are computed. The integral images are forwarded to the [Detect](/DET/detector.py) module, which *detects persons*. Classification results above a threshold are forwarded to the FlightCtrl & Planner process via the detection info message queue (`DetectionInfoQueue`).
+- [Server](ServerUpload.py): Server process keeps a open connection with te server address using the LTE connection. Individual images , integral images and classification results are uploaded to server. It receives the information from the [Render](/LFR/python/pyaos.pyx) using a `uploadQueue` message queue. 
 
 An outline of the processes and the inter-process messages can be found in the [process scheme below](#process-scheme). 
 Further details on the message queues can be found in the [quick tutorial](#quick-tutorial)
@@ -99,18 +100,26 @@ RenderingQueue = multiprocessing.Queue(maxsize=200) # images, poses | FlightCtrl
     #        'UpdatePlanningAlgo' = # boolean indicating after adding which frame we should send the detections
     #    }
 DetectionInfoQueue = multiprocessing.Queue(maxsize=200) # detection info | Render & Detect ==> FlightCtrl & Planner
-    #   {   'PreviousVirtualCamPos': (gps_lat,gps_lon)),  
+    #   {   'PreviousVirtualCamPos': (gps_lat,gps_lon),  
     #       'DLDetections': [{'gps':(gps_lat,gps_lon), 'conf': #}, {'gps':(gps_lat,gps_lon), 'conf': #}, ...]
     #       'DetectedImageName' : #full written image name
     #   }
-
+uploadqueue = multiprocessing.Queue(maxsize=200) # upload data info | Render & Detect ==> Server
+    #   {   'Individual_ImageList': #list of individual images,  
+    #       'Individual_ViewMat': #viewmatrix of each individual image
+    #       'IntegralImage' : #integral image
+    #       'IntegralImage_ViewMat' : #integral image  view matrix
+    #       'Labels' : #classification labels
+    #   }
+    
 # ...
 
-# Init the 4 processes ...
+# Init the 5 processes ...
 CamCtrl = CameraControl(FlirAttached=Init._FlirAttached, ... ) # CamCtrl
 DroneCom = DroneCommunication(out_folder = './logs',...) # DroneCom
 FlightCtrlPlanner = DroneFlyingControl(RenderAfter = 3, ...) # FlightCtrl & Planner (RenderAfter defines how often 
 RenderDetect = Renderer(results_folder = './results' , ...) # Render & Detect
+serverclass = ServerUpload(serveraddress,location_ref) #Server
 
 # Set up processes using `multiprocessing` or `threading` and provide the message queues and some events for 
 # inter-message communication:
@@ -122,12 +131,16 @@ FlyingControlProcess = multiprocessing.Process(name = 'FlyingControlProcess', ta
     args = (CurrentGPSInfoQueue,SendWayPointInfoQueue, RenderingQueue, DetectionInfoQueue, FlyingProcessEvent, RecordEvent))
 CameraFrameAcquireProcess = multiprocessing.Process(name = 'CameraFrameAcquireProcess', target = CamCtrl.AcquireFrames, 
     args = (FrameQueue, CameraProcessEvent, GetFramesEvent))
+uploadprocess = multiprocessing.Process(name = 'uploadprocess', target=serverclass.dummy_run, args=(uploadqueue, upload_complete_event))
+    processes.append(uploadprocess)
+    
 
 # Start the processes:
 RenderProcess.start()
 DroneCommunicationProcess.start()
 FlyingControlProcess.start()
 CameraFrameAcquireProcess.start()
+uploadprocess.start()
 
 # ...
 ```
