@@ -80,7 +80,7 @@ async with aiohttp.ClientSession() as session:
 ```
 
 ## More detailed usage
-For a more detailed example on the performing experiments with the [SERVER](/SERV) look at the serverupload (/DRONE/ServerUpload.py) and utils(/DRONE/utils.py) program in [DRONE](/DRONE).
+For a more detailed example on the performing experiments with the [SERVER](/SERV) look at the serverupload (../DRONE/ServerUpload.py) and utils(../DRONE/utils.py) program in [DRONE](/DRONE).
 
 
 
