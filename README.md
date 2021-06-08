@@ -54,9 +54,10 @@ This repository contains software for drone-based search and rescue applications
 - [DET](DET/README.md)      (Python code): contains the person classification.
 - [CAM](CAM/README.md)      (Python code): the module for triggering, recording, and processing thermal images.
 - [PLAN](PLAN/README.md)    (Python code): implementation of our path planning and adaptive sampling technique.
-- [DRONE](DRONE/README.md)  (C and Python code): contains the implementation for drone communication and the logic to perform AOS flights. 
+- [DRONE](DRONE/README.md)  (C and Python code): contains the implementation for drone communication and the logic to perform AOS flights.
+- [SERV](SERV/README.md)  (Rust code): contains the implementation of a dabase server to which AOS flights data are uploaded.
 
-Note that the modules LFR, DET, CAM, PLAN are standalone software packages that can be installed and used independently. The DRONE module, however, relies on the other modules (LFR, DET, CAM, PLAN) in this repository.
+Note that the modules LFR, DET, CAM, PLAN, SERV are standalone software packages that can be installed and used independently. The DRONE module, however, relies on the other modules (LFR, DET, CAM, PLAN, SERV) in this repository.
 
 
 ## Installation
@@ -64,7 +65,8 @@ Note that the modules LFR, DET, CAM, PLAN are standalone software packages that 
 To install the individual modules, refer to the [module's README](#modules).
 For the Python modules (DET, CAM, PLAN) it is sufficient to verify that the [required Python libraries](../requirements.txt) are available. Furthermore, the classifier (DET) relies on the [OpenVINO toolkit](https://docs.openvinotoolkit.org/latest/index.html). 
 The modules containing C/C++ code (LFR, DRONE) need to be compiled before they can be used. 
-All other modules (LFR, DET, CAM, PLAN) have to be installed before the DRONE module can be used.
+Similarily the module containing Rust code (SERV) need to be compiled before it can be used.
+All other modules (LFR, DET, CAM, PLAN, SERV) have to be installed before the DRONE module can be used.
 
 
 ## Hardware

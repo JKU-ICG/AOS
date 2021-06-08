@@ -163,151 +163,155 @@ class DroneCommunication():
         #print('Drone Communication Started in First Thread')
         #if self._simulation:
         #    self._GPSInfoDictList = GPSLog
-        print(len(self._GPSInfoDictList))
+        #print(len(self._GPSInfoDictList))
         self._log = setup_logger( 'GPSReceived_logger', os.path.join( self._out_folder, 'GPSReceivedLog.log') )
         self._queueLog = setup_logger( 'GPSInterpolated_logger', os.path.join( self._out_folder, 'GPSInterpolatedLog.log') )
         self._sentwaypointlog = setup_logger( 'SentWayPoint_logger', os.path.join( self._out_folder, 'SentWaypoint.log') )
-        if not self._simulation :
-            self.DroneInit()
-        else :
-            PreviousTime =  datetime.now(timezone.utc).timestamp()
-        if not self._interpolation:
-            if self._FlirAttached and not self._addsynthethicimage:
-                FlirVideoSource = cv2.VideoCapture(0)
-        while not DroneProcessEvent.is_set():
-            if not SendWayPointInfoQueue.empty():
-                SendingWayPointInfo = SendWayPointInfoQueue.get()
-                print('Sending Waypoint')
-                Index = SendingWayPointInfo['Index']
-                LatToSend = SendingWayPointInfo['Latitude']
-                LongtoSend = SendingWayPointInfo['Longitude']
-                AlttoSend = SendingWayPointInfo['Altitude']*10
-                SpeedtoSend = SendingWayPointInfo['Speed']*10
-                #print('Upload and Send Drone to Waypoint', Index)
-                self._sentwaypointlog.debug('Upload and Send Drone to Waypoint = %s to Lat = %s, Lon = %s, Alt = %s and Speed = %s', str(Index), str(LatToSend), str(LongtoSend),str(AlttoSend),str(SpeedtoSend) )
-                if not self._simulation :
-                    self._DroneCommunication.sendWayPoint(ct.c_int(LatToSend),ct.c_int(LongtoSend),ct.c_int(AlttoSend),ct.c_int(Index),ct.c_int(SpeedtoSend))
-                #print('SendWayPointInfoQueue Size', SendWayPointInfoQueue.qsize())
-            else:
-                if not self._simulation :
-                    self._DroneCommunication.receiveDroneInfo.restype = CurrentDroneInfo
-                    DroneInfoData = self._DroneCommunication.receiveDroneInfo()
-                    CurrentGPSReceivedtime = datetime.now(timezone.utc).timestamp()
-                else :
-                    #print(self._SimulationCount)
-                    time.sleep(0.1)
-                    DroneInfoData = self._GPSInfoDictList[self._SimulationCount]
-                    CurrentGPSReceivedtime = datetime.now(timezone.utc).timestamp()
-                    self._SimulationCount = self._SimulationCount + 1
-                streamInfo = DroneInfoData.streamInfo
-                if streamInfo != -1: 
-                    Index = DroneInfoData.Index
-                    if Index >= 10:
-                        if self._interpolation:
-                            if (abs(DroneInfoData.Latitude - self._PreviousLatitude ) > 0.01) or (abs(DroneInfoData.Longitude - self._PreviousLongitude ) > 0.01) :
-                                GetFramesEvent.set()
-                                if Index == 15:
-                                    self._log.debug('%s %s %s %s %s %s New WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(DroneInfoData.TargetHoldTime),str(CurrentGPSReceivedtime))           
-                                    self._PreviousDroneTargetHoldTime = DroneInfoData.TargetHoldTime
-                                elif Index == 16:
-                                    self._log.debug('%s %s %s %s %s %s New WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(DroneInfoData.CompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))               
-                                    self._PreviousCompassHeading = DroneInfoData.CompassHeading
-                                else :
-                                    self._log.debug('%s %s %s %s %s %s New WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))           
-                                self._GPSTimeList.append(CurrentGPSReceivedtime)
-                                self._GPSLatList.append(DroneInfoData.Latitude)
-                                self._GPSLonList.append(DroneInfoData.Longitude)
-                                self._GPSAltList.append(DroneInfoData.BaroAltitude)
-                                self._GPSCompList.append(self._PreviousCompassHeading)   
-                            else :
-                                if Index == 15:
-                                    self._log.debug('%s %s %s %s %s %s Old WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(DroneInfoData.TargetHoldTime),str(CurrentGPSReceivedtime))           
-                                    self._PreviousDroneTargetHoldTime = DroneInfoData.TargetHoldTime
-                                elif Index == 16:
-                                    self._log.debug('%s %s %s %s %s %s Old WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(DroneInfoData.CompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))               
-                                    self._PreviousCompassHeading = DroneInfoData.CompassHeading
-                                else :
-                                    self._log.debug('%s %s %s %s %s %s Old WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))           
-                        self._PreviousLatitude = DroneInfoData.Latitude
-                        self._PreviousLongitude = DroneInfoData.Longitude
-                        self._PreviousAltitude = DroneInfoData.Altitude
-                        self._PreviousBaroAltitude = DroneInfoData.BaroAltitude
-                        if self._simulation:
-                            self._PreviousDroneTargetHoldTime = DroneInfoData.TargetHoldTime
-                            self._PreviousCompassHeading = DroneInfoData.CompassHeading
-                    if not RecordEvent.is_set():
-                        if not FrameQueue.empty():
-                            FrameBundle = FrameQueue.get()
+        try:
+            if not self._simulation :
+                self.DroneInit()
+            else :
+                PreviousTime =  datetime.now(timezone.utc).timestamp()
+            if not self._interpolation:
+                if self._FlirAttached and not self._addsynthethicimage:
+                    FlirVideoSource = cv2.VideoCapture(0)
+            while not DroneProcessEvent.is_set():
+                if not SendWayPointInfoQueue.empty():
+                    SendingWayPointInfo = SendWayPointInfoQueue.get()
+                    print('Sending Waypoint')
+                    Index = SendingWayPointInfo['Index']
+                    LatToSend = SendingWayPointInfo['Latitude']
+                    LongtoSend = SendingWayPointInfo['Longitude']
+                    AlttoSend = SendingWayPointInfo['Altitude']*10
+                    SpeedtoSend = SendingWayPointInfo['Speed']*10
+                    #print('Upload and Send Drone to Waypoint', Index)
+                    self._sentwaypointlog.debug('Upload and Send Drone to Waypoint = %s to Lat = %s, Lon = %s, Alt = %s and Speed = %s', str(Index), str(LatToSend), str(LongtoSend),str(AlttoSend),str(SpeedtoSend) )
+                    if not self._simulation :
+                        self._DroneCommunication.sendWayPoint(ct.c_int(LatToSend),ct.c_int(LongtoSend),ct.c_int(AlttoSend),ct.c_int(Index),ct.c_int(SpeedtoSend))
+                    #print('SendWayPointInfoQueue Size', SendWayPointInfoQueue.qsize())
+                else:
+                    if not self._simulation :
+                        self._DroneCommunication.receiveDroneInfo.restype = CurrentDroneInfo
+                        DroneInfoData = self._DroneCommunication.receiveDroneInfo()
+                        CurrentGPSReceivedtime = datetime.now(timezone.utc).timestamp()
                     else :
-                        if not self._interpolation:
-                            if self._FlirAttached and not self._addsynthethicimage:
-                                FrameGrabbingSuccessFlag, Frame = FlirVideoSource.read()
-                            else :
-                                Frame = np.random.randint(0,255,size = (self._synthethic_image_res_y,self._synthethic_image_res_x,3)).astype(np.uint8)
-                            CurrentDroneInfoDict = {}
-                            CurrentDroneInfoDict['Latitude'] = self._PreviousLatitude
-                            CurrentDroneInfoDict['Longitude'] = self._PreviousLongitude
-                            CurrentDroneInfoDict['Altitude'] = self._PreviousAltitude
-                            CurrentDroneInfoDict['BaroAltitude'] = self._PreviousBaroAltitude
-                            CurrentDroneInfoDict['TargetHoldTime'] = self._PreviousDroneTargetHoldTime
-                            CurrentDroneInfoDict['CompassHeading'] = self._PreviousCompassHeading
-                            CurrentDroneInfoDict['Image'] = Frame
-                            CurrentGPSInfoQueue.put(CurrentDroneInfoDict)
-                        else :
+                        #print(self._SimulationCount)
+                        time.sleep(0.1)
+                        DroneInfoData = self._GPSInfoDictList[self._SimulationCount]
+                        CurrentGPSReceivedtime = datetime.now(timezone.utc).timestamp()
+                        self._SimulationCount = self._SimulationCount + 1
+                    streamInfo = DroneInfoData.streamInfo
+                    if streamInfo != -1: 
+                        Index = DroneInfoData.Index
+                        if Index >= 10:
+                            if self._interpolation:
+                                if (abs(DroneInfoData.Latitude - self._PreviousLatitude ) > 0.01) or (abs(DroneInfoData.Longitude - self._PreviousLongitude ) > 0.01) :
+                                    GetFramesEvent.set()
+                                    if Index == 15:
+                                        self._log.debug('%s %s %s %s %s %s New WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(DroneInfoData.TargetHoldTime),str(CurrentGPSReceivedtime))           
+                                        self._PreviousDroneTargetHoldTime = DroneInfoData.TargetHoldTime
+                                    elif Index == 16:
+                                        self._log.debug('%s %s %s %s %s %s New WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(DroneInfoData.CompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))               
+                                        self._PreviousCompassHeading = DroneInfoData.CompassHeading
+                                    else :
+                                        self._log.debug('%s %s %s %s %s %s New WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))           
+                                    self._GPSTimeList.append(CurrentGPSReceivedtime)
+                                    self._GPSLatList.append(DroneInfoData.Latitude)
+                                    self._GPSLonList.append(DroneInfoData.Longitude)
+                                    self._GPSAltList.append(DroneInfoData.BaroAltitude)
+                                    self._GPSCompList.append(self._PreviousCompassHeading)
+                                    time.sleep(0.02)
+                                else :
+                                    if Index == 15:
+                                        self._log.debug('%s %s %s %s %s %s Old WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(DroneInfoData.TargetHoldTime),str(CurrentGPSReceivedtime))           
+                                        self._PreviousDroneTargetHoldTime = DroneInfoData.TargetHoldTime
+                                    elif Index == 16:
+                                        self._log.debug('%s %s %s %s %s %s Old WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(DroneInfoData.CompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))               
+                                        self._PreviousCompassHeading = DroneInfoData.CompassHeading
+                                    else :
+                                        self._log.debug('%s %s %s %s %s %s Old WayPoint', str(DroneInfoData.Latitude),str(DroneInfoData.Longitude),str(DroneInfoData.BaroAltitude),str(self._PreviousCompassHeading),str(self._PreviousDroneTargetHoldTime),str(CurrentGPSReceivedtime))           
+                            self._PreviousLatitude = DroneInfoData.Latitude
+                            self._PreviousLongitude = DroneInfoData.Longitude
+                            self._PreviousAltitude = DroneInfoData.Altitude
+                            self._PreviousBaroAltitude = DroneInfoData.BaroAltitude
+                            if self._simulation:
+                                self._PreviousDroneTargetHoldTime = DroneInfoData.TargetHoldTime
+                                self._PreviousCompassHeading = DroneInfoData.CompassHeading
+                        if not RecordEvent.is_set():
                             if not FrameQueue.empty():
                                 FrameBundle = FrameQueue.get()
-                                if len(self._GPSTimeList) > 1:
-                                    FrameTimeList = FrameBundle['FrameTimes']
-                                    FrameList = FrameBundle['Frames']
-                                    self._queueLog.debug('No of Frames %s %s %s %s %s', str(len(FrameTimeList)),str(len(self._CurrentFrameTimeList)),str(FrameTimeList[0]),str(FrameTimeList[-1]),str(CurrentGPSReceivedtime))
-                                    #t1_start = time.perf_counter()
-                                    for i in range(len(FrameTimeList)):
-                                        if FrameTimeList[i] > self._GPSTimeList[-1]:
-                                            if self._extrapolate:
+                        else :
+                            if not self._interpolation:
+                                if self._FlirAttached and not self._addsynthethicimage:
+                                    FrameGrabbingSuccessFlag, Frame = FlirVideoSource.read()
+                                else :
+                                    Frame = np.random.randint(0,255,size = (self._synthethic_image_res_y,self._synthethic_image_res_x,3)).astype(np.uint8)
+                                CurrentDroneInfoDict = {}
+                                CurrentDroneInfoDict['Latitude'] = self._PreviousLatitude
+                                CurrentDroneInfoDict['Longitude'] = self._PreviousLongitude
+                                CurrentDroneInfoDict['Altitude'] = self._PreviousAltitude
+                                CurrentDroneInfoDict['BaroAltitude'] = self._PreviousBaroAltitude
+                                CurrentDroneInfoDict['TargetHoldTime'] = self._PreviousDroneTargetHoldTime
+                                CurrentDroneInfoDict['CompassHeading'] = self._PreviousCompassHeading
+                                CurrentDroneInfoDict['Image'] = Frame
+                                CurrentGPSInfoQueue.put(CurrentDroneInfoDict)
+                            else :
+                                if not FrameQueue.empty():
+                                    FrameBundle = FrameQueue.get()
+                                    if len(self._GPSTimeList) > 1:
+                                        FrameTimeList = FrameBundle['FrameTimes']
+                                        FrameList = FrameBundle['Frames']
+                                        self._queueLog.debug('No of Frames %s %s %s %s %s', str(len(FrameTimeList)),str(len(self._CurrentFrameTimeList)),str(FrameTimeList[0]),str(FrameTimeList[-1]),str(CurrentGPSReceivedtime))
+                                        #t1_start = time.perf_counter()
+                                        for i in range(len(FrameTimeList)):
+                                            if FrameTimeList[i] > self._GPSTimeList[-1]:
+                                                if self._extrapolate:
+                                                    self._CurrentFrameTimeList.append(FrameTimeList[i])
+                                                    self._CurrentFrameList.append(FrameList[i])
+                                                else:
+                                                    self._NextFrameTimeList.append(FrameTimeList[i])
+                                                    self._NextFrameList.append(FrameList[i])
+                                            else:
                                                 self._CurrentFrameTimeList.append(FrameTimeList[i])
                                                 self._CurrentFrameList.append(FrameList[i])
-                                            else:
-                                                self._NextFrameTimeList.append(FrameTimeList[i])
-                                                self._NextFrameList.append(FrameList[i])
-                                        else:
-                                            self._CurrentFrameTimeList.append(FrameTimeList[i])
-                                            self._CurrentFrameList.append(FrameList[i])
-                                    if not self._extrapolate :
-                                        FrameInterpolatedLatList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSLatList)
-                                        FrameInterpolatedLonList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSLonList)
-                                        FrameLatInterpolatedAltList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSAltList)
-                                        FrameLatInterpolatedCompList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSCompList) 
-                                    else :
-                                        InterpolatedLatFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSLatList, k=self._order)
-                                        InterpolatedLonFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSLonList, k=self._order)
-                                        InterpolatedAltFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSAltList, k=self._order)
-                                        InterpolatedCompFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSCompList, k=self._order)
-                                        FrameInterpolatedLatList = InterpolatedLatFunction(self._CurrentFrameTimeList)
-                                        FrameInterpolatedLonList = InterpolatedLonFunction(self._CurrentFrameTimeList)
-                                        FrameLatInterpolatedAltList = InterpolatedAltFunction(self._CurrentFrameTimeList)
-                                        FrameLatInterpolatedCompList = InterpolatedCompFunction(self._CurrentFrameTimeList)
-                                    for i in range(len(self._CurrentFrameList)) :
-                                        CurrentDroneInfoDict = {}
-                                        CurrentDroneInfoDict['Latitude'] = FrameInterpolatedLatList[i]
-                                        CurrentDroneInfoDict['Longitude'] = FrameInterpolatedLonList[i]
-                                        CurrentDroneInfoDict['Altitude'] = self._PreviousAltitude
-                                        CurrentDroneInfoDict['BaroAltitude'] = FrameLatInterpolatedAltList[i]
-                                        CurrentDroneInfoDict['TargetHoldTime'] = self._PreviousDroneTargetHoldTime
-                                        CurrentDroneInfoDict['CompassHeading'] = FrameLatInterpolatedCompList[i]
-                                        CurrentDroneInfoDict['Image'] = self._CurrentFrameList[i]
-                                        CurrentGPSInfoQueue.put(CurrentDroneInfoDict)
-                                        self._queueLog.debug('%s %s %s %s %s %s', str(CurrentDroneInfoDict['Latitude']),str(CurrentDroneInfoDict['Longitude']),str(CurrentDroneInfoDict['BaroAltitude']),str(CurrentDroneInfoDict['CompassHeading']),str(CurrentDroneInfoDict['TargetHoldTime']),str(self._CurrentFrameTimeList[i]))
-                                    FrameInterpolatedLatList = []
-                                    FrameInterpolatedLonList = []
-                                    FrameLatInterpolatedAltList = []
-                                    FrameLatInterpolatedCompList = [] 
-                                    self._CurrentFrameTimeList = []
-                                    self._CurrentFrameList = []
-                                    if not self._extrapolate:
-                                        self._CurrentFrameTimeList.extend(self._NextFrameTimeList)
-                                        self._CurrentFrameList.extend(self._NextFrameList)
-                                    self._NextFrameTimeList = []
-                                    self._NextFrameList = []
+                                        if not self._extrapolate :
+                                            FrameInterpolatedLatList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSLatList)
+                                            FrameInterpolatedLonList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSLonList)
+                                            FrameLatInterpolatedAltList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSAltList)
+                                            FrameLatInterpolatedCompList = np.interp(self._CurrentFrameTimeList, self._GPSTimeList, self._GPSCompList) 
+                                        else :
+                                            InterpolatedLatFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSLatList, k=self._order)
+                                            InterpolatedLonFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSLonList, k=self._order)
+                                            InterpolatedAltFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSAltList, k=self._order)
+                                            InterpolatedCompFunction = InterpolatedUnivariateSpline(self._GPSTimeList, self._GPSCompList, k=self._order)
+                                            FrameInterpolatedLatList = InterpolatedLatFunction(self._CurrentFrameTimeList)
+                                            FrameInterpolatedLonList = InterpolatedLonFunction(self._CurrentFrameTimeList)
+                                            FrameLatInterpolatedAltList = InterpolatedAltFunction(self._CurrentFrameTimeList)
+                                            FrameLatInterpolatedCompList = InterpolatedCompFunction(self._CurrentFrameTimeList)
+                                        for i in range(len(self._CurrentFrameList)) :
+                                            CurrentDroneInfoDict = {}
+                                            CurrentDroneInfoDict['Latitude'] = FrameInterpolatedLatList[i]
+                                            CurrentDroneInfoDict['Longitude'] = FrameInterpolatedLonList[i]
+                                            CurrentDroneInfoDict['Altitude'] = self._PreviousAltitude
+                                            CurrentDroneInfoDict['BaroAltitude'] = FrameLatInterpolatedAltList[i]
+                                            CurrentDroneInfoDict['TargetHoldTime'] = self._PreviousDroneTargetHoldTime
+                                            CurrentDroneInfoDict['CompassHeading'] = FrameLatInterpolatedCompList[i]
+                                            CurrentDroneInfoDict['Image'] = self._CurrentFrameList[i]
+                                            CurrentGPSInfoQueue.put(CurrentDroneInfoDict)
+                                            self._queueLog.debug('%s %s %s %s %s %s', str(CurrentDroneInfoDict['Latitude']),str(CurrentDroneInfoDict['Longitude']),str(CurrentDroneInfoDict['BaroAltitude']),str(CurrentDroneInfoDict['CompassHeading']),str(CurrentDroneInfoDict['TargetHoldTime']),str(self._CurrentFrameTimeList[i]))
+                                        FrameInterpolatedLatList = []
+                                        FrameInterpolatedLonList = []
+                                        FrameLatInterpolatedAltList = []
+                                        FrameLatInterpolatedCompList = [] 
+                                        self._CurrentFrameTimeList = []
+                                        self._CurrentFrameList = []
+                                        if not self._extrapolate:
+                                            self._CurrentFrameTimeList.extend(self._NextFrameTimeList)
+                                            self._CurrentFrameList.extend(self._NextFrameList)
+                                        self._NextFrameTimeList = []
+                                        self._NextFrameList = []
+        except Exception as ex:
+            self._log.exception('Error in DroneCom')
         if self._FlirAttached and not self._addsynthethicimage:
             FlirVideoSource.release()
         print('Drone Communication Halted and First Process Terminated')

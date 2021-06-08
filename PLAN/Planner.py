@@ -707,16 +707,16 @@ if __name__ == '__main__':
 
     
     
-    gps_center = (48.3356687, 14.3262629)
+    gps_center = (48.3327358, 14.3306531)
     utm_center = utm.from_latlon( gps_center[0], gps_center[1] )
-    gps_start = (48.335673, 14.32703)
-    grid_size = 30
-    num_cells = 3
+    gps_start = (48.333659, 14.330823)
+    grid_size = 300
+    num_cells = 1
     area_size = (grid_size*num_cells, grid_size*num_cells) # produce a square grid
     
     
     # path to the digital elevation model as required by the Visualizer
-    dem_path = os.path.join( Path(__file__).parent.absolute(), '..',  'data', 'open_field', 'DEM' )
+    dem_path = os.path.join( Path(__file__).parent.absolute(), '..',  'data', '20210525_conifer2', 'DEM' )
     vis = Visualizer( dem_path ) # initialize an instance of the visualizer (this is optional)
 
     prob_map =   None 

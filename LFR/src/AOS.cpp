@@ -103,7 +103,6 @@ Image AOS::render(const glm::mat4 virtual_pose, const float virtualFovDegrees, c
 	else // otherwise use specified ids!
 		_ids= std::vector<unsigned int>(ids);
 
-
 	//unsigned int counter = 0;
 	for (unsigned int idx : _ids)
 	{
@@ -343,14 +342,14 @@ void AOS::initFrameBufferTexture(unsigned int* fbo, unsigned int* texture)
 	// position color buffer
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
-#ifdef GL_EXT_color_buffer_float
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, render_width, render_height, 0, GL_RGBA, GL_FLOAT, NULL);
-#elif GL_EXT_color_buffer_half_float
+//#ifdef GL_EXT_color_buffer_float
+//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, render_width, render_height, 0, GL_RGBA, GL_FLOAT, NULL);
+//#elif GL_EXT_color_buffer_half_float
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, render_width, render_height, 0, GL_RGBA, GL_FLOAT, NULL);
-#else
-	static_assert(true, "Error: floating point framebuffer not supported!");
-	throw std::runtime_error("Error: floating point framebuffer not supported!");
-#endif
+//#else
+//	static_assert(true, "Error: floating point framebuffer not supported!");
+//	throw std::runtime_error("Error: floating point framebuffer not supported!");
+//#endif
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture, 0);

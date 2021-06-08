@@ -11,6 +11,10 @@
 #include <string.h>
 #include <math.h>
 
+#ifdef __unix
+#define sprintf_s(buf, size, ...) snprintf((buf), (size), __VA_ARGS__)
+#define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),(mode)))==NULL
+#endif
 
 enum IMTYPE {PNG, BMP, TGA, JPG};
 

@@ -27,7 +27,7 @@ sys.path.insert(1, os.path.join(cur_file_path, '..', 'DET') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'LFR', 'python') )
 sys.path.insert(1, os.path.join(cur_file_path, '..', 'CAM') )
 import pyaos
-detection = False
+detection = True
 if detection :
     from detector import Detector
 from Planner import Planner
@@ -35,9 +35,15 @@ from FlyingControl import DroneFlyingControl
 #from ..DRONE.DroneCom import DroneCommunication, ReadGPSReceivedLogFiles, ReadNewGPSReceivedLogFiles
 from Renderer_Detector import Renderer
 from CameraControl import CameraControl
+
+test_server = True
+if test_server :
+    from ServerUpload import ServerUpload
+
 from DroneCom import DroneCommunication
 from LFR_utils import hdr_mean_adjust
 from PathVisualizer import Visualizer
+from utils import download_file
 from scipy.stats import circmean
 import random
 from scipy import interpolate
@@ -50,6 +56,12 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+
+import asyncio
+import aiohttp
+
+
 
 class InitializationClass():
     _sitename = None
@@ -110,14 +122,15 @@ class InitializationClass():
     _CenterNorth = None
     _prob_map = None
     _utm_center = None
+    _UpdatePathPlanning = False
 
     def  __init__(self, sitename, area_sides, ReadfromFile = False, DroneAttached = True, FlirAttached = True, IntelStickAttached = True, DroneFlyingSpeed = 10, Flying_Height = 35, 
                 ImageSamplingDistance = 1.0, MaxFlightTime = 20*60, FieldofView = 43.10803984095769,GridSideLength = 30, GrabVideoFrames = True, StartLatitudeGlobal = 0.0, dc = 10,
-                StartLongitudeGlobal = 0.0 , FasterDroneFlyingSpeed = 50, WayPointHoldingTime = 5, PiWayPointRadiusCheck = 5.0, TimeDelayForFlirConnection = 7.0, pwmPin = 18,
+                StartLongitudeGlobal = 0.0 , FasterDroneFlyingSpeed = 10, WayPointHoldingTime = 5, PiWayPointRadiusCheck = 5.0, TimeDelayForFlirConnection = 7.0, pwmPin = 18,
                 LowerThreshold = 0.05, UpperThreshold = 0.10, Render = True, Detect = True, PrePlannedPath = False, legacy_normalization = False, _NormalizedDistance = 30,
                 AlwaysRenderSeparetly = True, SimulateonCPU = False, GridAlignedPathPlanning = True, ContinuousIntegration = True, ContinuousIntegrationAfterNoofImages = 10,
                 DetectWithPiImages = False, SendEmail = False, UpdatePathPlanningflag = False, sender_email = None, receiver_email = None, subject = None, body = None,
-                ProjectIndividualImages = False, WritePoses = False, aug = "noAHE", yoloversion = "yolov4-tiny",prob_map = None
+                ProjectIndividualImages = False, WritePoses = False, aug = "noAHE", yoloversion = "yolov4-tiny",currentpath = '../data',uploadserver = False, baseserver = 'http://localhost:8080',prob_map = None
     ):
         self._sitename = sitename
         self._DroneFlyingSpeed = DroneFlyingSpeed # in 0.1m/s
@@ -147,6 +160,9 @@ class InitializationClass():
         self._receiver_email = receiver_email
         self._subject = subject
         self._body = body
+        self._uploadserver = uploadserver
+        self._serveraddress = baseserver
+
         self._ProjectIndividualImages = ProjectIndividualImages
         self._GrabVideoFrames = GrabVideoFrames
         self._ContinuousIntegration = ContinuousIntegration
@@ -170,21 +186,22 @@ class InitializationClass():
         self._aug = aug
         self._yoloversion = yoloversion
         self._source = '/data/camera/*/*.tiff'
-        if self._SimulateonCPU :
-            self._basedatapath = 'D:\\Resilio\\ANAOS\\SIMULATIONS'
-        else :
-            self._basedatapath = '../data'#'../data' 
+        self._basedatapath = currentpath
+        #if self._SimulateonCPU :
+        #    self._basedatapath = 'D:\\Resilio\\ANAOS\\SIMULATIONS'
+        #else :
+        #    self._basedatapath = '../data'#'../data' 
         self._StartLatitudeGlobal = StartLatitudeGlobal
         self._StartLongitudeGlobal = StartLongitudeGlobal
         if self._DetectWithPiImages :
-            self._PiImagesFolder = os.path.join(self._basedatapath,'FlightResults', sitename, 'PiRenderedResults')
-        self._Download_Dest = os.path.join(self._basedatapath,'FlightResults', sitename, 'Image')
-        self._WritePosesPath = os.path.join(self._basedatapath,'FlightResults', sitename, 'FlightPoses')
-        self._SavProjPath = os.path.join(self._basedatapath,'FlightResults', sitename, 'Projections')
-        self._ObjModelPath = os.path.join(self._basedatapath,'FlightResults', sitename, 'LFR','dem.obj')
-        self._ObjModelImagePath = os.path.join(self._basedatapath,'FlightResults', sitename, 'LFR','dem.png')
-        self._LFRPath = os.path.join(self._basedatapath,'FlightResults', sitename, 'LFR')
-        self._DemInfoJSOn = os.path.join(self._basedatapath,'FlightResults', sitename, 'LFR','dem_info.json')
+            self._PiImagesFolder = os.path.join(self._basedatapath,'..','data', sitename, 'PiRenderedResults')
+        self._Download_Dest = os.path.join(self._basedatapath,'..','data', sitename, 'Image')
+        self._WritePosesPath = os.path.join(self._basedatapath,'..','data', sitename, 'FlightPoses')
+        self._SavProjPath = os.path.join(self._basedatapath,'..','data', sitename, 'Projections')
+        self._ObjModelPath = os.path.join(self._basedatapath,'..','data', sitename, 'DEM','dem.obj')
+        self._ObjModelImagePath = os.path.join(self._basedatapath,'..','data', sitename, 'DEM','dem.png')
+        self._LFRPath = os.path.join(self._basedatapath,'..','data', sitename, 'DEM')
+        self._DemInfoJSOn = os.path.join(self._basedatapath,'..','data', sitename, 'DEM','dem_info.json')
         with open(self._DemInfoJSOn) as json_file:
             self._DemInfoDict = json.load(json_file)
         self._CenterUTMInfo = self._DemInfoDict['centerUTM']
@@ -195,8 +212,18 @@ class InitializationClass():
 ##############################################################################
 ##############################################################################
 if __name__ == "__main__":
-    InitializedValuesClass = InitializationClass(sitename="Test20200326_Conifer_Fs6Re3_motion",area_sides = (90,90), ReadfromFile=False, DroneAttached=True,FlirAttached=True,
-    DroneFlyingSpeed=6,Flying_Height = 35, GridSideLength = 90, SimulateonCPU=False)
+    cur_file_path = Path(__file__).resolve().parent
+    
+    base_url1 = 'http://140.78.99.183:80'
+    sitename = "test_flight_server_upload"
+
+    #ToDo --- Download All Files and Place in a Folder Locally
+    location_ref = 'test_flight_server_upload' #Find Way to Get locationref from the server
+    #download_file(base_url1,"locations",local_file = os.path.join(cur_file_path,'..','data',sitename,'DEM','dem.obj'),remote_file= location_ref + ".obj")
+    #download_file(base_url1,"locations",local_file = os.path.join(cur_file_path,'..','data',sitename,'DEM','dem.png'),remote_file= location_ref + ".png")
+    #download_file(base_url1,"locations",local_file = os.path.join(cur_file_path,'..','data',sitename,'DEM','dem_info.json'),remote_file= location_ref + ".json")
+    InitializedValuesClass = InitializationClass(sitename=sitename,area_sides = (90,90), ReadfromFile=False, DroneAttached=True,FlirAttached=True,
+    DroneFlyingSpeed=4,Flying_Height = 30, GridSideLength = 90, UpdatePathPlanningflag = False, SimulateonCPU=False, currentpath = cur_file_path)
     
     #vis = Visualizer( InitializedValuesClass._LFRPath )
     #PlanningAlgoClass = Planner( InitializedValuesClass._utm_center, InitializedValuesClass._area_sides, tile_distance = InitializedValuesClass._GridSideLength,  prob_map=InitializedValuesClass._prob_map, debug=False,vis=None, results_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'),gridalignedplanpath = InitializedValuesClass._GridAlignedPathPlanning)
@@ -238,6 +265,7 @@ if __name__ == "__main__":
         #       'DLDetections': [{'gps':(gps_lat,gps_lon), 'conf': #}, {'gps':(gps_lat,gps_lon), 'conf': #}, ...]
         #       'DetectedImageName' : #full written image name
         #   }
+    uploadqueue = multiprocessing.Queue(maxsize=200)
     
     # events are only binary
     DroneProcessEvent = multiprocessing.Event()     # enabling this event (.set) stops the DroneCommunication process terminally (only do once)
@@ -246,6 +274,7 @@ if __name__ == "__main__":
     CameraProcessEvent = multiprocessing.Event()    # enabling this event (.set) stops the camera process terminally (only do once)
     GetFramesEvent = multiprocessing.Event()        # enable if you want to retrieve recorded frames
     RecordEvent = multiprocessing.Event()           # enable if you want to record information while flying
+    upload_complete_event = multiprocessing.Event()
 
     if InitializedValuesClass._ReadfromFile:
         GPSReceivedLogFile = os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'GPSReceivedLog.log')
@@ -255,11 +284,11 @@ if __name__ == "__main__":
         GPSlogFileInfo = []
     #print(len(GPSReceivedLogFile))
 
-    CameraClass = CameraControl(FlirAttached=InitializedValuesClass._FlirAttached, AddsynthethicImage=False, out_folder = os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'))
+    CameraClass = CameraControl(FlirAttached=InitializedValuesClass._FlirAttached, AddsynthethicImage=False, out_folder = os.path.join(InitializedValuesClass._basedatapath,'..','data', InitializedValuesClass._sitename, 'log'))
     
     # interpolation is done here. 
     DroneCommunicationClass = DroneCommunication(simulate=False,GPSLog=GPSlogFileInfo, interpolation=True,extrapolate=False, AddSynthethicImage=False,FlirAttached = InitializedValuesClass._FlirAttached,
-                                                 out_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'Log'))
+                                                 out_folder=os.path.join(InitializedValuesClass._basedatapath,'..','data', InitializedValuesClass._sitename, 'log'))
     # geotagged images are the output here (interpolation and adding GPS) -> input to FlyingControl
     # many more images than are actually used
     
@@ -269,21 +298,27 @@ if __name__ == "__main__":
     FlyingControlClass = DroneFlyingControl(sitename = InitializedValuesClass._sitename,CenterEast = InitializedValuesClass._CenterEast,CenterNorth = InitializedValuesClass._CenterNorth,
                                             objectmodelpath=InitializedValuesClass._ObjModelPath,basedatapath=InitializedValuesClass._basedatapath,Render=True,
                                             FlirAttached = InitializedValuesClass._FlirAttached,Flying_Height = InitializedValuesClass._Flying_Height,
-                                            DroneFlyingSpeed = InitializedValuesClass._DroneFlyingSpeed,RenderAfter = 3,CenterUTMInfo=InitializedValuesClass._CenterUTMInfo,
-                                            out_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults', InitializedValuesClass._sitename, 'SimulatedImages'),
+                                            DroneFlyingSpeed = InitializedValuesClass._DroneFlyingSpeed,RenderAfter = 2,CenterUTMInfo=InitializedValuesClass._CenterUTMInfo,
+                                            out_folder=os.path.join(InitializedValuesClass._basedatapath,'..','data', InitializedValuesClass._sitename, 'images'),
                                             area_sides=InitializedValuesClass._area_sides,GridSideLength=InitializedValuesClass._GridSideLength,GridAlignedPathPlanning=InitializedValuesClass._GridAlignedPathPlanning,
-                                            prob_map=InitializedValuesClass._prob_map,
+                                            prob_map=InitializedValuesClass._prob_map,UpdatePathPlanningflag = InitializedValuesClass._UpdatePathPlanning,
                                             adddebugInfo=True)
     
     # Renderer does undistortion, LFR, DET
     RendererClass = Renderer(CenterUTMInfo=InitializedValuesClass._CenterUTMInfo,ObjModelPath=InitializedValuesClass._ObjModelPath,
                             Detect=True,ObjModelImagePath=InitializedValuesClass._ObjModelImagePath,basedatapath=InitializedValuesClass._basedatapath,
-                            sitename=InitializedValuesClass._sitename,results_folder=os.path.join(InitializedValuesClass._basedatapath,'FlightResults',InitializedValuesClass._sitename, 'RenderedResults'),
-                            FieldofView=InitializedValuesClass._FieldofView,adddebuginfo=True)
+                            sitename=InitializedValuesClass._sitename,results_folder=os.path.join(InitializedValuesClass._basedatapath,'..','data',InitializedValuesClass._sitename, 'results'),
+                            FieldofView=InitializedValuesClass._FieldofView,device="MYRIAD",adddebuginfo=True,uploadserver=True,baseserver=base_url1,locationid=location_ref)
 
+    serverclass = ServerUpload(serveraddress=base_url1,locationid= location_ref)
+    
     
     processes = []
-    RenderProcess = multiprocessing.Process(name='RenderingProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, RenderingProcessEvent))
+    uploadprocess = multiprocessing.Process(name = 'uploadprocess', target=serverclass.dummy_run, args=(uploadqueue, upload_complete_event))
+    processes.append(uploadprocess)
+    uploadprocess.start()
+    
+    RenderProcess = multiprocessing.Process(name='RenderingProcess', target=RendererClass.RendererandDetectContinuous, args=(RenderingQueue, DetectionInfoQueue, uploadqueue, RenderingProcessEvent))
     processes.append(RenderProcess)
     RenderProcess.start()
     time.sleep(2)
@@ -299,15 +334,15 @@ if __name__ == "__main__":
     CameraFrameAcquireProcess = multiprocessing.Process(name='CameraFrameAcquireProcess', target=CameraClass.AcquireFrames, args=(FrameQueue, CameraProcessEvent, GetFramesEvent))
     processes.append(CameraFrameAcquireProcess)
     CameraFrameAcquireProcess.start()
-    
+        
     
     while not FlyingProcessEvent.is_set():
         time.sleep(10.0)
     DroneProcessEvent.set()
     CameraProcessEvent.set()
     RenderingProcessEvent.set()
-    
-    time.sleep(15.0)
+    upload_complete_event.set()
+    time.sleep(25.0)
 
     while not FrameQueue.empty():
         FramesInfo = FrameQueue.get()
@@ -317,12 +352,18 @@ if __name__ == "__main__":
         FramesInfo = SendWayPointInfoQueue.get()
     while not RenderingQueue.empty():
         FramesInfo = RenderingQueue.get()
+    while not uploadqueue.empty():
+        FramesInfo = uploadqueue.get()
+    while not DetectionInfoQueue.empty():
+        FramesInfo = DetectionInfoQueue.get()
     CurrentGPSInfoQueue.close()
     SendWayPointInfoQueue.close()
     FrameQueue.close()
     RenderingQueue.close()
+    uploadqueue.close()
+    DetectionInfoQueue.close()
 
-    print('All Thread Done')
+    print('Wrapping Up all Process')
     for process in processes:
         process.join(5)
     print('CameraFrameAcquireProcess.is_alive()', CameraFrameAcquireProcess.is_alive())
@@ -345,6 +386,10 @@ if __name__ == "__main__":
         RenderProcess.terminate()
         RenderProcess.join()
     print('RenderProcess.is_alive()', RenderProcess.is_alive())
+    if uploadprocess.is_alive() :
+        uploadprocess.terminate()
+        uploadprocess.join()
+    print('uploadprocess.is_alive()', uploadprocess.is_alive())
     print('All Process Done')
     #f.close()
     #CurrentDronedata.updateReceiveCommand(False)

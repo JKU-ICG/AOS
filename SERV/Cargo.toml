@@ -1,0 +1,22 @@
+[workspace]
+
+members = [
+	"server",
+]
+
+
+# Rust without any kind of optimizations is really, really slow
+# With opt-level=1 it is at least possible to get a feel about application performance
+[profile.dev.package."*"]
+opt-level = 1
+debug-assertions = true
+
+# required to make model loading bearable. without optimiztion
+# loadign the terrains takes up to 20 seconds.
+# This way, it takes 1 second
+[profile.dev.package.tobj]
+opt-level = 3
+debug-assertions = true
+
+
+

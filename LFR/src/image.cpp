@@ -37,7 +37,7 @@ float get_pixel(Image m, int x, int y, int c)
     assert(x < m.w && y < m.h && c < m.c);
     return m.data[c*m.h*m.w + y*m.w + x];
 }
-static float get_pixel_extend(Image m, int x, int y, int c)
+float get_pixel_extend(Image m, int x, int y, int c)
 {
     if (x < 0 || x >= m.w || y < 0 || y >= m.h) return 0;
     /*
@@ -49,13 +49,13 @@ static float get_pixel_extend(Image m, int x, int y, int c)
     if (c < 0 || c >= m.c) return 0;
     return get_pixel(m, x, y, c);
 }
-static void set_pixel(Image m, int x, int y, int c, float val)
+void set_pixel(Image m, int x, int y, int c, float val)
 {
     if (x < 0 || y < 0 || c < 0 || x >= m.w || y >= m.h || c >= m.c) return;
     assert(x < m.w && y < m.h && c < m.c);
     m.data[c*m.h*m.w + y*m.w + x] = val;
 }
-static void add_pixel(Image m, int x, int y, int c, float val)
+void add_pixel(Image m, int x, int y, int c, float val)
 {
     assert(x < m.w && y < m.h && c < m.c);
     m.data[c*m.h*m.w + y*m.w + x] += val;

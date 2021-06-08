@@ -18,6 +18,10 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+import asyncio
+import aiohttp
+import aiofiles
+
 #TODo:- Do Dense and Coarse Planning similarily using this function -- independent of compass 
 def GenerateGPSGridInfo(CenterUTMCoordinates, DEMCenterUTMInfo,GridSideLength, AreaSideLength, AreaSideWidth, RotationAngle = 0):
     RotationAngle = -RotationAngle
@@ -445,3 +449,303 @@ def smtp_connect(sender_email):
     server = smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context)
     server.login(sender_email, password)
     return server
+
+async def upload_png_file(session, serveraddres,image_ref, file):
+    #print("Uploading to " + str(image_ref) + " file " + str(file))
+    with open(file, 'rb') as f:
+        async with session.request(
+                "put", serveraddres + image_ref + ".png",
+                data=f,
+                headers={"content-type": "image/png"},  # mime type is very relevant
+        ) as resp:
+            await resp.read()
+            assert 201 == resp.status
+            return resp.headers["Location"]  # this one is needed for linking with the metadata
+
+async def upload_file(session, resource, file, mime=None):
+    #print("Uploading to " + str(resource) + " file " + str(file))
+    headers = {}
+    if mime:
+        headers['content-type'] = str(mime)
+
+    with open(file, 'rb') as f:
+        async with session.request(
+                "put", resource,
+                data=f,
+                headers=headers
+        ) as resp:
+            await resp.read()
+            resp.raise_for_status()
+            print(resp.headers["Location"])
+            return resp.headers["Location"]
+
+#Indrajit Test
+async def upload_png_file_data(session, resources, dataup):
+    #print("Uploading to " + str(resources) )
+    async with session.request(
+                "put", resources + ".png",
+                data=dataup,
+                headers={"content-type": "image/png"},  # mime type is very relevant
+        ) as resp:
+            await resp.read()
+            assert 201 == resp.status
+            return resp.headers["Location"]  # this one is needed for linking with the metadata
+
+def upload_png_file_data_was(session, resources, dataup):
+    #print("Uploading to " + str(resources) )
+    with session.request(
+                "put", resources + ".png",
+                data=dataup,
+                headers={"content-type": "image/png"},  # mime type is very relevant
+        ) as resp:
+            resp.read()
+            assert 201 == resp.status
+            return resp.headers["Location"]  # this one is needed for linking with the metadata
+'''
+async def upload_json(session, resource, data):
+    async with session.request(
+            "post", resource,
+            data=data,
+            headers={"content-type": "application/json"}
+    ) as resp:
+        await resp.read()
+
+        resp.raise_for_status()
+        location = resp.headers["Location"]
+        print("Metadata created for " + resource + " at " + location)
+        return location
+
+
+
+async def create_image_meta(session, resources, data) -> str:
+    return await upload_json(session, resources, data)
+'''
+async def upload_json(session, resource, data):
+    #print('url',resource)
+    async with session.request(
+            "post", resource,
+            data=data,
+            headers={"content-type": "application/json"}
+    ) as resp:
+        await resp.read()
+
+        resp.raise_for_status()
+        location = resp.headers["Location"]
+        #print("Metadata created for " + resource + " at " + location)
+        return location
+
+def upload_json_was(session, resource, data):
+    #print('url',resource)
+    with session.request(
+            "post", resource,
+            data=data,
+            headers={"content-type": "application/json"}
+    ) as resp:
+        resp.read()
+
+        resp.raise_for_status()
+        location = resp.headers["Location"]
+        #print("Metadata created for " + resource + " at " + location)
+        return location
+
+
+async def create_image_meta(session, resources, data) -> str:
+    return await upload_json(session, resources, data)
+
+def create_image_meta_was(session, resources, data) -> str:
+    return upload_json_was(session, resources, data)
+
+
+async def download_file(serveraddress, resources, local_file,remote_file):
+    async with aiohttp.ClientSession() as session:
+        #print("Downloading to " + str(local_file) + "from file " + str(remote_file))
+        async with session.request("get", os.path.join(serveraddress,resources,remote_file).replace("\\","/"),params=None) as resp:
+            assert resp.status == 200
+            data = await resp.read()
+            async with aiofiles.open(local_file, "wb") as outfile:
+                await outfile.write(data)
+
+async def create_dummylocation_id(serveraddress, locationid):
+    async with aiohttp.ClientSession() as session:
+        # Store metadata of the one drone used in the demo data
+        # Provides camera details - may allow to integrate over images provided by drones with different
+        # camera settings, no magic numbers in the viewer code.
+        async with session.request(
+                "put", serveraddress + '/drones/drone1',
+                data=json.dumps({
+                    "camera": {"fov": {"Deg": 50.815436217896945}, "near": 0.1, "far": 100.0, "aspect": 1.0,
+                               "resolution": [512, 512]}}),
+                headers={"content-type": "application/json"}
+        ) as resp:
+            #print(str(resp))
+            #print(await resp.text())
+            assert 201 == resp.status
+
+        location_id = locationid
+        # Store our main location metadata
+        async with session.request(
+                "put", serveraddress + "/locations/" + location_id,
+                data=json.dumps({
+                    "start_height": 307.0020751953125,
+                    "start_lat_lon": [48.339758, 14.33059],
+                    "center_lat_lon": [48.3398054625, 14.3318629125],
+                    "start_utm": [450393.91024515807, 5354280.539372292, 33, "U"],
+                    "start_gkm31": [73989.71284555788, 356206.4560305681],
+                    "center_gkm31": [74084.00932285623, 356212.9582170388],
+                    "center_utm": [450488.28387294046, 5354284.992294418, 33, "U"]
+                }),
+                headers={"content-type": "application/json"}
+        ) as resp:
+            await resp.read()
+            #print(str(resp))
+            resp.raise_for_status()
+            location_ref = resp.headers["Location"]
+
+def create_dummylocation_id_was(serveraddress, locationid):
+    with aiohttp.ClientSession() as session:
+        # Store metadata of the one drone used in the demo data
+        # Provides camera details - may allow to integrate over images provided by drones with different
+        # camera settings, no magic numbers in the viewer code.
+        with session.request(
+                "put", serveraddress + '/drones/drone1',
+                data=json.dumps({
+                    "camera": {"fov": {"Deg": 50.815436217896945}, "near": 0.1, "far": 100.0, "aspect": 1.0,
+                               "resolution": [512, 512]}}),
+                headers={"content-type": "application/json"}
+        ) as resp:
+            #print(str(resp))
+            #print(resp.text())
+            assert 201 == resp.status
+
+        location_id = locationid
+        # Store our main location metadata
+        with session.request(
+                "put", serveraddress + "/locations/" + location_id,
+                data=json.dumps({
+                    "start_height": 307.0020751953125,
+                    "start_lat_lon": [48.339758, 14.33059],
+                    "center_lat_lon": [48.3398054625, 14.3318629125],
+                    "start_utm": [450393.91024515807, 5354280.539372292, 33, "U"],
+                    "start_gkm31": [73989.71284555788, 356206.4560305681],
+                    "center_gkm31": [74084.00932285623, 356212.9582170388],
+                    "center_utm": [450488.28387294046, 5354284.992294418, 33, "U"]
+                }),
+                headers={"content-type": "application/json"}
+        ) as resp:
+            resp.read()
+            #print(str(resp))
+            resp.raise_for_status()
+            location_ref = resp.headers["Location"]
+
+async def upload_dummylocation_id_was(session, serveraddress, locationid):
+    async with session.request(
+            "put", serveraddress + '/drones/drone1',
+            data=json.dumps({
+                "camera": {"fov": {"Deg": 50.815436217896945}, "near": 0.1, "far": 100.0, "aspect": 1.0,
+                            "resolution": [512, 512]}}),
+            headers={"content-type": "application/json"}
+    ) as resp:
+        #print(str(resp))
+        #print(resp.text())
+        assert 201 == resp.status
+
+    location_id = locationid
+    # Store our main location metadata
+    async with session.request(
+            "put", serveraddress + "/locations/" + location_id,
+            data=json.dumps({
+                "start_height": 307.0020751953125,
+                "start_lat_lon": [48.335673, 14.32703],
+                "center_lat_lon": [48.3356687, 14.3262629],
+                "start_utm": [450126.11627760687, 5353828.794316645, 33, "U"],
+                "start_gkm31": [73731.66832550615, 355748.8056906797],
+                "center_gkm31": [73674.80240903652, 355747.59297018684],
+                "center_utm": [450069.2625109379, 5353828.815501057, 33, "U"]
+            }),
+            headers={"content-type": "application/json"}
+    ) as resp:
+        await resp.read()
+        #print(str(resp))
+        resp.raise_for_status()
+        location_ref = resp.headers["Location"]
+
+async def upload_images(serveraddress, undstortedimage, generatedviewmatrix, locationid, poses = None):
+    async with aiohttp.ClientSession() as session:            
+        if poses is not None:
+            resources = "/integrals"
+            data = {
+                    "drone_id": "drone1",
+                    "location_id": locationid,
+                    "m3x4": generatedviewmatrix.tolist(),
+                    "source_images": poses,
+
+                }
+        else :
+            resources = "/images"
+            data = {
+                    "location_id": locationid,
+                    "drone_id": "drone1",
+                    "m3x4": generatedviewmatrix.tolist()
+                }
+        #print(data)    
+        image_ref = await create_image_meta(session,serveraddress + resources,json.dumps(data))
+        is_success,img_encoded = cv2.imencode('.png', undstortedimage)
+        image_location = await upload_png_file_data(session, serveraddress + image_ref,img_encoded.tobytes())
+        return image_ref
+
+async def upload_images_was(session, serveraddress, undstortedimage, generatedviewmatrix, locationid, poses = None):           
+    if poses is not None:
+        resources = "/integrals"
+        data = {
+                "drone_id": "drone1",
+                "location_id": locationid,
+                "m3x4": generatedviewmatrix.tolist(),
+                "source_images": poses,
+
+            }
+    else :
+        resources = "/images"
+        data = {
+                "location_id": locationid,
+                "drone_id": "drone1",
+                "m3x4": generatedviewmatrix.tolist()
+            }
+    #print(data)    
+    image_ref = await create_image_meta(session,serveraddress + resources,json.dumps(data))
+    is_success,img_encoded = cv2.imencode('.png', undstortedimage)
+    image_location = await upload_png_file_data(session, serveraddress + image_ref,img_encoded.tobytes())
+    return image_ref
+'''
+async def upload_images(session,serveraddress, undstortedimage, generatedviewmatrix, locationid, poses = None):
+    if poses is not None:
+        resources = "/integral_images"
+        data = {
+                "location_id": locationid,
+                "drone_id": "drone1",
+                "m3x4": generatedviewmatrix.tolist(),
+                "source_images": poses
+                }
+    else :
+        resources = "/images"
+        data = {
+                "location_id": locationid,
+                "drone_id": "drone1",
+                "m3x4": [0, 0 ,0]#generatedviewmatrix.tolist()
+            }
+    image_ref = await create_image_meta(session,serveraddress + resources,json.dumps(data))
+    is_success,img_encoded = cv2.imencode('.png', undstortedimage)
+    image_location = await upload_png_file_data(session, serveraddress + image_ref,img_encoded.tobytes())
+'''       
+        
+async def upload_detectionlabels(serveraddress, location_id,labels_data):
+    async with aiohttp.ClientSession() as session:
+        for label in labels_data:
+            label["location_id"] = location_id
+            await upload_json(session, serveraddress + "/labels", json.dumps(label))
+
+async def upload_detectionlabels_was(session, serveraddress, location_id,labels_data):
+    for label in labels_data:
+        resources = "/labels"
+        #print(json.dumps(label, indent=2))
+        await upload_json(session, serveraddress + resources, json.dumps(label))
+
