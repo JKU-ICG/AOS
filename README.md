@@ -11,6 +11,25 @@ Single Images         |  Airborne Optical Sectioning
 
 This repository contains software for drone-based search and rescue applications with airborne optical sectioning, as discussed in our [publications](#publications).
 
+## Contacts
+Univ.-Prof. Dr. Ing. habil. Oliver Bimber
+<br />
+<br />Johannes Kepler University Linz
+<br />Institute of Computer Graphics
+<br />Altenberger Straße 69
+<br />Computer Science Building
+<br />3rd Floor, Room 0302
+<br />4040 Linz, Austria 
+<br />
+<br />Phone: +43-732-2468-6631 (secretary: -6630)
+<br />Web: www.jku.at/cg 
+<br />Email: oliver.bimber@jku.at
+
+## News
+
+- **Science Robotics** paper appeared. See [publications](#publications) (Autonomous Drones for Search and Rescue in Forests)  
+- **New compbined people classifer** outbeats classical people classifers significantly. See [publications](#publications) (Combined People Classification with Airborne Optical Sectioning) 
+- First AOS experiments with **DJI M300RTK** reveals remarkable results (much better than with our OktoXL 6S12, due to higher GPS precission and better IR camera/stabilizer). 
 
 
 ## Publications
@@ -49,7 +68,6 @@ This repository contains software for drone-based search and rescue applications
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Airborne optical sectioning. Journal of Imaging. 4, 102 (2018).
   - [MDPI (open access and final version)](https://www.mdpi.com/2313-433X/4/8/102)
   - [Video on YouTube](https://www.youtube.com/watch?v=ELnvBfafnRA&ab_channel=JKUCG) 
-
 
 
 ## Modules
