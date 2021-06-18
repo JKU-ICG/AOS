@@ -18,7 +18,7 @@ This repository contains software for drone-based search and rescue applications
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Combined People Classification with Airborne Optical Sectioning, IEEE SENSORS JOURNAL (under review), (2021)
   - [arXiv (pre-print)](https://arxiv.org)  
   - [Data: ](https://doi.org/) [![DOI](https://zenodo.org/)
-- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics (accepted), (2021)
+- David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics, (2021)
   - [Science (final version)](https://robotics.sciencemag.org/)
   - [arXiv (pre-print)](https://arxiv.org/pdf/2105.04328)  
   - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
