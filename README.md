@@ -35,7 +35,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Publications
 
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Combined People Classification with Airborne Optical Sectioning, IEEE SENSORS JOURNAL (under review), (2021)
-  - [arXiv (pre-print)](https://arxiv.org)  
+  - [arXiv (pre-print)](https://arxiv.org/abs/2106.10077)  
   - [Data: ](https://doi.org/) [![DOI](https://zenodo.org/)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics, (2021)
   - [Science (final version)](https://robotics.sciencemag.org/)
