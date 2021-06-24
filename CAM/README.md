@@ -78,4 +78,7 @@ cameraMatrix = np.array( [
     ])
 ```
 
+### Calibration Pattern
 
+To perform rectification and calibration for our camera we created a metal plate with glued black velvet squares ( sidelength = 5cm)  aligned in a checker board pattern (9 x 8 checkerboar pattern as shown below). RGB camera can detect the color difference whereas the thermal camera detects the temperature difference between the metal and the velvet squares. 
+![calibration](../img/Calibrationpattern.PNG)
