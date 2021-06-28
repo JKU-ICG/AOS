@@ -127,7 +127,7 @@ The open field dataset is a linear flight without high vegetation and was record
 
 ## Simulation
 
-A [Simulator](https://aos.tensorware.app) (simulating forrest occlusion) has been developed by Fracis Seits. The code is available [here](https://github.com/tensorware/aos-simulation).
+A [simulator](https://aos.tensorware.app) for forest occlusion has been developed by Fracis Seits. The code is available [here](https://github.com/tensorware/aos-simulation).
 
 
 ## License
