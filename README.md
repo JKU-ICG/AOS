@@ -81,8 +81,6 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 Note that the modules LFR, DET, CAM, PLAN, SERV are standalone software packages that can be installed and used independently. The DRONE module, however, relies on the other modules (LFR, DET, CAM, PLAN, SERV) in this repository.
 
-A [Simulator](https://aos.tensorware.app) (simulating forrest occlusion) has been developed by Fracis Seits. The code is available [here](https://github.com/tensorware/aos-simulation).
-
 
 ## Installation
 
@@ -126,6 +124,10 @@ The `images` and `poses` are in the corresponding folders.
 The `F0` was recorded while flying over forest with the payload version 1 and is [available online](https://doi.org/10.5281/zenodo.3894773).
 The open field dataset is a linear flight without high vegetation and was recorded with payload version 3 in the course of the experimnents for the "Combined People Classification with Airborne Optical Sectioning" article.
 
+
+## Simulation
+
+A [Simulator](https://aos.tensorware.app) (simulating forrest occlusion) has been developed by Fracis Seits. The code is available [here](https://github.com/tensorware/aos-simulation).
 
 
 ## License
