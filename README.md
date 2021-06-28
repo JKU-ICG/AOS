@@ -81,6 +81,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 Note that the modules LFR, DET, CAM, PLAN, SERV are standalone software packages that can be installed and used independently. The DRONE module, however, relies on the other modules (LFR, DET, CAM, PLAN, SERV) in this repository.
 
+A [Simulator](https://github.com/tensorware/aos-simulation) (simulating forrest occlusion) has been developed by Fracis Seits.  
+
 
 ## Installation
 
