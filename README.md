@@ -132,5 +132,5 @@ A [simulator](https://aos.tensorware.app) for forest occlusion has been develope
 
 ## License
 * Data: Creative Commons Attribution 4.0 International
-* Code: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
+* Code Modules: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
 * Occlusion Simulator: [MIT](https://github.com/tensorware/aos-simulation/blob/master/LICENSE) 
