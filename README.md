@@ -25,7 +25,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 <br />Web: www.jku.at/cg 
 <br />Email: oliver.bimber@jku.at
 
-## News (see also [press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
 - 06/23/2021: **Science Robotics** paper appeared. See [publications](#publications) (Autonomous Drones for Search and Rescue in Forests)  
 - 5/31/2021: **New combined people classifer** outbeats classical people classifers significantly. See [publications](#publications) (Combined People Classification with Airborne Optical Sectioning) 
