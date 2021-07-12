@@ -25,6 +25,11 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 <br />Web: www.jku.at/cg 
 <br />Email: oliver.bimber@jku.at
 
+## Sponsors
+- Austrian Science Fund (FWF)
+- State of Upper Austria, Nationalstiftung für Forschung, Technologie und Entwicklung
+- Linz Institute of Technology (LIT) 
+
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
 - 06/23/2021: **Science Robotics** paper appeared. See [publications](#publications) (Autonomous Drones for Search and Rescue in Forests)  
