@@ -16,7 +16,8 @@ Open the Visual Studio solution at `/LFR/vs/LFR.sln` and compile it. Compilation
 
 ### Linux (e.g. a Raspberry Pi) building: 
 Install [GLFW](https://www.glfw.org/) and compile [Assimp](https://www.assimp.org/) first. 
-To build the module, make [LFR](/LFR) the current directory and run `make `.
+To build the module, make [LFR](/LFR) the current directory and run `make `. 
+After that, change the dir to LFR/bin and run './main'. Note that you must go to the subdir of the LFR first before you run the 'main' file.
 
 
 ## Detailed usage
