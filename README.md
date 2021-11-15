@@ -38,7 +38,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
-
+- Rakesh John Amala Arokia Nathan, Indrajit Kurmi, David C. Schedl and Oliver Bimber, Through-Foliage Tracking with Airborne Optical Sectioning, Remote Sensing of Environment (under Review), (2021)
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Combined People Classification with Airborne Optical Sectioning, Nature Scientific Reports (under review), (2021)
   - [arXiv (pre-print)](https://arxiv.org/abs/2106.10077)  
   - [Data: ](https://doi.org/10.5281/zenodo.5013640)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5013640.svg)](https://doi.org/10.5281/zenodo.5013640)
