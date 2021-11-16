@@ -103,7 +103,7 @@ All other modules (LFR, DET, CAM, PLAN, SERV) have to be installed before the DR
 
 ## Hardware
 
-For our prototype, an octocopter (MikroKopter OktoXL 6S12, two LiPo 4500 mAh batteries, 4.5 kg to 4.9 kg) carries our payload. In the course of the project 3 versions of payloads with varying components have been used.
+For our prototype, an octocopter (MikroKopter OktoXL 6S12, two LiPo 4500 mAh batteries, 4.5 kg to 4.9 kg) carries our payload. In the course of the project 4 versions of payloads with varying components have been used.
 
 Prototype        |  Payload
 :-------------------------:|:-------------------------:
