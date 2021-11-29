@@ -32,6 +32,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
+- 11/29/2021: New work on **Acceleration-Aware Path Planning with Waypoints**. See [publications](#publications) (Acceleration-Aware Path Planning with Waypoints)
 - 11/15/2021: New work on **Through-Foliage Tracking with AOS**. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning)  
 - 06/23/2021: **Science Robotics** paper appeared. See [publications](#publications) (Autonomous Drones for Search and Rescue in Forests)  
 - 5/31/2021: **New combined people classifer** outbeats classical people classifers significantly. See [publications](#publications) (Combined People Classification with Airborne Optical Sectioning) 
