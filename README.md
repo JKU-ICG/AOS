@@ -145,6 +145,10 @@ The open field dataset is a linear flight without high vegetation and was record
 A [simulator](https://aos.tensorware.app) for forest occlusion has been developed by Fracis Seits. The code is available [here](https://github.com/tensorware/aos-simulation).
 
 
+## Acceleration-Aware Path Planner
+
+A path planner which takes acceleration/deceleration into consideration while planning waypoints has been developed by Mr. Rudolf Ortner. The code is available [here](https://github.com/rudolfortner/aapp).
+
 ## License
 * Data: Creative Commons Attribution 4.0 International
 * Code Modules: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
