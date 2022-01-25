@@ -154,4 +154,4 @@ A path planner which takes acceleration/deceleration into consideration while pl
 * Data: Creative Commons Attribution 4.0 International
 * Code Modules: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
 * Occlusion Simulator: [MIT](https://github.com/tensorware/aos-simulation/blob/master/LICENSE) 
-* OpenGl Support libraries [`LFR/include/learnopengl/camera.h`](learnopengl/camera.h), [`LFR/include/learnopengl/mesh.h`](learnopengl/mesh.h), [`LFR/include/learnopengl/model.h`](learnopengl/model.h) and [`LFR/include/learnopengl/shader.h`](learnopengl/shader.h) : [CC BY-NC 4.0](https://github.com/JoeyDeVries/LearnOpenGL/blob/master/LICENSE.md)
+* OpenGL Support libraries [`LFR/include/learnopengl/camera.h`](LFR/include/learnopengl/camera.h), [`LFR/include/learnopengl/mesh.h`](LFR/include/learnopengl/mesh.h), [`LFR/include/learnopengl/model.h`](LFR/include/learnopengl/model.h) and [`LFR/include/learnopengl/shader.h`](learnopengl/shader.h) : [CC BY-NC 4.0](https://github.com/JoeyDeVries/LearnOpenGL/blob/master/LICENSE.md)
