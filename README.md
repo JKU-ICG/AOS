@@ -52,7 +52,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [arXiv (pre-print)](https://arxiv.org/abs/2106.10077)  
   - [Data: ](https://doi.org/10.5281/zenodo.5013640)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5013640.svg)](https://doi.org/10.5281/zenodo.5013640)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics 6(55), eabg1188, https://doi.org/10.1126/scirobotics.abg1188, (2021)
-  - [Science (final version)](https://robotics.sciencemag.org/content/6/55/eabg1188)
+  - [Science (final version)](https://doi.org/10.1126/scirobotics.abg1188)
   - [arXiv (pre-print)](https://arxiv.org/pdf/2105.04328)  
   - [Data: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
   - [Video on YouTube](https://www.youtube.com/watch?v=ebk7GQH5ltk)
