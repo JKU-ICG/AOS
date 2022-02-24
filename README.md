@@ -70,7 +70,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Video on YouTube](https://www.youtube.com/watch?v=39GU1BOCfWQ&ab_channel=JKUInstituteofComputerGraphics)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Airborne Optical Sectioning for Nesting Observation. Sci Rep 10, 7254, https://doi.org/10.1038/s41598-020-63317-9 (2020).
   - [Nature (open access and final version)](https://www.nature.com/articles/s41598-020-63317-9) 
-  - [Video on YouTube]((https://www.youtube.com/watch?v=81l-Y6rVznI)
+  - [Video on YouTube](https://www.youtube.com/watch?v=81l-Y6rVznI)
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Thermal airborne optical sectioning. Remote Sensing. 11, 1668, https://doi.org/10.3390/rs11141668, (2019).
   - [MDPI (open access and final version)](https://www.mdpi.com/2072-4292/11/14/1668) 
   - [Video on YouTube](https://www.youtube.com/watch?v=_t2GEwA_tus&ab_channel=JKUCG)
