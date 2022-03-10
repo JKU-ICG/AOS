@@ -41,7 +41,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## Publications
 - Rudolf Ortner, Indrajit Kurmi, and Oliver Bimber, Acceleration-Aware Path Planning with Waypoints. Drones. 5, no. 4: 143 (2021).
-  - [Drones (open access and Online version)](https://www.mdpi.com/2504-446X/5/4/143)
+  - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/5/4/143)
   - [Path Planner (Code)](https://github.com/rudolfortner/aapp)
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi, David C. Schedl and Oliver Bimber, Through-Foliage Tracking with Airborne Optical Sectioning, Remote Sensing of Environment (under Review), (2021)
   - [arXiv (pre-print)](https://arxiv.org/abs/2111.06959) 
