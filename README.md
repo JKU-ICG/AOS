@@ -32,7 +32,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
-- 03/09/2022: **Combined People Classification with Airborne Optical Sectioning** published in Nature Scientific Reports
+- 03/09/2022: **Combined Person Classification with Airborne Optical Sectioning** published in Nature Scientific Reports
 - 11/29/2021: Our recent work, **Acceleration-Aware Path Planning with Waypoints** has been published. See [publications](#publications) (Acceleration-Aware Path Planning with Waypoints)
 - 11/15/2021: New work on **Through-Foliage Tracking with AOS**. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning)  
 - 06/23/2021: **Science Robotics** paper appeared. See [publications](#publications) (Autonomous Drones for Search and Rescue in Forests)  
@@ -49,7 +49,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Data: ](https://doi.org/10.5281/zenodo.5680949)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5680949.svg)](https://doi.org/10.5281/zenodo.5680949)
   - [Video on YouTube (two persons tracked)](https://www.youtube.com/watch?v=RdrYUOEoxHM)
   - [Video on YouTube (one person tracked)](https://www.youtube.com/watch?v=pzdKJtyNxcM)
-- Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Combined People Classification with Airborne Optical Sectioning, Nature Scientific Reports, 12, Article number: 3804, 2022
+- Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Combined Person Classification with Airborne Optical Sectioning, Nature Scientific Reports, 12, Article number: 3804, 2022
   - [Nature Scientific Reports (final version)](https://www.nature.com/articles/s41598-022-07733-z)
   - [arXiv (pre-print)](https://arxiv.org/abs/2106.10077)  
   - [Data: ](https://doi.org/10.5281/zenodo.5013640)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5013640.svg)](https://doi.org/10.5281/zenodo.5013640)
