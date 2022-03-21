@@ -32,7 +32,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
-- 03/22/2022: **AOS for DJI released** See [AOS for DJI](#DJI)
+- 03/22/2022: **AOS for DJI released** See [AOS for DJI](#AOS for DJI)
 - 03/09/2022: **Combined Person Classification with Airborne Optical Sectioning** published in Nature Scientific Reports
 - 11/29/2021: Our recent work, **Acceleration-Aware Path Planning with Waypoints** has been published. See [publications](#publications) (Acceleration-Aware Path Planning with Waypoints)
 - 11/15/2021: New work on **Through-Foliage Tracking with AOS**. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning)  
@@ -153,7 +153,7 @@ A [simulator](https://aos.tensorware.app) for forest occlusion has been develope
 
 A path planner which takes acceleration/deceleration into consideration while planning waypoints has been developed by Mr. Rudolf Ortner. The code is available [here](https://github.com/rudolfortner/aapp).
 
-# DJI
+
 ## AOS for DJI
 
 We have developed a DJI compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on DJI's Mobile SDK (https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our license conditions (see the [LICENSE.txt](LICENSE.txt)).
