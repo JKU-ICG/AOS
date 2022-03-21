@@ -153,7 +153,7 @@ A [simulator](https://aos.tensorware.app) for forest occlusion has been develope
 
 A path planner which takes acceleration/deceleration into consideration while planning waypoints has been developed by Mr. Rudolf Ortner. The code is available [here](https://github.com/rudolfortner/aapp).
 
-#DJI
+# DJI
 ## AOS for DJI
 
 We have developed a DJI compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on DJI's Mobile SDK (https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our license conditions (see the [LICENSE.txt](LICENSE.txt)).
