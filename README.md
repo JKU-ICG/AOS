@@ -32,6 +32,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
+- 03/22/2022: **AOS for DJI released**
 - 03/09/2022: **Combined Person Classification with Airborne Optical Sectioning** published in Nature Scientific Reports
 - 11/29/2021: Our recent work, **Acceleration-Aware Path Planning with Waypoints** has been published. See [publications](#publications) (Acceleration-Aware Path Planning with Waypoints)
 - 11/15/2021: New work on **Through-Foliage Tracking with AOS**. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning)  
