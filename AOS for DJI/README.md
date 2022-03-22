@@ -6,6 +6,35 @@ Airborne Optical Sectioning (AOS) is a wide synthetic-aperture imaging technique
 
 ## AOS for DJI
 
+
+
+
+![Image_T1](https://user-images.githubusercontent.com/83944465/159417063-e35c9da6-069f-4a93-bcc6-4bf6c944dac3.png)
+
+
+
+1: Anomaly Detection Threshold (slider)
+2: Anomaly Detection (on/off)
+3: Take-Off / Landing
+4: Return to Home
+5: Compass
+6: V = View (toggle: full screen / split screen / drone images / integral images)
+7: I = Integral (toggle: integral image / spatially alligned single image)
+8: AOS = AOS scan on/off
+9: Focal Plane Pitch (slider)
+10: Compass Correction (slider)
+11: Focal Plane Distance (slider)
+12: Focal Plane Roll (slider)
+13:
+14: Battery Status Drone
+15: Wifi Signal Strenght
+16: Video Signal Strength
+17: Battery Status Remote Control
+18: 
+19: Sattelite Reception
+20: 
+21: Remaining Flight Time
+
 We have developed a DJI compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on [DJI's Mobile SDK](https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
 The following documentation explains the AOS-specific features of the app. For general usage, flying operations, and initial drone setup and calibration, please refer to [DJI's Fly app](https://www.dji.com/de/dji-fly) and corresponding [tutorial](https://www.youtube.com/watch?v=TF-3CaJG52A).
 
