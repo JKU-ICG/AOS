@@ -30,14 +30,14 @@ We have developed a DJI compatible app that integrates AOS to support blue light
 **10:** Compass Correction (slider),
 **11:** Focal Plane Distance (slider),
 **12:** Focal Plane Roll (slider),
-**13:** XXXX,
-**14:** Battery Status Drone,
-**15:** Wifi Signal Strenght,
+**13:** Product Connection Status,
+**14:** Drone Battery Status ,
+**15:** Wifi Signal Strength,
 **16:** Video Signal Strength,
-**17:** Battery Status Remote Control,
-**18:** XXX,
-**19:** Sattelite Reception,
-**20:** XXX,
+**17:** Remote Control Signal Strength,
+**18:** Visual Positioning Status,
+**19:** GPS Signal Strength,
+**20:** Current Flight Mode,
 **21:** Remaining Flight Time
 
 The following documentation explains the AOS-specific features of the app. For general usage, flying operations, and initial drone setup and calibration, please refer to [DJI's Fly app](https://www.dji.com/de/dji-fly) and corresponding [tutorial](https://www.youtube.com/watch?v=TF-3CaJG52A).<br /><br />
