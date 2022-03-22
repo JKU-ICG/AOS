@@ -34,7 +34,7 @@ We have developed a DJI compatible app that integrates AOS to support blue light
 **18:** XXX,
 **19:** Sattelite Reception,
 **20:** XXX,
-**21:** Remaining Flight Time,
+**21:** Remaining Flight Time
 
 The following documentation explains the AOS-specific features of the app. For general usage, flying operations, and initial drone setup and calibration, please refer to [DJI's Fly app](https://www.dji.com/de/dji-fly) and corresponding [tutorial](https://www.youtube.com/watch?v=TF-3CaJG52A).<br /><br />
 
