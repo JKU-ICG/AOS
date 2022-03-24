@@ -63,7 +63,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Nature (final version)](https://www.nature.com/articles/s42256-020-00261-3) | [(view only version)](https://rdcu.be/cbcf2) 
   - [arXiv (pre-print)](https://arxiv.org/pdf/2009.08835.pdf)
   - [Data: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
-  - [Supporting RGB and thermal integral image dataset:- ](https://doi.org/10.5281/zenodo.6382373) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6382373.svg)](https://doi.org/10.5281/zenodo.6382373)
+  - [Supporting RGB and thermal integral image dataset: ](https://doi.org/10.5281/zenodo.6382373) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6382373.svg)](https://doi.org/10.5281/zenodo.6382373)
   - [Video on YouTube](https://www.youtube.com/watch?v=kyKVQYG-j7U)
 - Indrajit Kurmi, David C. Schedl, and Oliver Bimber, Pose Error Reduction for Focus Enhancement in Thermal Synthetic Aperture Visualization, IEEE Geoscience and Remote Sensing Letters, DOI: https://doi.org/10.1109/LGRS.2021.3051718 (2021).
   - [IEEE (final version)](https://ieeexplore.ieee.org/document/9340240) 
