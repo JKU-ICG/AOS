@@ -97,7 +97,7 @@ The following parameters can be setup before flight, as shown in the video below
 
 https://user-images.githubusercontent.com/48999492/159263679-b6cf0f04-786d-4bc3-a3cf-5d4223861dd3.mp4
 
-## On-Fligh Usage
+## On-Flight Usage
 
 The first video below shows the app elements during flight. After start, press **No Warranty** to use the app at your own risk. This will provide you access to all the app elements and to the live video stream from the aircraft. The button **V** toggels between regular full-screen view of live drone images, full-screen view of AOS integral images, and a split-screen view (left: live aerial images of the drone, right: AOS integral images). Note, that the AOS integral image display is significantly slower than the live drone images, because many live images (as specified with the **Integration Window** parameter) are computationally combined. Flight operation is possible with the sticks in common fashion. _**Note, that the gimbal is always forced to point the camera downwards at 90 degrees (Nadir).**_ <br />
 <br />
