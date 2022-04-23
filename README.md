@@ -46,6 +46,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/5/4/143)
   - [Path Planner (Code)](https://github.com/rudolfortner/aapp)
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi, David C. Schedl and Oliver Bimber, Through-Foliage Tracking with Airborne Optical Sectioning, Journal of Remote Sensing (under Review), (2021)
+  - [Journal of Remote Sensing (open access and final version)](https://spj.sciencemag.org/journals/remotesensing/2022/9812765/)
   - [arXiv (pre-print)](https://arxiv.org/abs/2111.06959) 
   - [Data: ](https://doi.org/10.5281/zenodo.5680949)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5680949.svg)](https://doi.org/10.5281/zenodo.5680949)
   - [Video on YouTube (two persons tracked)](https://www.youtube.com/watch?v=RdrYUOEoxHM)
