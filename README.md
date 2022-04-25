@@ -32,20 +32,17 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
+- 04/25/2022: **Through-Foliage Tracking with Airborne Optical Sectioning** pubisled in Science Partner Journal of Remote Sensing. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning) 
 - 03/22/2022: **AOS for DJI released** See [AOS for DJI](#aos-for-dji)
 - 03/09/2022: **Combined Person Classification with Airborne Optical Sectioning** published in Nature Scientific Reports
 - 11/29/2021: Our recent work, **Acceleration-Aware Path Planning with Waypoints** has been published. See [publications](#publications) (Acceleration-Aware Path Planning with Waypoints)
-- 11/15/2021: New work on **Through-Foliage Tracking with AOS**. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning)  
 - 06/23/2021: **Science Robotics** paper appeared. See [publications](#publications) (Autonomous Drones for Search and Rescue in Forests)  
 - 5/31/2021: **New combined people classifer** outbeats classical people classifers significantly. See [publications](#publications) (Combined People Classification with Airborne Optical Sectioning) 
 - 04/15/2021: First AOS experiments with **DJI M300RTK** reveals remarkable results (much better than with our OktoXL 6S12, due to higher GPS precission and better IR camera/stabilizer). 
 
 
 ## Publications
-- Rudolf Ortner, Indrajit Kurmi, and Oliver Bimber, Acceleration-Aware Path Planning with Waypoints. Drones. 5, no. 4: 143 (2021).
-  - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/5/4/143)
-  - [Path Planner (Code)](https://github.com/rudolfortner/aapp)
-- Rakesh John Amala Arokia Nathan, Indrajit Kurmi, David C. Schedl and Oliver Bimber, Through-Foliage Tracking with Airborne Optical Sectioning, Journal of Remote Sensing (under Review), (2021)
+- Rakesh John Amala Arokia Nathan, Indrajit Kurmi, David C. Schedl and Oliver Bimber, Through-Foliage Tracking with Airborne Optical Sectioning, Journal of Remote Sensing, (2022)
   - [Journal of Remote Sensing (open access and final version)](https://spj.sciencemag.org/journals/remotesensing/2022/9812765/)
   - [arXiv (pre-print)](https://arxiv.org/abs/2111.06959) 
   - [Data: ](https://doi.org/10.5281/zenodo.5680949)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5680949.svg)](https://doi.org/10.5281/zenodo.5680949)
@@ -55,6 +52,9 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Nature Scientific Reports (final version)](https://www.nature.com/articles/s41598-022-07733-z)
   - [arXiv (pre-print)](https://arxiv.org/abs/2106.10077)  
   - [Data: ](https://doi.org/10.5281/zenodo.5013640)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5013640.svg)](https://doi.org/10.5281/zenodo.5013640)
+- Rudolf Ortner, Indrajit Kurmi, and Oliver Bimber, Acceleration-Aware Path Planning with Waypoints. Drones. 5, no. 4: 143 (2021).
+  - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/5/4/143)
+  - [Path Planner (Code)](https://github.com/rudolfortner/aapp)
 - David C. Schedl, Indrajit Kurmi, and Oliver Bimber, Autonomous Drones for Search and Rescue in Forests, Science Robotics 6(55), eabg1188, https://doi.org/10.1126/scirobotics.abg1188, (2021)
   - [Science (final version)](https://doi.org/10.1126/scirobotics.abg1188)
   - [arXiv (pre-print)](https://arxiv.org/pdf/2105.04328)  
