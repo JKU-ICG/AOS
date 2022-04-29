@@ -44,8 +44,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Publications
 - Francis Seits, Indrajit Kurmi, Rakesh John Amala Arokia Nathan, Rudolf Ortner and Oliver Bimber, On the Role of Field of View for Occlusion Removal with Airborne Optical Sectioning (2022)
   - [arXiv (pre-print)](https://arxiv.org/abs/2204.13371) 
-  - [simulator: ](https://aos.tensorware.app)
-  - [code: ](https://github.com/tensorware/aos-simulation)
+  - [simulator](https://aos.tensorware.app)
+  - [code](https://github.com/tensorware/aos-simulation)
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi, David C. Schedl and Oliver Bimber, Through-Foliage Tracking with Airborne Optical Sectioning, Journal of Remote Sensing, Volume 2022, Article ID 9812765, (2022)
   - [Journal of Remote Sensing (open access and final version)](https://spj.sciencemag.org/journals/remotesensing/2022/9812765/)
   - [arXiv (pre-print)](https://arxiv.org/abs/2111.06959) 
