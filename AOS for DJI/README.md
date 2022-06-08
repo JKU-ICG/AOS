@@ -12,9 +12,7 @@ Single Images         |  Airborne Optical Sectioning
 
 We have developed a DJI compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on [DJI's Mobile SDK](https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
 
-
-![Image_T1](https://user-images.githubusercontent.com/83944465/159417063-e35c9da6-069f-4a93-bcc6-4bf6c944dac3.png)
-
+![image7038](https://user-images.githubusercontent.com/48999492/172576924-2fc1bc37-08e1-43d7-ad53-b1cc4d05c3ac.png)
 
 **Left:** Live Drone Images,
 **Right:** AOS Integral Images,
