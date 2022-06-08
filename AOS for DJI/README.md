@@ -76,8 +76,11 @@ Restart the drone and the remote controller after the initial setup. Install the
 
 
 
+https://user-images.githubusercontent.com/48999492/172589467-2b0ac1b9-bf93-49c2-ba41-e00bf8434211.mp4
 
-https://user-images.githubusercontent.com/48999492/159482906-22b1d018-bd3a-4345-b4e9-36bbdfbd99a4.mp4
+
+
+
 
 
 
