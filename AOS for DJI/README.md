@@ -20,23 +20,27 @@ We have developed a DJI compatible app that integrates AOS to support blue light
 **2:** Anomaly Detection (on/off),
 **3:** Take-Off / Landing,
 **4:** Return to Home,
-**5:** Compass,
-**6:** V = View (toggle: full screen / split screen / drone images / integral images),
-**7:** I = Integral (toggle: integral image / spatially alligned single image),
-**8:** AOS = AOS scan on/off,
-**9:** Focal Plane Pitch (slider),
-**10:** Compass Correction (slider),
-**11:** Focal Plane Distance (slider),
-**12:** Focal Plane Roll (slider),
-**13:** Product Connection Status,
-**14:** Drone Battery Status ,
-**15:** Wifi Signal Strength,
-**16:** Video Signal Strength,
-**17:** Remote Control Signal Strength,
-**18:** Visual Positioning Status,
-**19:** GPS Signal Strength,
-**20:** Current Flight Mode,
-**21:** Remaining Flight Time
+**5:** Settings,
+**6:** Compass,
+**7:** V = View (toggle: full screen / split screen / drone images / integral images),
+**8:** I = Integral (toggle: integral image / spatially alligned single image),
+**9:** AOS = AOS scan on/off,
+**10:** RGB = Toggle: RGB/Thermal imaging,
+**11:** - = Decrement selected slider value,
+**12:** Focal Plane Pitch (slider),
+**13:** Compass Correction (slider),
+**14:** + = Increment selected slider value,
+**15:** Focal Plane Distance (slider),
+**16:** Focal Plane Roll (slider),
+**17:** Product Connection Status,
+**18:** Drone Battery Status ,
+**19:** Wifi Signal Strength,
+**20:** Video Signal Strength,
+**21:** Remote Control Signal Strength,
+**22:** Visual Positioning Status,
+**23:** GPS Signal Strength,
+**24:** Current Flight Mode,
+**25:** Remaining Flight Time
 
 The following documentation explains the AOS-specific features of the app. For general usage, flying operations, and initial drone setup and calibration, please refer to [DJI's Fly app](https://www.dji.com/de/dji-fly) and corresponding [tutorial](https://www.youtube.com/watch?v=TF-3CaJG52A).<br /><br />
 
@@ -111,7 +115,7 @@ The first video below shows the app elements during flight. After start, press *
 https://user-images.githubusercontent.com/48999492/159248878-7ed1f04a-4920-4a9b-8423-86e60e21fe97.mp4
 
 
-The second video below shows how to carry out an AOS scan. From hovering at the starting position, use the **AOS** button to switch AOS on (button becomes green). Fly to the end position to cover the synthetic aperture (see **Integration Window** and **Minimal Pose Distance** parameters to understand how wide the synthetic aperture is). During scanning, the AOS intergral image is being successively displayed. When reaching the end position, press the **AOS button** again to turn AOS off (button becomes red). For removing occlusion, you now need to set the correct imaging parameters (see Fig.1 in [publication](https://arxiv.org/pdf/2005.04065.pdf)): Use the sliders **FP** to move (up/down) the **focal plane** and **CC** to change (left/right) the **compass correction**. The sliders **Pi** and **Ro** are used to **adjust the focal plane pitch and roll** respectively. The buttons **+** and **-** can also be used to increase or decrease the slider values respectively. For correct occlusion removal, the focal plane has to be aligned with the ground plane as good as possible, and the compass correction (which is necessary as the used compass modules are error prone) must be set correctly. All parameters should be manually tuned until target features can be recognized on the ground. Note again, that if no or little light reaches the target, even occlusion removal will not make it visible. Thermal imaging has to be used instead. The anomaly detector can be turned on / off using the **Rx** button to support visual search. With the **I** button you can toggle between integral image and single image (same perspective of the integral image) for spatial references. If anomaly detection is turned on, the marked anomalies are shown in both cases (blue pixles). All other elements and functions are similar as for the [DJI Fly app](https://www.youtube.com/watch?v=TF-3CaJG52A).
+The second video below shows how to carry out an AOS scan. From hovering at the starting position, use the **AOS** button to switch AOS on (button becomes green). Fly to the end position to cover the synthetic aperture (see **Integration Window** and **Minimal Pose Distance** parameters to understand how wide the synthetic aperture is). During scanning, the AOS intergral image is being successively displayed. When reaching the end position, press the **AOS button** again to turn AOS off (button becomes red). For removing occlusion, you now need to set the correct imaging parameters (see Fig.1 in [publication](https://arxiv.org/pdf/2005.04065.pdf)): Use the sliders **FP** to move (up/down) the **focal plane** and **CC** to change (left/right) the **compass correction**. The sliders **Pi** and **Ro** are used to **adjust the focal plane pitch and roll** respectively. The buttons **+** and **-** can also be used to increase or decrease the slider value (select the slider of interest) respectively. For correct occlusion removal, the focal plane has to be aligned with the ground plane as good as possible, and the compass correction (which is necessary as the used compass modules are error prone) must be set correctly. All parameters should be manually tuned until target features can be recognized on the ground. Note again, that if no or little light reaches the target, even occlusion removal will not make it visible. Thermal imaging has to be used instead. The anomaly detector can be turned on / off using the **Rx** button to support visual search. With the **I** button you can toggle between integral image and single image (same perspective of the integral image) for spatial references. If anomaly detection is turned on, the marked anomalies are shown in both cases (blue pixles). All other elements and functions are similar as for the [DJI Fly app](https://www.youtube.com/watch?v=TF-3CaJG52A).
 <br /><br />
 _Note, that if you see only a static single image while you expect to see an integral image, then you are in single image mode and have to switch back to integral image mode with the **I** button._
 
