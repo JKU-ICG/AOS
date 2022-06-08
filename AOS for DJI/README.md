@@ -57,7 +57,7 @@ The following documentation explains the AOS-specific features of the app. For g
 ## Compatability
 
 - **Tested DJI drones:** Mavic Mini, Mini 2, Mavic 2 Enterprise Advanced <br />
-- **Compatible DJI drones (in therory, based on Android Mobile SDK 4.16 release notes):** Mavic Mini, Mini 2, Mavic 2 Series, Mavic 2 Enterprise Advanced, Mavic Air, Mavic Pro, Phantom series, Inspire series, Matrice 200 V2 series, Matrice 100, Matrice 600,... <br /><br />
+- **Compatible DJI drones (in therory, based on Android Mobile SDK 4.16 release notes):** Mavic Mini, Mini 2, Mavic 2 Series, Mavic 2 Enterprise Advanced, Mavic Air, Mavic Pro, Phantom series, Inspire series, Matrice 200 V2 series, Matrice 100, Matrice 600,... <br />
 - **Tested mobile phones:** OnePlus 6 (Android 11), Xiaomi Pocophone F1 (Android 10), Samsung Galaxy S9 (Android 10), Samsung Galaxy J7 Max (Android 8.1), Samsung Galaxy S6 (Android 7.0) <br />
 - **Compatible mobile phones:** Android 10 or 11 (**V2_0**) and Android < 10 (**V2_1**), the more RAM the better, the faster the better -<br />
 
