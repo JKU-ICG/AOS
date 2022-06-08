@@ -109,7 +109,11 @@ For thermal imaging, use the **RGB** toggle button to switch to thermal imaging 
 
 
 
-https://user-images.githubusercontent.com/48999492/172592674-e9e9dc75-7a7a-44cd-a665-f7f4d8f1a0aa.mp4
+
+
+https://user-images.githubusercontent.com/48999492/172593086-c798742b-eaf3-4823-b0c9-89ff8b73333c.mp4
+
+
 
 
 
