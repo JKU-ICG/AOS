@@ -109,9 +109,13 @@ For thermal imaging, use the **RGB** toggle button to switch to thermal imaging 
 
 
 
+https://user-images.githubusercontent.com/48999492/172592674-e9e9dc75-7a7a-44cd-a665-f7f4d8f1a0aa.mp4
 
 
-https://user-images.githubusercontent.com/48999492/159263679-b6cf0f04-786d-4bc3-a3cf-5d4223861dd3.mp4
+
+
+
+
 
 ## On-Flight Usage
 
