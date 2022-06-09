@@ -20,7 +20,7 @@ We have developed a DJI compatible app that integrates AOS to support blue light
 **2:** Anomaly Detection (on/off),
 **3:** Take-Off / Landing,
 **4:** Return to Home,
-**5:** Settings,
+**5:** O = Settings,
 **6:** Compass,
 **7:** V = View (toggle: full screen / split screen / drone images / integral images),
 **8:** I = Integral (toggle: integral image / spatially alligned single image),
