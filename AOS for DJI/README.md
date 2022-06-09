@@ -26,10 +26,10 @@ We have developed a DJI compatible app that integrates AOS to support blue light
 **8:** I = Integral (toggle: integral image / spatially alligned single image),
 **9:** AOS = AOS scan on/off,
 **10:** RGB = Toggle: RGB/Thermal imaging,
-**11:** - = Decrement selected slider value,
+**11:** - = Decrement value of the selected slider,
 **12:** Focal Plane Pitch (slider),
 **13:** Compass Correction (slider),
-**14:** + = Increment selected slider value,
+**14:** + = Increment value of the selected slider,
 **15:** Focal Plane Distance (slider),
 **16:** Focal Plane Roll (slider),
 **17:** Product Connection Status,
@@ -46,7 +46,7 @@ The following documentation explains the AOS-specific features of the app. For g
 
 [**Download v2_0 (Android 10 & 11) or V2_1 (Android < 10)**](https://forms.gle/DrfZiCthjp9g5eF87)<br /><br />
 
-- **Principle Limitations**: AOS applied to RGB images is limited to the amount of sunlight that penetrates through the vegetation. **_If no or little light reaches the target, even occlusion removal will not make it visible. Thermal imaging has to be used instead to overcome this limitation._** The app also supports thermal imaging to use with DJI Enterprise systmes. In general, visibility improvement through occlusion removal is limited by density. Best visibility improvements are achieved for 50% occlusion ([see publication](https://arxiv.org/abs/1906.06600)). Due to the sequential sampling, only static targests are supported ([see publication](https://arxiv.org/abs/2111.06959) for moving targets). 
+- **Principle Limitations**: AOS applied to RGB images is limited to the amount of sunlight that penetrates through the vegetation. **_If no or little light reaches the target, even occlusion removal will not make it visible. Thermal imaging has to be used instead to overcome this limitation._** The app also supports thermal imaging to use with DJI Enterprise systems. In general, visibility improvement through occlusion removal is limited by density. Best visibility improvements are achieved for 50% occlusion ([see publication](https://arxiv.org/abs/1906.06600)). Due to the sequential sampling, only static targests are supported ([see publication](https://arxiv.org/abs/2111.06959) for moving targets). 
 - **Known Issues on our ToDo List**: Anomaly detection is relatively slow (on most phones not really suitable for interactive usage), and does show wrong detections at image borders (propper padding will be implemented to fix this). No digital elevation model is currently supported (ground surface is approximated with a plane). Imaging parameters needs to be manually/visually adjusted (automatic adjustment is not yet integrated). Imaging is limited to 10 frames per second (speed limit of the GPS sensor). The app has not been tested under all conditions and for all phone/drone hardware. It might crash. If this is the case, close and restart it (also possible during flight). <br />
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
