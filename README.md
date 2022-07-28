@@ -48,7 +48,6 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Video 1](https://download.jku.at/org/7kM/8UM/Video1.mp4)
   - [Video 2](https://download.jku.at/org/7kM/8UM/Video2.mp4)
   - [Video 3](https://download.jku.at/org/7kM/8UM/Video3.mp4)
-  - [code]
 - Francis Seits, Indrajit Kurmi, Rakesh John Amala Arokia Nathan, Rudolf Ortner and Oliver Bimber, On the Role of Field of View for Occlusion Removal with Airborne Optical Sectioning (2022)
   - [arXiv (pre-print)](https://arxiv.org/abs/2204.13371) 
   - [simulator](https://aos.tensorware.app)
