@@ -32,6 +32,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
+- 07/28/2022: **Inverse Airborne Optical Sectioning** Through-foilage tracking with a single, conventonal, hovering (static) drone. See [publications](#publications)  
 - 06/13/2022: **DJI Enterprise Systems with Thermal Imaging supported** See [AOS for DJI](#aos-for-dji)
 - 04/25/2022: **Through-Foliage Tracking with Airborne Optical Sectioning** pubisled in Science Partner Journal of Remote Sensing. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning) 
 - 03/22/2022: **AOS for DJI released** See [AOS for DJI](#aos-for-dji)
