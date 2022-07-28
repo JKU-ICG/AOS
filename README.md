@@ -29,6 +29,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Austrian Science Fund (FWF)
 - State of Upper Austria, Nationalstiftung für Forschung, Technologie und Entwicklung
 - Linz Institute of Technology (LIT) 
+- Upper Austrian Fire Brigade Headquarters 
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 
