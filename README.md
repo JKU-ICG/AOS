@@ -47,7 +47,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Publications
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Inverse Airborne Optical Sectioning (2022)
   - [arXiv (pre-print)](https://arxiv.org/abs/2207.13344) 
-  - [Data: ](https://doi.org/10.5281/zenodo.6966119)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6966119.svg)](https://doi.org/10.5281/zenodo.6966119)
+  - [Data: ](https://doi.org/10.5281/zenodo.6966437)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6966437.svg)](https://doi.org/10.5281/zenodo.6966437)
   - [Video 1:](https://download.jku.at/org/7kM/8UM/Video1.mp4) Manual motion parameter estimation.
   - [Video 2:](https://download.jku.at/org/7kM/8UM/Video2.mp4) Automatic motion parameter estimation (example 1).
   - [Video 3:](https://download.jku.at/org/7kM/8UM/Video3.mp4) Automatic motion parameter estimation (example 2).
