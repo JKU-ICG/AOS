@@ -49,9 +49,9 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Drones (open access and online version, to appear)](https://arxiv.org/abs/2207.13344)
   - [arXiv (pre-print)](https://arxiv.org/abs/2207.13344) 
   - [Data: ](https://doi.org/10.5281/zenodo.6966437)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6966437.svg)](https://doi.org/10.5281/zenodo.6966437)
-  - [Video 1:](https://download.jku.at/org/7kM/8UM/Video1.mp4) Manual motion parameter estimation.
-  - [Video 2:](https://download.jku.at/org/7kM/8UM/Video2.mp4) Automatic motion parameter estimation (example 1).
-  - [Video 3:](https://download.jku.at/org/7kM/8UM/Video3.mp4) Automatic motion parameter estimation (example 2).
+  - [Video S1:](https://download.jku.at/org/7kM/8UM/Video1.mp4) Manual motion parameter estimation.
+  - [Video S2:](https://download.jku.at/org/7kM/8UM/Video2.mp4) Automatic motion parameter estimation (example 1).
+  - [Video S3:](https://download.jku.at/org/7kM/8UM/Video3.mp4) Automatic motion parameter estimation (example 2).
 - Francis Seits, Indrajit Kurmi, Rakesh John Amala Arokia Nathan, Rudolf Ortner and Oliver Bimber, On the Role of Field of View for Occlusion Removal with Airborne Optical Sectioning (2022)
   - [arXiv (pre-print)](https://arxiv.org/abs/2204.13371) 
   - [simulator](https://aos.tensorware.app)
