@@ -47,6 +47,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Publications
 - Francis Seits, Indrajit Kurmi, and Oliver Bimber, Evaluation of Color Anomaly Detection in Multispectral Images For Synthetic Aperture Sensing, Eng 2022, 3(4), 541-553, (2022)
   - [Eng (open access and online version)](https://www.mdpi.com/2673-4117/3/4/38) 
+  - [PDF Version (open access)]( https://www.mdpi.com/2673-4117/3/4/38/pdf) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2211.04293) 
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Inverse Airborne Optical Sectioning, Drones, Volume 6, Number 9, (2022)
   - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/6/9/231)
