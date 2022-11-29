@@ -32,7 +32,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Upper Austrian Fire Brigade Headquarters 
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
--11/29(2022: **Study on state-of-the-art color anomaly detectors** suitable for through-foliage detection and tracking. See [publications](#publications) (Evaluation of Color Anomaly Detection in Multispectral Images For Synthetic Aperture Sensing)
+- 11/29(2022: **Study on state-of-the-art color anomaly detectors** suitable for through-foliage detection and tracking. See [publications](#publications) (Evaluation of Color Anomaly Detection in Multispectral Images For Synthetic Aperture Sensing)
 - 07/28/2022: **Inverse Airborne Optical Sectioning** -- through-foilage tracking with a single, conventional, hovering (stationary) drone. See [publications](#publications) (Inverse Airborne Optical Sectioning)  
 - 06/13/2022: **DJI Enterprise Systems with Thermal Imaging supported** See [AOS for DJI](#aos-for-dji)
 - 04/25/2022: **Through-Foliage Tracking with Airborne Optical Sectioning** pubisled in Science Partner Journal of Remote Sensing. See [publications](#publications) (Through-Foliage Tracking with Airborne Optical Sectioning) 
@@ -46,8 +46,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## Publications
 - Francis Seits, Indrajit Kurmi, and Oliver Bimber, Evaluation of Color Anomaly Detection in Multispectral Images For Synthetic Aperture Sensing, Eng 2022, 3(4), 541-553, (2022)
+  - [Eng (open access and online version)](https://www.mdpi.com/2673-4117/3/4/38) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2211.04293) 
-  - [Eng](https://www.mdpi.com/2673-4117/3/4/38) 
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Inverse Airborne Optical Sectioning, Drones, Volume 6, Number 9, (2022)
   - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/6/9/231)
   - [arXiv (pre-print)](https://arxiv.org/abs/2207.13344) 
