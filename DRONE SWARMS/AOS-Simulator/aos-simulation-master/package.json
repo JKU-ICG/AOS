@@ -1,0 +1,11 @@
+{
+  "name": "aos-simulation",
+  "main": "index.js",
+  "scripts": {
+    "electron": "electron ."
+  },
+  "dependencies": {
+    "electron": "~13.1.8",
+    "eslint": "~7.32.0"
+  }
+}
