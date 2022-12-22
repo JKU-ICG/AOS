@@ -15,21 +15,7 @@ class Drone {
         this.clock = new THREE.Clock();
 
         this.loaded = new Promise(async function (resolve) {
-            //const path = 'model/drone.stl';
-            //const stl = await this.loader.load('stl', path);
-
-            //const droneGeometry = stl;
-            //droneGeometry.rotateX(rad(-90)).rotateY(rad(-90)).translate(0, 0, 0);
-
-            //const droneMaterial = new THREE.MeshStandardMaterial({
-            //   color: 0x0096ff,
-            //   roughness: 0.8,
-            //   metalness: 0.8
-            //});
-
-            //this.drone = new THREE.Mesh(droneGeometry, droneMaterial);
-            //this.drone.scale.multiplyScalar(12 / 100);
-
+           
             const geometry1 = new THREE.CircleGeometry( 0.001, 0 );
             geometry1.rotateX(rad(-90)).rotateY(rad(-90)).translate(0, 0, 0);
             const material1 = new THREE.MeshBasicMaterial( { color: 0x0096ff } );
@@ -40,9 +26,7 @@ class Drone {
                 this.drone.position.x = 0,  //Change the start coordinates of the drone
                 this.drone.position.y = this.config.drone.height,
                 this.drone.position.z = 0  
-                //this.config.drone.eastWest = 0 ,
-                //this.config.drone.height,
-                //this.config.drone.northSouth = 0 
+               
             );
             this.drone.setRotationFromEuler(new THREE.Euler(0, rad(this.config.drone.rotation), 0));
 
@@ -227,16 +211,6 @@ class Drone {
         
         const {coverage} = this.getView();
 
-
-        //this.config.drone.eastWest = this.drone.position.x;
-        //this.config.drone.northSouth = this.drone.position.z;
-
-        // ground top-left
-        //this.forest.blockMoveTest1();
-        //this.forest.blockMoveTest2();
-        //this.forest.blockMoveTest3();
-        //console.log("value: " +  this.config.drone.drone1x);
-        //console.log("value: " +  this.config.drone.drone1y);
         const start = {
             x: this.config.drone.eastWest, //Math.round(-this.config.forest.ground / 2 - coverage / 2),
             y: 0,
@@ -276,24 +250,11 @@ class Drone {
 
         this.config.forest.persons.posx = px
         this.config.forest.persons.posy = py
-        //this.config.forest.persons.roattion = 90
-        console.log("xxxxxxxxxxxxxxxxxxxxxxxxx",orient)
-        //console.log("xxxxxxxxxxxxxxxxxxxxxxxxx",px)
         this.config.forest.persons.rotation = orient
-        
-
         this.config.forest.persons1.posx = 65
         this.config.forest.persons1.posy = 65
-        //await sleep(1000);
-        //this.person.position.set(this.config.forest.persons.posx, current.y, this.config.forest.persons.posy);
         this.forest.addPersons();
-        //this.forest.removePersons1();
-        //this.person.position.set(this.config.forest.persons.posx, current.y, this.config.forest.persons.posy);
-        //this.forest.addPersons1();
-        //this.forest.removePersons2();
-        //this.person.position.set(this.config.forest.persons.posx, current.y, this.config.forest.persons.posy);
-        //this.forest.addPersons2();
-        // update drone position
+        
         let i = 0;
         
         let dir = 1 ;  
@@ -304,33 +265,19 @@ class Drone {
         await this.setNorthSouth(y);
         await this.setEastWest(x);
         
-        console.log(this.config.forest.persons.posx)
-        console.log(this.config.forest.persons.posy)
-        console.log(this.config.forest.persons1.posx)
-        console.log(this.config.forest.persons1.posy)
+    
         await sleep(2000);
 
         await this.camera.capture(false);
         
-        //await new Promise(r => setTimeout(r, 5000));
-        //await sleep(1);
-        //this.forest.removePersons();
+        
         this.config.forest.persons.posx = 60 /////////////////////////////60
         this.config.forest.persons.posy = 60
-
         this.config.forest.persons1.posx = px
         this.config.forest.persons1.posy = py
         this.config.forest.persons1.rotation = orient
         
         await this.forest.addPersons2();
-        //await sleep(1000);
-
-        console.log(this.config.forest.persons1.posx)
-        console.log(this.config.forest.persons1.posy)
-        console.log(this.config.forest.persons.posx)
-        console.log(this.config.forest.persons.posy)
-
-
         await sleep(2000);
         await this.camera.capture1(false);
 
@@ -342,63 +289,15 @@ class Drone {
        
         console.log("yes")
 
-
-        //await this.forest.addPersons();
-        
-        
-              
-
-      
-        
-        
         await sleep(t);
-            
 
         // flight stop
         this.flying = false;
         await this.update();
 
-        // capture 
-
-        //this.stage.status(); 
-       
-        
     }
 
 
-    
-
-    async awesome(x,y,prevx,prevy,alts) {
-
-        var from = new THREE.Vector3( prevx, alts, prevy );
-        var to = new THREE.Vector3( x, alts, y);
-        var direction = to.clone().sub(from);
-        var length = direction.length();
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xffffff,1.0,1.0 );
-        
-        this.scene.add( arrowHelper ); 
-        
-
-    }
-
-    async robuster(f,g,h) {
-        const geometry2 = new THREE.CircleGeometry( 0.4, 32 );
-        geometry2.rotateX(rad(-90)).rotateY(rad(-90)).translate(0, 0, 0);
-        const material2 = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-        this.drones = new THREE.Mesh( geometry2, material2 );
-        this.scene.add( this.drones );
-        
-        this.drones.position.set(
-            this.drones.position.x = f,  //Change the start coordinates of the drone
-            this.drones.position.y = h,
-            this.drones.position.z = g  
-            //this.config.drone.eastWest = 0 ,
-            //this.config.drone.height,
-            //this.config.drone.northSouth = 0 
-        );
-        this.drone.setRotationFromEuler(new THREE.Euler(0, rad(this.config.drone.rotation), 0));
-        
-    }
 
     async update() {
         const { rotation } = this.getView();
@@ -1039,10 +938,6 @@ class Image {
 
     
 }
-
-
-
-
 
 
 class Image1 {
