@@ -19,25 +19,22 @@ Download_Location = r'Enter your path here'
 #set_parameters
 altitude_list = [43,41,39,37,35,36,38,40,42,44]
 drone_speed = 10 # m/s
-NumberofDrones = 10
+numberofdrones = 10
 fov = 50
 rxthreshold = 0.9998
 dem_height = 33 
-Scanning_direction = 0
+scanning_direction = 0
 person=[0,10]  
 personorientation = 100
 person_speed = 4 # m/s
 
-
 # Hyperparameters
 local_fac = 1.0   #c1
 global_fac = 2.0   #c2 
-Scanning_direction_Waypoint_Distance = 2.0 #c3
+scanning_direction_waypoint_distance = 2.0 #c3
 minimum_distance_btwn_drone = 4.2 #c4 
 changing_to_linear_speed = 0.3 #c5
  
-
-
 #blob_threshold
 emptyblobthreshold = 0.0   # T
 ```
