@@ -24,7 +24,7 @@ fov = 50
 rxthreshold = 0.9998
 dem_height = 33 
 scanning_direction = 0
-person=[0,10]  
+person = [0,10]  
 personorientation = 100
 person_speed = 4 # m/s
 
@@ -38,5 +38,9 @@ changing_to_linear_speed = 0.3 #c5
 #blob_threshold
 emptyblobthreshold = 0.0   # T
 ```
+
+### Detailed Usage
+
+Install the python wrapper for the C++ Light-Field Renderer for Airborne Optical Sectioning. Make sure that the working directory is set to `/LFR/python/`
 
 
