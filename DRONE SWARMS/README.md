@@ -43,4 +43,26 @@ emptyblobthreshold = 0.0   # T
 
 Install the python wrapper for the C++ Light-Field Renderer for Airborne Optical Sectioning. Make sure that the working directory is set to `/LFR/python/`
 
+## AOS-Simulator
+
+The simulation is based on three.js and runs on all major platforms and web browsers.
+
+```py
+#set_parameters (/AOS-Simulator/aos-simulation-master/config/demo.json)
+
+{
+    "drone": {
+        "noofdrones": 10,
+         },
+    "forest": {
+        "size": 300,
+	},
+
+}
+```
+
+
+
+
+
 
