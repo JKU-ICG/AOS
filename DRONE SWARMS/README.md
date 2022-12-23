@@ -14,7 +14,7 @@ Single Images         |  Airborne Optical Sectioning
 ### Quick tutorial (droneswarms.ipynb)
 ```py
 import pyaos.lfr as LFR
-Download_Location = r'Enter your path here' 
+Download_Location = r'Enter the path to your downloads directory' 
 
 #set_parameters
 altitude_list = [43,41,39,37,35,36,38,40,42,44]
