@@ -17,6 +17,10 @@ Here we make the simulation code available that was used to compute the results 
 ![image](https://user-images.githubusercontent.com/83944465/209770734-9445a4e5-fb86-4074-953f-d58a67357e69.png)
 See **[Video Abstract](https://youtu.be/BaFM5ROShFY)** for a summary. 
 
+
+## Install
+Follow the instructions in [`/LFR/python/README`](./LFR/python/README.md) for the installation of Light-Field Renderer
+
 ### Quick tutorial (droneswarms.ipynb)
 ```py
 import pyaos.lfr as LFR
