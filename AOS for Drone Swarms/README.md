@@ -55,10 +55,6 @@ emptyblobthreshold = 0.0   # T
 ```
 Run the sections in droneswarms.ipynb after starting the simulator with set parameters.
 
-### Detailed Usage
-
-Install the python wrapper for the C++ Light-Field Renderer for Airborne Optical Sectioning. Make sure that the working directory is set to `/LFR/python/`
-
 ## AOS-Simulator
 
 The simulation is based on three.js and runs on all major platforms and web browsers.
