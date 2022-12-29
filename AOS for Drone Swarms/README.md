@@ -15,7 +15,7 @@ We demonstrate how efficient autonomous drone swarms can be in detecting and tra
 Here we make the simulation code available that was used to compute the results presented in the article Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms.
 
 ![image](https://user-images.githubusercontent.com/83944465/209770734-9445a4e5-fb86-4074-953f-d58a67357e69.png)
-See **[Video Abstract](https://youtu.be/BaFM5ROShFY)** for a summary. 
+See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary. 
 
 
 ## Install
