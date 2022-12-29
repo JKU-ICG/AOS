@@ -21,8 +21,12 @@ See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary.
 ## Install
 - Follow the instructions in [`/LFR/python/README`](./LFR/python/README.md) for the installation of Light-Field Renderer.
 - [Visual studio code](https://code.visualstudio.com/download)
+- [Python 3.7.9](https://www.python.org/downloads/release/python-379/)
 
 ### Quick tutorial (droneswarms.ipynb)
+
+Note that droneswarms.ipynb should be within /LFR folder so that the libraries and shaders are found at the startup of the renderer (PyAOS).
+
 ```py
 import pyaos.lfr as LFR
 Download_Location = r'Enter the path to your downloads directory' 
@@ -63,10 +67,10 @@ The simulation is based on three.js and runs on all major platforms and web brow
 
 {
     "drone": {
-        "noofdrones": 10,
+        "noofdrones": 10,   # (1..10)
          },
     "forest": {
-        "size": 300,
+        "size": 300,        # (300,400,500)
 	},
 
 }
