@@ -19,7 +19,7 @@ See **[Video Abstract](https://youtu.be/BaFM5ROShFY)** for a summary.
 
 
 ## Install
-Follow the instructions in [`/LFR/python/README`](./LFR/python/README.md) for the installation of Light-Field Renderer
+Follow the instructions in [`/LFR/python/README`](./LFR/python/README.md) for the installation of Light-Field Renderer.
 
 ### Quick tutorial (droneswarms.ipynb)
 ```py
