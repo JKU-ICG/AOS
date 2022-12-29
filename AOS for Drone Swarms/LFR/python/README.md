@@ -5,6 +5,11 @@ This is a python wrapper for the [C++ Light-Field Renderer](../README.md) for Ai
 
 ## Install
 
+- python version (3.7.9): 
+```
+pip install -r requirements.txt
+```
+
 To compile the Python bindings make `python` your current working directory and run the following command.
 - On Windows: 
 ```
