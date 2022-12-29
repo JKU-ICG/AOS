@@ -36,19 +36,3 @@ Our software builds on the following code/libraries/tools from:
 - [stb_image](https://github.com/nothings/stb) for reading images
 
 
-## ToDos/Wishlist
-
-Some of the features that will be nice to have or are on our agenda for implementation:
-
-- [ ] support for masking / alpha channels (e.g., to remove FLIR watermark)
-- [ ] render with RGB (3 channel) images. So far only grayscale has been tested.
-- [ ] optionally display the satelite image on the ground
-- [ ] show a wireframe of the digital elevation model
-- [ ] check if float32 ifdef is working on the Raspberry Pi
-- [ ] command line arguments: https://github.com/CLIUtils/CLI11#install 
-- [ ] OBJ loading: switch to a more lightweight loader (e.g., https://github.com/tinyobjloader/tinyobjloader) or keep Assimp
-- [ ] Image loading: stb_image does not support TIFF so consider switching to FreeImage, SDL, or OpenCV
-- [ ] Unittests in C++: https://cmake.org/cmake/help/latest/module/CTest.html  
-- [ ] Disable the OpenGL Window when using the python binding: https://www.glfw.org/docs/latest/context.html#context_offscreen or https://github.com/glfw/glfw/issues/648
-- [ ] Optimize min/max computation (only used for displaying)
-
