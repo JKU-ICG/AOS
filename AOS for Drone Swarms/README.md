@@ -53,6 +53,7 @@ changing_to_linear_speed = 0.3 #c5
 #blob_threshold
 emptyblobthreshold = 0.0   # T
 ```
+Run the sections in droneswarms.ipynb after starting the simulator with set parameters.
 
 ### Detailed Usage
 
@@ -61,6 +62,7 @@ Install the python wrapper for the C++ Light-Field Renderer for Airborne Optical
 ## AOS-Simulator
 
 The simulation is based on three.js and runs on all major platforms and web browsers.
+Start the simulator (/AOS-simulator/aos-simulation-master) using visual studio code. Select Go Live from the status bar to turn the server on/off.
 
 ```py
 #set_parameters (/AOS-Simulator/aos-simulation-master/config/demo.json)
@@ -70,7 +72,7 @@ The simulation is based on three.js and runs on all major platforms and web brow
         "noofdrones": 10,   # (1..10)
          },
     "forest": {
-        "size": 300,        # (300,400,500)
+        "size": 300,        # (300/400/500)
 	},
 
 }
