@@ -49,10 +49,12 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [arXiv (pre-print)](https://arxiv.org/abs/2212.14692) 
   - [Data: ](https://doi.org/10.5281/zenodo.7472380)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7472380.svg)](https://doi.org/10.5281/zenodo.7472380)
   - [code](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)
+  - [Video abstract](https://www.youtube.com/watch?v=nb0K7n03qFU)
 - Francis Seits, Indrajit Kurmi, and Oliver Bimber, Evaluation of Color Anomaly Detection in Multispectral Images For Synthetic Aperture Sensing, Eng, 3(4), 541-553, (2022)
   - [Eng (open access and online version)](https://www.mdpi.com/2673-4117/3/4/38) 
   - [PDF Version (open access)]( https://www.mdpi.com/2673-4117/3/4/38/pdf) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2211.04293) 
+  
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Inverse Airborne Optical Sectioning, Drones, Volume 6, Number 9, (2022)
   - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/6/9/231)
   - [arXiv (pre-print)](https://arxiv.org/abs/2207.13344) 
