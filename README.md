@@ -32,7 +32,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Upper Austrian Fire Brigade Headquarters 
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 12/28/2022: **First AOS approach towards Drone Swarms** for autonomous and adaptive sampling. See [publications](#publications) (Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms)
+- 12/28/2022: **First AOS approach towards drone swarms** for autonomous and adaptive sampling. See [publications](#publications) (Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms)
 - 11/29/2022: **Study on state-of-the-art color anomaly detectors** suitable for through-foliage detection and tracking. See [publications](#publications) (Evaluation of Color Anomaly Detection in Multispectral Images For Synthetic Aperture Sensing)
 - 07/28/2022: **Inverse Airborne Optical Sectioning** -- through-foilage tracking with a single, conventional, hovering (stationary) drone. See [publications](#publications) (Inverse Airborne Optical Sectioning)  
 - 06/13/2022: **DJI Enterprise Systems with Thermal Imaging supported** See [AOS for DJI](#aos-for-dji)
