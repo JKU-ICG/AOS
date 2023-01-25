@@ -14,6 +14,11 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 We make the new app and a description available here soon.
 
+**Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
+**Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
+**[License](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt)**  <br />
+**No warranty.**<br />
+
 ## AOS for DJI SDKV4
 
 We have developed a DJI (SDKV4) compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on [DJI's Mobile SDK](https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
