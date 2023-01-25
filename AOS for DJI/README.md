@@ -12,7 +12,7 @@ Single Images         |  Airborne Optical Sectioning
 
 We have upgrated our DJI compatible AOS app (see below) to [DJI's Mobile SDK v5](https://developer.dji.com/). It supports DJI's enterprise platforms and was tested on the  [Mavic 3T Enterrpise](https://www.dji.com/de/mavic-3-enterprise). Our intention is to supports blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases, and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
 
-We make the new app and a description available soon.
+We make the new app and a description available here soon.
 
 ## AOS for DJI SDKV4
 
