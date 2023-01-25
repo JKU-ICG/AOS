@@ -8,6 +8,12 @@ Single Images         |  Airborne Optical Sectioning
 
 > Source: [Video on YouTube](https://www.youtube.com/watch?v=kyKVQYG-j7U) | [FLIR](https://www.flir.com/discover/cores-components/researchers-develop-search-and-rescue-technology-that-sees-through-forest-with-thermal-imaging/)
 
+## AOS for DJI SDKV5
+
+We have upgrated our DJI compatible AOS app (see below) to [DJI's Mobile SDK v5](https://developer.dji.com/). It supports DJI's enterprise platforms and was tested on the  [Mavic 3T Enterrpise]([https://developer.dji.com/](https://www.dji.com/de/mavic-3-enterprise). It supports blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases, and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
+
+We make the new app and a description available soon.
+
 ## AOS for DJI SDKV4
 
 We have developed a DJI (SDKV4) compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on [DJI's Mobile SDK](https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
