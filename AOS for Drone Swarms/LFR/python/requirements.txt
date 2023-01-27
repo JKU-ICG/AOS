@@ -19,7 +19,7 @@ scipy==1.7.3
 seaborn==0.11.1
 selenium==4.4.0
 spectral==0.22.2
-shutil
+shutils
 utm==0.7.0
 webdriver-manager==3.5.4
 webencodings==0.5.1
