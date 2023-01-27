@@ -25,7 +25,7 @@ See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary.
 
 ### Quick tutorial (droneswarms.ipynb)
 
-Note that droneswarms.ipynb should be within /LFR folder so that the libraries and shaders are found at the startup of the renderer (PyAOS).
+Note that droneswarms.ipynb should be within /LFR/python folder so that the libraries and shaders are found at the startup of the renderer (PyAOS).
 
 ```py
 import pyaos.lfr as LFR
