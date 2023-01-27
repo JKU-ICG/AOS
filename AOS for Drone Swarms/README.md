@@ -19,7 +19,7 @@ See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary.
 
 
 ## Install
-- [Visual studio code](https://code.visualstudio.com/download)
+- [Visual studio code with Live Server extension](https://code.visualstudio.com/download)
 - [Python 3.7.9](https://www.python.org/downloads/release/python-379/)
 - Follow the instructions in [`/LFR/python/README`](./LFR/python/README.md) for the installation of Light-Field Renderer.
 
