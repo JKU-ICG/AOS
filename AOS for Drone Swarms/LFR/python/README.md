@@ -48,5 +48,4 @@ Please take a look at [`/LFR/python/sample.py`](./sample.py) file in the reposit
 The `/LFR/python/LFR_utils.py` file provides additional auxiliary functions for initializing the light-field renderer, uploading poses and images, and for modifying poses (e.g., to virtual camera positions needed for integration).
 Note that at startup of the renderer (`PyAOS`) the working directory should be the `/LFR/python/` folder to make sure libraries and shaders are found.
 
-`/LFR/python/pyaos_test.py` is a unit test written in Python's `unittest` framework. To verify that the code compiled correctly, just run the unit test. Make sure that the working directory is set to `/LFR/python/`.
 
