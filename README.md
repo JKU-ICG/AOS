@@ -30,6 +30,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - State of Upper Austria, Nationalstiftung für Forschung, Technologie und Entwicklung
 - Linz Institute of Technology (LIT) 
 - Upper Austrian Fire Brigade Headquarters 
+- Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 - 12/30/2022: **First AOS approach towards drone swarms** for autonomous and adaptive sampling. See [publications](#publications) (Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms)
