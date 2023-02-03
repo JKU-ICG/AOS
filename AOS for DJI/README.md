@@ -17,31 +17,31 @@ We make the new app and a description available here soon.
 The app supports three modes of operation:
 
 - **flight mode**: Normal flight operation mode with full screen live video image (RGB or thermal).
-- **scan mode**: This mode supports to fly short linear pathes for AOS scanning. It shows a split screen with the last recorded single image (RGB or thermal) on the left, and the current integral image (RGB, thermal, or RX anomalie masks) from the SA center perspective on the right. 
+- **scan mode**: This mode supports to fly short linear paths for AOS scanning. It shows a split screen with the last recorded single image (RGB or thermal) on the left, and the current integral image (RGB, thermal, or RX anomaly masks) from the SA centre perspective on the right. 
 - **parameter mode**: In this mode, visualization parameters (focal plane, RX threshold, and compass correction) can be interactively adjusted. 
 
-While the SDK4 version of the app (see below) was controlled by softbuttons and sliders on touchscreens (phones of smart controllers), the DJI SDK 5 version is mainly controlled by hardware buttons and sticks of the smart controllers. This is more robust and supports first-person-view (FPV) flights with goggles. The controll assigments are as follows:
+While the SDK4 version of the app (see below) was controlled by soft buttons and sliders on touch screens (phones of smart controllers), the DJI SDK 5 version is mainly controlled by hardware buttons and sticks of the smart controllers. This is more robust and supports first-person-view (FPV) flights with goggles. The control assignments are as follows:
 
 - **C2** (back, right): Switches forth and back between flight mode and scan mode. In parameter mode, it resets the focal plane parameters.
 - **C1** (back, left): Switches forth and back between scan mode and parameter mode.
 - **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging.
 - **shutter** (top-side, right): Turns on/off anomaly detection (RX).
 - **O** (front, right): Options (different settings for RGB and thermal imaging)
-- **pause** (front, left): In scan and parameter modes, toggles between fullscreen and splitscreen. 
+- **pause** (front, left): In scan and parameter modes, toggles between full screen and split screen. 
 - **left wheel**: In flight mode, changes gimbal tilt (in scan mode, gimbal is tilted downwards).
 - **right wheel**: In parameter mode, RX threshold is changed.
 - **right stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane distance and compass correction settings (push/pull: focal plane up/down, left/right: compass correction counter-clockwise/clockwise).
-- **left stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane orientation (push/pull: tild forward/backward, left/right: tilt left/right).
+- **left stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane orientation (push/pull: tilt forward/backward, left/right: tilt left/right).
 
 Common process of operation:
 
 - **1. take off and fly to target area**: This is done in flight mode (default when app is started).
-- **2. scan in target area**: Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomalie detection (shutter), and fly a linar path to scan.
-- **3. fine-tune parameters**: After scanning, the integral image on the right shows unoccluded anomalies. They can be focussed at switching to parameter mode (C1) and shifting the focal plane up/down (right stick up/down). In case of compass erros, shifting the focal plane alone will not register corespoindg anomalie images. Compass correctin (right stick left/right) can be applied in additon. If the ground surface is not parallel to the scanning plane, the focal plane can also be tilted (left stick) in both directions. But this is often not necessary. All parameters can be reset to default (C2). 
-- **4. scan target area again**: Switch back from parameter mode to scanning mode (C1) and scan target area again. The fine-tuned visualization paramters should be appropriate as long as the terrain's slope, drone's altitude (AGL), and GPS/compass errors don't change much. If necessary, they need to be fine-tuned again (C2 for parameter mode).   
+- **2. scan in target area**: Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomaly detection (shutter), and fly a linear path to scan.
+- **3. fine-tune parameters**: After scanning, the integral image on the right shows unoccluded anomalies. They can be focussed at switching to parameter mode (C1) and shifting the focal plane up/down (right stick up/down). In case of compass errors, shifting the focal plane alone will not register corresponding anomaly images. Compass correction (right stick left/right) can be applied in addition. If the ground surface is not parallel to the scanning plane, the focal plane can also be tilted (left stick) in both directions. But this is often not necessary. All parameters can be reset to default (C2). 
+- **4. scan target area again**: Switch back from parameter mode to scanning mode (C1) and scan target area again. The fine-tuned visualization parameters should be appropriate as long as the terrain's slope, drone's altitude (AGL), and GPS/compass errors don't change much. If necessary, they need to be fine-tuned again (C2 for parameter mode).   
 - **5. fly back to take-off area and land**: From scan mode, switch to flight mode (C2), fly back and land (H button is still supported).
 
-**Note:** If too many incorrect/too few anomalies are detected the RX threshold should slighly be increased/decreased (in parameter mode: right wheel). This change will become only effective for the next scan. Scanning with RGB imaging is also possible, but thermal imaging is recommended here. Scanning without RX anomalie detection turn on is also possible (RGB or thermal), but anomalie detection turned on is recommended here.   
+**Note:** If too many incorrect/too few anomalies are detected the RX threshold should slightly be increased/decreased (in parameter mode: right wheel). This change will become only effective for the next scan. Scanning with RGB imaging is also possible, but thermal imaging is recommended here. Scanning without RX anomaly detection turn on is also possible (RGB or thermal), but anomaly detection turned on is recommended here.   
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
