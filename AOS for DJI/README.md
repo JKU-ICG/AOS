@@ -14,6 +14,12 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 We make the new app and a description available here soon.
 
+The app supports three modes of operation:
+
+- **flight mode**: Normal flight operation mode with full screen live video image (RGB or thermal).
+- **scan mode**: This mode supports to fly short linear pathes for AOS scanning. It shows a split screen with the last recorded single image (RGB or thermal) on the left, and the current integral image (RGB, thermal, or RX anomalie masks) from the SA center perspective on the right. 
+- **parameter mode**: In this mode, visualization parameters (focal plane, RX threshold, and compass correction) can be interactively adjusted. 
+
 While the SDK4 version of the app (see below) was controlled by softbuttons and sliders on touchscreens (phones of smart controllers), the DJI SDK 5 version is mainly controlled by hardware buttons and sticks of the smart controllers. This is more robust and supports first-person-view (FPV) flights with goggles. The controll assigments are as follows:
 
 - **C2** (back, right): Switches forth and back between flight mode and scan mode. In parameter mode, it resets the focal plane parameters.
