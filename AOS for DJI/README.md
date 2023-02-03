@@ -14,6 +14,10 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 We make the new app and a description available here soon.
 
+While the SDK4 version of the app (see below) was controlled by softbuttons and sliders on touchscreens (phones of smartcontrollers), the DJI SDK 5 is mainly controlled by hardware buttons and sticks of the smart controllers. This is more robust and supports first-person-view (FPV) flights with goggles. The controll assigments are as follows:
+
+
+
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
 **[License](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt)**  <br />
