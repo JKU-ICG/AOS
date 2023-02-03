@@ -35,11 +35,11 @@ While the SDK4 version of the app (see below) was controlled by softbuttons and 
 
 Common process of operation:
 
--**1. take off and fly to target area**: This is done in flight mode (default when app is started).
--**2. scan in target area**: Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomalie detection (shutter), and fly a linar path to scan.
--**3. fine-tune parameters**: After scanning, the integral image on the right shows unoccluded anomalies. They can be focussed at switching to parameter mode (C1) and shifting the focal plane up/down (right stick up/down). In case of compass erros, shifting the focal plane alone will not register corespoindg anomalie images. Compass correctin (right stick left/right) can be applied in additon. If the ground surface is not parallel to the scanning plane, the focal plane can also be tilted (left stick) in both directions. But this is often not necessary. All parameters can be reset to default (C2). 
--**4. scan target area again**: Switch back from parameter mode to scanning mode (C1) and scan target area again. The fine-tuned visualization paramters should be appropriate as long as the terrain's slope, drone's altitude (AGL), and GPS/compass errors don't change much. If necessary, they need to be fine-tuned again (C2 for parameter mode).   
--**5. fly back to take-off area and land**: From scan mode, switch to flight mode (C2), fly back and land (H button is still supported).
+- **1. take off and fly to target area**: This is done in flight mode (default when app is started).
+- **2. scan in target area**: Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomalie detection (shutter), and fly a linar path to scan.
+- **3. fine-tune parameters**: After scanning, the integral image on the right shows unoccluded anomalies. They can be focussed at switching to parameter mode (C1) and shifting the focal plane up/down (right stick up/down). In case of compass erros, shifting the focal plane alone will not register corespoindg anomalie images. Compass correctin (right stick left/right) can be applied in additon. If the ground surface is not parallel to the scanning plane, the focal plane can also be tilted (left stick) in both directions. But this is often not necessary. All parameters can be reset to default (C2). 
+- **4. scan target area again**: Switch back from parameter mode to scanning mode (C1) and scan target area again. The fine-tuned visualization paramters should be appropriate as long as the terrain's slope, drone's altitude (AGL), and GPS/compass errors don't change much. If necessary, they need to be fine-tuned again (C2 for parameter mode).   
+- **5. fly back to take-off area and land**: From scan mode, switch to flight mode (C2), fly back and land (H button is still supported).
 
 **Note:** If too many incorrect/too few anomalies are detected the RX threshold should slighly be increased/decreased (in parameter mode: right wheel). This will be only effective for the next scan. Scanning with RGB imaging is also possible, but thermal imaging is recommended here.  
 
