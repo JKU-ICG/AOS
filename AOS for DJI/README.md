@@ -16,7 +16,16 @@ We make the new app and a description available here soon.
 
 While the SDK4 version of the app (see below) was controlled by softbuttons and sliders on touchscreens (phones of smart controllers), the DJI SDK 5 version is mainly controlled by hardware buttons and sticks of the smart controllers. This is more robust and supports first-person-view (FPV) flights with goggles. The controll assigments are as follows:
 
-
+- **C2** (back, right): Switches forth and back between flight mode and scan mode. In parameter mode, it resets the focal plane parameters.
+- **C1** (back, left): Switches forth and back between scan mode and parameter mode.
+- **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging.
+- **shutter** (top-side, right): Turns on/off anomaly detection (RX).
+- **O** (front, right): Options (different settings for RGB and thermal imaging)
+- **pause** (front, left): In scan and parameter modes, toggles between fullscreen and splitscreen. 
+- **left wheel**: In flight mode, changes gimbal tilt (in scan mode, gimbal is tilted downwards).
+- **right wheel**: In parameter mode, RX threshold is changed.
+- **right stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane distance and compass correction settings (push/pull: focal plane up/down, left/right: compass correction counter-clockwise/clockwise).
+- **left stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane orientation (push/pull: tild forward/backward, left/right: tilt left/right).
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
