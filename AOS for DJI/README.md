@@ -39,7 +39,7 @@ While the SDK4 version of the app (see below) was controlled by soft buttons and
 - **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging.
 - **shutter** (top-side, right): Turns on/off anomaly detection (RX).
 - **O** (front, right): Options (different settings for RGB and thermal imaging)
-- **pause** (front, left): In scan and parameter modes, toggles between full screen and split screen. 
+## - **pause** (front, left): In scan and parameter modes, toggles between full screen and split screen. 
 - **left wheel**: In flight mode, changes gimbal tilt (in scan mode, gimbal is tilted downwards).
 - **right wheel**: In parameter mode, RX threshold is changed.
 - **right stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane distance and compass correction settings (push/pull: focal plane up/down, left/right: compass correction counter-clockwise/clockwise).
