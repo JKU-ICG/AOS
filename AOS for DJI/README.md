@@ -53,6 +53,7 @@ Common process of operation:
 - **Tested DJI drones:** Mavic 3T Enterprise <br />
 - **Tested smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
 
+
 ## AOS for DJI SDKV4
 
 We have developed a DJI (SDKV4) compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on [DJI's Mobile SDK](https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
