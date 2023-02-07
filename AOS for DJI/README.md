@@ -22,6 +22,7 @@ New features:
 
 In Progress:
 
+- **GUI Elements**: DIJ GUI elements for flight control (compass, map, status-bar) will be added to the app in all three modes of operation.
 - **Free gimbal orientation**: AOS scanning with arbitrary orientations of the gimbal (not only facing downwards).
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
