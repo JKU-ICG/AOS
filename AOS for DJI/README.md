@@ -51,7 +51,7 @@ Common process of operation:
 ## Compatability
 
 - **Tested DJI drones:** Mavic 3T Enterprise <br />
-- **Tested smart controller:** M3T -DJI Remote Smart Controller (Android 10.0) <br />
+- **Tested smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
 
 ## AOS for DJI SDKV4
 
