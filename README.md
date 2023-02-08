@@ -184,7 +184,7 @@ A [simulator](https://aos.tensorware.app) for forest occlusion has been develope
 
 ## Acceleration-Aware Path Planner
 
-A path planner which takes acceleration/deceleration into consideration while planning waypoints has been developed by Mr. Rudolf Ortner. The code is available [here](https://github.com/rudolfortner/aapp).
+A path planner which takes acceleration/deceleration into consideration while planning waypoints has been developed by Rudolf Ortner. The code is available [here](https://github.com/rudolfortner/aapp).
 
 
 ## AOS for DJI
