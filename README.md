@@ -165,7 +165,7 @@ This repository is using Version 3 of our Payload right now.
 The fourth version does not include any payloads from the previous versions. Instead the payload consists of a custom built light-weight camera array based on a truss design. It carries ten light weight DVR pin-hole cameras (12g each), attached equidistant (1m) to each other on a 9m long detachable and hollow carbon fibre tube (700g) which is segmented into detachable sections (one of the sections is shown in the image) of varying lengths and a gradual reduction in diameter in each section from 2.5cm at the drone centre to 1.5cm at the outermost section.The cameras are aligned in such a way that their optical axes are parallel and pointing downwards. They record images at a resolution of 1600X1200 pixels and videos at a resolution of 1280X720 and 30fps to individual SD cards. All cameras receive power from two central 7.2V Ni-MH batteries and are synchronously triggered from the drone's flight controller trough a flat-band cable bus.
 
 ### DJI Support
-We have developed a [ DJI compatible app](AOS%20for%20DJI/README.md) that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. Tested DJI drones: Mavic 3T Enterprise, Mavic 2 Enterprise Advanced, Mavic Mini, Mini 2 
+We have developed a [ DJI compatible app](AOS%20for%20DJI/README.md) that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. Tested DJI drones: Mavic 3T Enterprise, Mavic 2 Enterprise Advanced, Mavic Mini, Mini 2. 
 
 
 ## Data
