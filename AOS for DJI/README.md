@@ -44,7 +44,13 @@ While the SDK4 version of the app (see below) was controlled by soft buttons and
 - **right stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane distance and compass correction settings (push/pull: focal plane up/down, left/right: compass correction counter-clockwise/clockwise).
 - **left stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane orientation (push/pull: tilt forward/backward, left/right: tilt left/right).
 
-Common process of operation:
+
+
+https://user-images.githubusercontent.com/83944465/217470172-74a2b272-2cd4-431c-9e21-b91938a340f2.mp4
+
+
+
+Common process of operation (see also video above, with several scanning examples):
 
 - **1. take off and fly to target area**: This is done in flight mode (default when app is started).
 - **2. scan in target area**: Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomaly detection (shutter), and fly a linear path to scan.
@@ -62,7 +68,7 @@ Common process of operation:
 ## Compatability
 
 - **Tested DJI drones:** Mavic 3T Enterprise <br />
-- **Tested smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
+- **Tested DJI smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
 
 
 ## AOS for DJI SDKV4
