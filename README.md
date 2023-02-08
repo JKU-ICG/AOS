@@ -33,7 +33,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 02/08/2023: **DJI SDK 5 support (Mavic 3MT, etc.) and new app with real-time anomaly detection** See [AOS for DJI](#aos-for-dji)
+- 02/08/2023: **DJI SDK 5 support (Mavic 3T, etc.) and new app with real-time anomaly detection** See [AOS for DJI](#aos-for-dji)
 - 12/30/2022: **First AOS approach towards drone swarms** for autonomous and adaptive sampling. See [publications](#publications) (Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms)
 - 11/29/2022: **Study on state-of-the-art color anomaly detectors** suitable for through-foliage detection and tracking. See [publications](#publications) (Evaluation of Color Anomaly Detection in Multispectral Images For Synthetic Aperture Sensing)
 - 07/28/2022: **Inverse Airborne Optical Sectioning** -- through-foilage tracking with a single, conventional, hovering (stationary) drone. See [publications](#publications) (Inverse Airborne Optical Sectioning)  
@@ -165,7 +165,7 @@ This repository is using Version 3 of our Payload right now.
 The fourth version does not include any payloads from the previous versions. Instead the payload consists of a custom built light-weight camera array based on a truss design. It carries ten light weight DVR pin-hole cameras (12g each), attached equidistant (1m) to each other on a 9m long detachable and hollow carbon fibre tube (700g) which is segmented into detachable sections (one of the sections is shown in the image) of varying lengths and a gradual reduction in diameter in each section from 2.5cm at the drone centre to 1.5cm at the outermost section.The cameras are aligned in such a way that their optical axes are parallel and pointing downwards. They record images at a resolution of 1600X1200 pixels and videos at a resolution of 1280X720 and 30fps to individual SD cards. All cameras receive power from two central 7.2V Ni-MH batteries and are synchronously triggered from the drone's flight controller trough a flat-band cable bus.
 
 ### DJI Support
-We have developed a [ DJI compatible app](AOS%20for%20DJI/README.md) that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. Tested DJI drones: Mavic 3MT Enterprise, Mavic 2 Enterprise Advanced, Mavic Mini, Mini 2. 
+We have developed a [ DJI compatible app](AOS%20for%20DJI/README.md) that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. Tested DJI drones: Mavic 3T Enterprise, Mavic 2 Enterprise Advanced, Mavic Mini, Mini 2. 
 
 
 ## Data
