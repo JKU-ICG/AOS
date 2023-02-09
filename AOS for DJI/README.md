@@ -17,7 +17,7 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 
 <p align="center">
-[**Get AOS for DJI v3_0**](https://docs.google.com/forms/d/e/)<br />
+[**Get AOS for DJI v3 (SDK 5)**](https://forms.gle/DrfZiCthjp9g5eF87)<br /><br />
 </p>
 
 New features: 
