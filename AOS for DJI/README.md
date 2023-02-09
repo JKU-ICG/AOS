@@ -15,8 +15,8 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 ![AOS_FPV](https://user-images.githubusercontent.com/83944465/217472024-da433c30-1925-4d45-91c0-4465e26b7bf9.jpg)
 
-
-[**Get v3_0**](https://docs.google.com/forms/d/e/1FAIpQLSezKIkoUEhyVqxQAE0MTDYjzC7NbBXMe_QSQlt1ecBU4OQASA/viewform?vc=0&c=0&w=1&flr=0)<br /><br />
+<br />
+[**Get AOS for DJI v3_0**](https://docs.google.com/forms/d/e/1FAIpQLSezKIkoUEhyVqxQAE0MTDYjzC7NbBXMe_QSQlt1ecBU4OQASA/viewform?vc=0&c=0&w=1&flr=0)<br /><br />
 
 New features: 
 
