@@ -36,7 +36,7 @@ The app supports three modes of operation:
 - **Scan mode**: This mode supports to fly short linear paths for AOS scanning. It shows a split screen with the last recorded single image (RGB or thermal) on the left, and the current integral image (RGB, thermal, or RX anomaly masks) from the SA centre perspective on the right. 
 - **Parameter mode**: In this mode, visualization parameters (focal plane, RX threshold, and compass correction) can be interactively adjusted. 
 
-While the SDK4 version of the app (see below) was controlled by soft buttons and sliders on touch screens (phones of smart controllers), the DJI SDK 5 version is mainly controlled by hardware buttons and sticks of the smart controllers. This is more robust and supports first-person-view (FPV) flights with goggles. The control assignments are as follows:
+While the SDK4 version of the app ([see below](#AOS-for-DJI-SDKV4)) was controlled by soft buttons and sliders on touch screens (phones of smart controllers), the DJI SDK 5 version is mainly controlled by hardware buttons and sticks of the smart controllers. This is more robust and supports first-person-view (FPV) flights with goggles. The control assignments are as follows:
 
 - **C2** (back, right): Switches forth and back between flight mode and scan mode. In parameter mode, it resets the focal plane parameters.
 - **C1** (back, left): Switches forth and back between scan mode and parameter mode.
