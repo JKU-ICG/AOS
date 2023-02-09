@@ -56,7 +56,7 @@ https://user-images.githubusercontent.com/83944465/217470172-74a2b272-2cd4-431c-
 
 Common process of operation (see also video above, with several scanning examples):
 
-- **1. start the app on the smart controller**: If it does not start or does not connect to the drone (or it closes / was closed by mistake during runtime) all apps on the SC should be closed (clear all), as multiple apps or instances of the same app cannot connect to the drone simultaneously.
+- **1. start the app on the smart controller**: If it does not start or does not connect to the drone (or it closes / was closed by mistake during runtime) then all apps on the SC should be closed (clear all), as multiple apps or instances of the same app cannot connect to the drone simultaneously.
 - **2. take off and fly to target area**: This is done in flight mode (default when app is started).
 - **3. scan in target area**: Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomaly detection (shutter), and fly a linear path to scan.
 - **4. fine-tune parameters**: After scanning, the integral image on the right shows unoccluded anomalies. They can be focussed at switching to parameter mode (C1) and shifting the focal plane up/down (right stick up/down). In case of compass errors, shifting the focal plane alone will not register corresponding anomaly images. Compass correction (right stick left/right) can be applied in addition. If the ground surface is not parallel to the scanning plane, the focal plane can also be tilted (left stick) in both directions. But this is often not necessary. All parameters can be reset to default (C2). 
