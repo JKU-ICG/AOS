@@ -73,12 +73,12 @@ Common process of operation (see also video above, with several scanning example
 **[License](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt)**  <br />
 **No warranty.**<br />
 
-## Compatability
+Compatability:
 
 - **Tested DJI drones:** Mavic 3T Enterprise <br />
 - **Tested DJI smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
 
-## Versions
+Versions:
 
 - **v3:** basis version 
 - **v3_1:** supports cotrast enhancement of integral image 
