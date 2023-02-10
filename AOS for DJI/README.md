@@ -78,6 +78,11 @@ Common process of operation (see also video above, with several scanning example
 - **Tested DJI drones:** Mavic 3T Enterprise <br />
 - **Tested DJI smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
 
+## Versions
+
+- **v3:** basis version 
+- **v3_1:** supports cotrast enhancement of integral image 
+
 
 ## AOS for DJI SDKV4
 
