@@ -18,7 +18,7 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 [**Get AOS for DJI v3 (SDK 5)**](https://forms.gle/dW4Q8yJnLEww7hew8)<br />
 
-**Note:** When installing the app in the RC, the RC must be online.
+**Note:** When installing the app on the RC, the RC must be online.
 
 New features: 
 
