@@ -18,6 +18,8 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 [**Get AOS for DJI v3 (SDK 5)**](https://forms.gle/dW4Q8yJnLEww7hew8)<br />
 
+**Note:** When installing the app in the RC, the RC must be online.
+
 New features: 
 
 - **New real-time AOS anomaly detection**: Instead of integrating images and applying anomaly detection to the integral, we now apply anomaly detection to single images and integrate the anomaly masks. This leads to much better and clearer detection results. A new GPU implementation of the RX anomaly detector supports real-time rates.
