@@ -68,11 +68,6 @@ Common process of operation (see also video above, with several scanning example
 
 **Note:** AOS scanning is reset if you change flight direction. If too many/few anomalies are detected the RX threshold should slightly be increased/decreased (in parameter mode: right wheel). This change will become only effective for the next scan. A good range for RX is 0.99-0.999. Scanning with RGB imaging is also possible, but thermal imaging is recommended here. Scanning without RX anomaly detection turned on is also possible (RGB or thermal), but anomaly detection turned on is recommended here.   
 
-**Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
-**Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
-**[License](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt)**  <br />
-**No warranty.**<br />
-
 Compatability:
 
 - **Tested DJI drones:** Mavic 3T Enterprise <br />
@@ -82,6 +77,11 @@ Versions:
 
 - **v3:** basis version 
 - **v3_1:** supports cotrast enhancement of integral image 
+
+**Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
+**Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
+**[License](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt)**  <br />
+**No warranty.**<br />
 
 
 ## AOS for DJI SDKV4
