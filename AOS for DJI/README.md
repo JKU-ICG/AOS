@@ -68,7 +68,7 @@ Common process of operation (see also video above, with several scanning example
 
 **Note:** AOS scanning is reset if you change flight direction. If too many/few anomalies are detected the RX threshold should slightly be increased/decreased (in parameter mode: right wheel). This change will become only effective for the next scan. A good range for RX is 0.99-0.999. Scanning with RGB imaging is also possible, but thermal imaging is recommended here. Scanning without RX anomaly detection turned on is also possible (RGB or thermal), but anomaly detection turned on is recommended here.   
 
-Compatability:
+Compatibility:
 
 - **Tested DJI drones:** Mavic 3T Enterprise <br />
 - **Tested DJI smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
