@@ -26,7 +26,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 <br />Email: oliver.bimber@jku.at
 
 ## Sponsors
-- Austrian Science Fund (FWF)
+- Austrian Science Funds (FWF)
+- German Science Funds (DFG)
 - State of Upper Austria, Nationalstiftung für Forschung, Technologie und Entwicklung
 - Linz Institute of Technology (LIT) 
 - Upper Austrian Fire Brigade Headquarters 
