@@ -27,10 +27,10 @@ New features:
 - **Simplified user interface**: All unnecessary features were removed to support easy and intuitive operations.
 - **Free gimbal orientation**: AOS scanning with arbitrary orientations of the gimbal (not only facing downwards).
 - **Zoom Camera**: Supports zoom camera in flight mode.
+- **GUI Elements**: DIJ GUI elements for flight control (compass, map, status-bar) will be added to the app in all three modes of operation.
 
 In Progress:
 
-- **GUI Elements**: DIJ GUI elements for flight control (compass, map, status-bar) will be added to the app in all three modes of operation.
 - **RTK**: Supports RTK for better positioning precision.
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
@@ -47,8 +47,8 @@ While the SDK4 version of the app ([see below](#AOS-for-DJI-SDKV4)) was controll
 - **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging (and zoom-camera in flight mode only).
 - **shutter** (top-side, right): Turns on/off anomaly detection (RX). 
 - **C3** (front, right): Options (different settings for RGB and thermal imaging). 
-- **left wheel**: In flight mode, changes gimbal tilt. 
-- **right wheel**: In parameter mode, RX threshold is changed or contrast of integral images is changed (use **pause** button to toggle). 
+- **left wheel**: In flight and scan modes, changes gimbal tilt. 
+- **right wheel**: In parameter mode, RX threshold is changed or contrast of integral images is changed (use **pause** button to toggle). In flight mode, zoom is changed.
 - **pause (front, left)**: In parameter mode, toggle between changing contrast of the integral image or RX threshold.
 - **right stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane distance and compass correction settings (push/pull: focal plane up/down, left/right: compass correction counter-clockwise/clockwise).
 - **left stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane orientation (push/pull: tilt forward/backward, left/right: tilt left/right).
@@ -81,6 +81,7 @@ Versions:
 - **v3.1:** supports cotrast enhancement of integral image 
 - **v3.2:** supports arbitrary gimbal angles for scanning
 - **v3.3:** supports zoom camera in flight mode
+- **v3.4:** added GUI elements
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
