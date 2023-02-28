@@ -80,6 +80,7 @@ Versions:
 - **v3:** basis version 
 - **v3_1:** supports cotrast enhancement of integral image 
 - **v3_2:** supports arbitrary gimbal angles for scanning
+- **v3_3:** supports zoom camera in flight mode
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
