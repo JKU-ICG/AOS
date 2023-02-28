@@ -77,7 +77,7 @@ Compatibility:
 
 Versions:
 
-- **v3:** basis version 
+- **v3.0:** basis version 
 - **v3.1:** supports cotrast enhancement of integral image 
 - **v3.2:** supports arbitrary gimbal angles for scanning
 - **v3.3:** supports zoom camera in flight mode
