@@ -25,11 +25,12 @@ New features:
 - **New real-time AOS anomaly detection**: Instead of integrating images and applying anomaly detection to the integral, we now apply anomaly detection to single images and integrate the anomaly masks. This leads to much better and clearer detection results. A new GPU implementation of the RX anomaly detector supports real-time rates.
 - **Better control**: No soft-buttons or -sliders to be operated on the touch-screen are used anymore. Instead, all functionality of the app is mapped to hard-buttons and -sticks. This allows more robust control and supports first-person-view (FPV) flying by attaching goggles to the HDMI port of the smart controller.  
 - **Simplified user interface**: All unnecessary features were removed to support easy and intuitive operations.
+- **Free gimbal orientation**: AOS scanning with arbitrary orientations of the gimbal (not only facing downwards).
 
 In Progress:
 
 - **GUI Elements**: DIJ GUI elements for flight control (compass, map, status-bar) will be added to the app in all three modes of operation.
-- **Free gimbal orientation**: AOS scanning with arbitrary orientations of the gimbal (not only facing downwards).
+- **Zoom Camera**: Supports zoom camera in flight mode.
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
 The app supports three modes of operation:
@@ -45,7 +46,7 @@ While the SDK4 version of the app ([see below](#AOS-for-DJI-SDKV4)) was controll
 - **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging.
 - **shutter** (top-side, right): Turns on/off anomaly detection (RX). 
 - **C3** (front, right): Options (different settings for RGB and thermal imaging). 
-- **left wheel**: In flight mode, changes gimbal tilt (in scan mode, gimbal is tilted downwards). 
+- **left wheel**: In flight mode, changes gimbal tilt. 
 - **right wheel**: In parameter mode, RX threshold is changed or contrast of integral images is changed (use **pause** button to toggle). 
 - **pause (front, left)**: In parameter mode, toggle between changing contrast of the integral image or RX threshold.
 - **right stick**: In flight and scan mode, it normally controls the drone. In parameter mode, it changes the focal plane distance and compass correction settings (push/pull: focal plane up/down, left/right: compass correction counter-clockwise/clockwise).
@@ -61,7 +62,7 @@ Common process of operation (see also video above, with several scanning example
 
 - **1. start the app on the smart controller**: If it does not start or does not connect to the drone (or it closes / was closed by mistake during runtime) then all apps on the SC should be closed (clear all), as multiple apps or instances of the same app cannot connect to the drone simultaneously.
 - **2. take off and fly to target area**: This is done in flight mode (default when app is started).
-- **3. scan in target area**: Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomaly detection (shutter), and fly a linear path to scan.
+- **3. scan in target area**: Position drone and gimbal tilt. Switch to AOS scan mode (C2), select thermal imaging (record), turn on RX anomaly detection (shutter), and fly a linear sideways path to scan.
 - **4. fine-tune parameters**: After scanning, the integral image on the right shows unoccluded anomalies. They can be focussed at switching to parameter mode (C1) and shifting the focal plane up/down (right stick up/down). In case of compass errors, shifting the focal plane alone will not register corresponding anomaly images. Compass correction (right stick left/right) can be applied in addition. If the ground surface is not parallel to the scanning plane, the focal plane can also be tilted (left stick) in both directions. But this is often not necessary. All parameters can be reset to default (C2). 
 - **5. scan target area again**: Switch back from parameter mode to scanning mode (C1) and scan target area again. The fine-tuned visualization parameters should be appropriate as long as the terrain's slope, drone's altitude (AGL), and GPS/compass errors don't change much. If necessary, they need to be fine-tuned again (C2 for parameter mode).   
 - **6. fly back to take-off area and land**: From scan mode, switch to flight mode (C2), fly back and land (H button is still supported).
