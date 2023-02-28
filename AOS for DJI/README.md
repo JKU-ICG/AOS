@@ -57,7 +57,7 @@ While the SDK4 version of the app ([see below](#AOS-for-DJI-SDKV4)) was controll
 
 https://user-images.githubusercontent.com/83944465/217470172-74a2b272-2cd4-431c-9e21-b91938a340f2.mp4
 
-
+This video shows v3.0.
 
 Common process of operation (see also video above, with several scanning examples):
 
