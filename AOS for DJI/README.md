@@ -26,11 +26,11 @@ New features:
 - **Better control**: No soft-buttons or -sliders to be operated on the touch-screen are used anymore. Instead, all functionality of the app is mapped to hard-buttons and -sticks. This allows more robust control and supports first-person-view (FPV) flying by attaching goggles to the HDMI port of the smart controller.  
 - **Simplified user interface**: All unnecessary features were removed to support easy and intuitive operations.
 - **Free gimbal orientation**: AOS scanning with arbitrary orientations of the gimbal (not only facing downwards).
+- **Zoom Camera**: Supports zoom camera in flight mode.
 
 In Progress:
 
 - **GUI Elements**: DIJ GUI elements for flight control (compass, map, status-bar) will be added to the app in all three modes of operation.
-- **Zoom Camera**: Supports zoom camera in flight mode.
 - **RTK**: Supports RTK for better positioning precision.
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
@@ -44,7 +44,7 @@ While the SDK4 version of the app ([see below](#AOS-for-DJI-SDKV4)) was controll
 
 - **C2** (back, right): Switches forth and back between flight mode and scan mode. In parameter mode, it resets the focal plane parameters.
 - **C1** (back, left): Switches forth and back between scan mode and parameter mode.
-- **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging.
+- **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging (and zoom-camera in flight mode only).
 - **shutter** (top-side, right): Turns on/off anomaly detection (RX). 
 - **C3** (front, right): Options (different settings for RGB and thermal imaging). 
 - **left wheel**: In flight mode, changes gimbal tilt. 
