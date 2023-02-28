@@ -31,6 +31,7 @@ In Progress:
 
 - **GUI Elements**: DIJ GUI elements for flight control (compass, map, status-bar) will be added to the app in all three modes of operation.
 - **Zoom Camera**: Supports zoom camera in flight mode.
+- **RTK**: Supports RTK for better positioning precision.
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
 The app supports three modes of operation:
