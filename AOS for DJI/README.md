@@ -18,7 +18,7 @@ We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to
 
 [**Get AOS for DJI v3 (SDK 5)**](https://forms.gle/dW4Q8yJnLEww7hew8)<br />
 
-**Note:** When installing the app on the RC, the RC must be online. Before staring the app, the drone must be ready (wait a bit after turning it on) and all other apps that could connect to the drone (e.g., DJI Pilot or other third-party apps) must be forcefully stopped (see description at the bottom [here](https://developer.dji.com/doc/mobile-sdk-tutorial/en/quick-start/run-sample.html)). But usually chosing "close all" in the running apps list will do it also.
+**Note:** Before installing the app on the RC previous versions of it must be uninstalled and the RC must be online to receive a new DJI key. Before staring the app, the drone must be ready (wait a bit after turning it on) and all other apps that could connect to the drone (e.g., DJI Pilot or other third-party apps) must be forcefully stopped (see description at the bottom [here](https://developer.dji.com/doc/mobile-sdk-tutorial/en/quick-start/run-sample.html)). But usually chosing "close all" in the running apps list will do it also.
 
 
 
