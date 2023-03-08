@@ -36,6 +36,9 @@ In Progress:
 - **RTK**: Supports RTK for better positioning precision.
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
+![modes](https://user-images.githubusercontent.com/83944465/223687417-0812947e-25df-4207-acaa-1f9861526303.jpg)
+
+
 The app supports three modes of operation:
 
 - **Flight mode**: Normal flight operation mode with full screen live video image (RGB or thermal).
