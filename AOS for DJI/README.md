@@ -50,7 +50,7 @@ While the SDK4 version of the app ([see below](#AOS-for-DJI-SDKV4)) was controll
 - **C1** (back, left): Switches forth and back between scan mode and parameter mode.
 - **record** (top-side, left): In flight and scan modes, switches forth and back between RGB and thermal imaging (and zoom-camera in flight mode only).
 - **shutter** (top-side, right): Turns on/off anomaly detection (RX). 
-- **C3** (front, right): Options (different settings for RGB and thermal imaging). 
+- **C3** (front, right): Options (different settings for RGB and thermal imaging), such as RTK settings, sampling distance and window size, thermal color modes, etc. 
 - **left wheel**: In flight and scan modes, changes gimbal tilt. 
 - **right wheel**: In parameter mode, RX threshold is changed or contrast of integral images is changed (use **pause** button to toggle). In flight mode, zoom is changed.
 - **pause (front, left)**: In parameter mode, toggle between changing contrast of the integral image or RX threshold.
