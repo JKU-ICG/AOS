@@ -36,7 +36,7 @@ In Progress:
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
 ![modes](https://user-images.githubusercontent.com/83944465/223687417-0812947e-25df-4207-acaa-1f9861526303.jpg)
-
+Modes of operation (v3.5).
 
 The app supports three modes of operation:
 
