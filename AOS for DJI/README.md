@@ -30,10 +30,9 @@ New features:
 - **Free gimbal orientation**: AOS scanning with arbitrary orientations of the gimbal (not only facing downwards).
 - **Zoom Camera**: Supports zoom camera in flight mode.
 - **GUI Elements**: DIJ GUI elements for flight control (compass, map, status-bar) will be added to the app in all three modes of operation.
+- **RTK**: Supports RTK for better positioning precision and speed.
 
 In Progress:
-
-- **RTK**: Supports RTK for better positioning precision.
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 
 ![modes](https://user-images.githubusercontent.com/83944465/223687417-0812947e-25df-4207-acaa-1f9861526303.jpg)
@@ -87,6 +86,7 @@ Versions:
 - **v3.2:** supports arbitrary gimbal angles for scanning
 - **v3.3:** supports zoom camera in flight mode
 - **v3.4:** added GUI elements
+- **v3.5:** network RTK integrated
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
