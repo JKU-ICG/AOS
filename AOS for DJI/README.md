@@ -35,7 +35,7 @@ New features:
 
 In Progress:
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
-- **Automatic Person Classification**: Using our deep learning model for automatically identifying persons in integral images.  
+- **Automatic Person Classification**: Using [our deep learning model](https://www.nature.com/articles/s42256-020-00261-3) for automatically identifying persons in integral images.  
 
 ![modes](https://user-images.githubusercontent.com/83944465/223687417-0812947e-25df-4207-acaa-1f9861526303.jpg)
 Modes of operation (v3.5).
