@@ -9,7 +9,13 @@ Single Images         |  Airborne Optical Sectioning
 > Source: [Video on YouTube](https://www.youtube.com/watch?v=kyKVQYG-j7U) | [FLIR](https://www.flir.com/discover/cores-components/researchers-develop-search-and-rescue-technology-that-sees-through-forest-with-thermal-imaging/)
  
 
-This repository contains [software modules](#modules) for drone-based search and rescue applications with airborne optical sectioning, as discussed in our [publications](#publications). It is made available under a [dual licence model](#license).
+This repository contains software modules for drone-based search and rescue applications with airborne optical sectioning, as discussed in our [publications](#publications). They are made available under a [dual licence model](#license).
+
+We have developed a DJI compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on [DJI's Mobile SDK](https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). 
+The app and documentation is available [here](AOS%20for%20DJI/README.md).
+
+
+
 
 ## Contacts
 Univ.-Prof. Dr. Ing. habil. Oliver Bimber
@@ -118,15 +124,5 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [MDPI (open access and final version)](https://www.mdpi.com/2313-433X/4/8/102)
   - [Video on YouTube](https://www.youtube.com/watch?v=ELnvBfafnRA&ab_channel=JKUCG) 
 
-
-
-## AOS for DJI
-
-We have developed a DJI compatible app that integrates AOS to support blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. The app is based on [DJI's Mobile SDK](https://developer.dji.com/) and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). 
-The app and documentation is available [here](AOS%20for%20DJI/README.md).
-
 ## License
-* Data: Creative Commons Attribution 4.0 International
-* Code Modules: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
-* Occlusion Simulator: [MIT](https://github.com/tensorware/aos-simulation/blob/master/LICENSE) 
-* OpenGL Support libraries [`LFR/include/learnopengl/camera.h`](LFR/include/learnopengl/camera.h), [`LFR/include/learnopengl/mesh.h`](LFR/include/learnopengl/mesh.h), [`LFR/include/learnopengl/model.h`](LFR/include/learnopengl/model.h) and [`LFR/include/learnopengl/shader.h`](LFR/include/learnopengl/shader.h) : [CC BY-NC 4.0](https://github.com/JoeyDeVries/LearnOpenGL/blob/master/LICENSE.md)
+This repository contains software modules for drone-based search and rescue applications with airborne optical sectioning, as discussed in our [publications](#publications). They are made available under a [dual licence model](#license).
