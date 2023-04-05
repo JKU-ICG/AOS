@@ -1,6 +1,6 @@
 # AOS for Drone Swarms
 
-This Weave (FWF&DFG) funded basic research project is on exploring AOS for moving targets, in paricular using drone swarms. It is in collaboration with the German Aerospace Center (DLR) and the Otto-von-Guericke University Magdeburg.
+This Weave ([FWF](https://www.fwf.ac.at/en/) & [DFG](https://www.dfg.de/en/index.jsp)) funded basic research project is on exploring AOS for moving targets, in paricular using drone swarms. It started in April 2023 and is in collaboration with the German Aerospace Center (DLR) and the Otto-von-Guericke University Magdeburg.
 
 ## Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms
 
