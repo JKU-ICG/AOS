@@ -27,7 +27,7 @@ For our prototype, an octocopter (MikroKopter OktoXL 6S12, two LiPo 4500 mAh bat
 
 Prototype        |  Payload
 :-------------------------:|:-------------------------:
-![prototype_2021](../img/Prototype.jpg) | ![payload](./img/payload.png)
+![prototype_2021](../img/Prototype.jpg) | ![payload](../img/payload.png)
 
 ### Payload Version 1
 Initially, the drone was equipped with a thermal camera (FlirVue Pro; 9 mm fixed focal length lens; 7.5 μm to 13.5 μm spectral band; 14 bit non-radiometric) and an RGB camera (Sony Alpha 6000; 16 mm to 50 mm lens at infinite focus).
