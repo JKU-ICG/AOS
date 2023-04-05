@@ -2,7 +2,7 @@
 
 This Weave ([FWF](https://www.fwf.ac.at/en/) & [DFG](https://www.dfg.de/en/index.jsp)) funded basic research project is on exploring AOS for moving targets, in paricular using drone swarms. It started in April 2023, in collaboration with the [German Aerospace Center (DLR)](https://www.dlr.de/EN/Home/home_node.html) and the [Otto-von-Guericke University Magdeburg](https://www.ovgu.de/en/).
 
-## Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms
+## First approach: Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms
 
 We demonstrate how efficient autonomous drone swarms can be in detecting and tracking occluded targets in dense forest, such as lost people during search and rescue missions. The exploration and optimization of local viewing conditions, like occlusion density and target view obliqueness, results in much faster and much more reliable findings compared to previous blind sampling strategies that are based on pre-defined waypoints. An adapted real-time particle swarm optimization and a new objective function are presented that are able to deal with dynamic and highly random through-foliage conditions. Synthetic aperture sensing is our fundamental sampling principle, while we apply drone swarms to approximate the optical signal of extremely wide and adaptable airborne lenses.
 Here we make the simulation code available that was used to compute the results presented in the article Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms.
