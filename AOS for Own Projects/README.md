@@ -1,5 +1,7 @@
 # AOS for Own Projects
 
+Here we provide AOS source code for own projects and give an overview over several research prototypes beeing developed over the years.
+
 ## Modules
 
 - [LFR](LFR/README.md)      (C++ and Python code): computes integral images.
