@@ -13,10 +13,11 @@ This repository contains software modules for drone-based search and rescue appl
 
 Please refer to:
 
-- **[AOS for DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**:XXX .  
+- **[AOS for DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)** for our DJI compatible AOS app.
+- **[AOS for Drone Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)** for our basic research on applying AOS to drone swarms.
+- **[AOS for Own Projects](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Own%20Projects)** for source code supporting your own AOS projects. 
 
 This work is supported by variaty of institutions (see and [sponsors](#sponsors). See and [news](#news) for latest updates.
-
 
 ## Contacts
 Univ.-Prof. Dr. Ing. habil. Oliver Bimber
