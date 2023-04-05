@@ -1,6 +1,0 @@
-2021-03-09 15:00:53,948 DEBUG planning coarse path for current point 48.336098, 14.326456
-2021-03-09 15:00:53,956 DEBUG coarse coverage map: [[0.]]
-2021-03-09 15:00:53,957 DEBUG planned 2 points for line 1:[(48.33607352376349, 14.326257566040246), (48.335263880478124, 14.326268233785425)]
-2021-03-09 15:03:45,569 DEBUG planning coarse path for current point 48.335264, 14.326268
-2021-03-09 15:03:45,570 DEBUG coarse coverage map: [[0.]]
-2021-03-09 15:03:45,571 DEBUG planned 0 points for line 2:[]
