@@ -1,6 +1,6 @@
 # AOS for Own Projects
 
-Here we provide basic [source code](#Modules) for own AOS projects and give an overview over several [research prototypes](#Hardware) beeing developed over the years. We also provide experimental [data](#Data), a [simulator](#Simulaton), and code for [acceleration-aware path planning](#Acceleration-Aware Path Planner).
+Here we provide basic [source code](#Modules) for own AOS projects and give an overview over several [research prototypes](#Hardware) beeing developed over the years. We also provide experimental [data](#Data), a [simulator](#Simulation), and code for [acceleration-aware path planning](#Acceleration-Aware-Path-Planner).
 
 ## Modules
 
