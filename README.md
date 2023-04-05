@@ -13,7 +13,7 @@ This repository contains software modules for drone-based search and rescue appl
 
 Please refer to:
 
-
+- **[AOS for DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**:XXX .  
 
 This work is supported by variaty of institutions (see and [sponsors](#sponsors). See and [news](#news) for latest updates.
 
