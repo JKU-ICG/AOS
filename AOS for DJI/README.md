@@ -4,7 +4,7 @@ Our intention is to supports blue light organisations and others in testing and 
 
 ## AOS for DJI SDKV5
 
-We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to [DJI's Mobile SDK v5](https://developer.dji.com/). It supports the latest DJI's enterprise platforms that are based on DJI's SDK v5. 
+We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4-(no-longer-supported)) to [DJI's Mobile SDK v5](https://developer.dji.com/). It supports the latest DJI's enterprise platforms that are based on DJI's SDK v5. 
 
 ![AOS_FPV](https://user-images.githubusercontent.com/83944465/217472024-da433c30-1925-4d45-91c0-4465e26b7bf9.jpg)<br />
 FPV operaion with DJI M3T and AOS.
