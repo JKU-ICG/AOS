@@ -6,7 +6,7 @@ Single Images         |  Airborne Optical Sectioning
 :-------------------------:|:-------------------------:
 ![single-images](./img/Nature_single-images.gif) | ![AOS](./img/Nature_aos.gif)
 
-> Source: [Video on YouTube](https://www.youtube.com/watch?v=kyKVQYG-j7U) | [FLIR](https://www.flir.com/discover/cores-components/researchers-develop-search-and-rescue-technology-that-sees-through-forest-with-thermal-imaging/)
+> Source: [Video on YouTube](https://www.youtube.com/watch?v=9HLdiJAZNTM) | [FLIR](https://www.flir.com/discover/cores-components/researchers-develop-search-and-rescue-technology-that-sees-through-forest-with-thermal-imaging/)
  
 
 This repository contains software modules for drone-based search and rescue applications with airborne optical sectioning, as discussed in our [publications](#publications). They are made available under a [dual licence model](#license).
