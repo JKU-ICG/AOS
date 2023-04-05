@@ -2,7 +2,7 @@
 
 ## AOS for DJI SDKV5
 
-We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to [DJI's Mobile SDK v5](https://developer.dji.com/). It supports DJI's enterprise platforms and was tested on the  [Mavic 3T Enterrpise](https://www.dji.com/de/mavic-3-enterprise). Our intention is to supports blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases, and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
+We have upgrated our DJI compatible AOS app ([see below](#AOS-for-DJI-SDKV4)) to [DJI's Mobile SDK v5](https://developer.dji.com/). It supports DJI's enterprise platforms that are based on DJI's SDK v5. Our intention is to supports blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases, and is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
 
 
 ![AOS_FPV](https://user-images.githubusercontent.com/83944465/217472024-da433c30-1925-4d45-91c0-4465e26b7bf9.jpg)<br />
