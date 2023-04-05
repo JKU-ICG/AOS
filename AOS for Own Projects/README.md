@@ -1,6 +1,6 @@
 # AOS for Own Projects
 
-Here we provide AOS source code for own projects and give an overview over several research prototypes beeing developed over the years.
+Here we provide basic source code for own AOS projects and give an overview over several research prototypes beeing developed over the years.
 
 ## Modules
 
