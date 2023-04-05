@@ -1,6 +1,6 @@
 # AOS for DJI
 
-Our intention is to supports blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. Our apps are free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
+Our intention is to supports blue light organisations and others in testing and evaluating airborne optical sectioning for their use cases. Our app is free for non-commercial usage. For commercial usage of AOS, please refer to our [license conditions](https://github.com/JKU-ICG/AOS/blob/stable_release/LICENSE.txt). <br />
 
 ## AOS for DJI SDKV5
 
