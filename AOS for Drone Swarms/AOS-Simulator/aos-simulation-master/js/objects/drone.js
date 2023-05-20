@@ -15,6 +15,21 @@ class Drone {
         this.clock = new THREE.Clock();
 
         this.loaded = new Promise(async function (resolve) {
+            
+            //const path = 'model/drone.stl';
+            //const stl = await this.loader.load('stl', path);
+
+            //const droneGeometry = stl;
+            //droneGeometry.rotateX(rad(-90)).rotateY(rad(-90)).translate(0, 0, 0);
+
+            //const droneMaterial = new THREE.MeshStandardMaterial({
+            //   color: 0x0096ff,
+            //   roughness: 0.8,
+            //   metalness: 0.8
+            //});
+
+            //this.drone = new THREE.Mesh(droneGeometry, droneMaterial);
+            //this.drone.scale.multiplyScalar(12 / 100);
            
             const geometry1 = new THREE.CircleGeometry( 0.001, 0 );
             geometry1.rotateX(rad(-90)).rotateY(rad(-90)).translate(0, 0, 0);
