@@ -13,6 +13,7 @@ We provide Python bindings, which make it easy to use the renderer in Python pro
 To compile the renderer with the user interface in native C++ follow the steps below:
 ### Windows building: 
 Open the Visual Studio solution at `/LFR/vs/LFR.sln` and compile it. Compilation has been tested with Visual Studio 2019 and the necessary libraries/DLLs (for Assimp and GLFW) are precompiled and included in the repository (`lib` and `bin`). 
+Build for the release version and copy the file 'assimp-vc141-mt.dll' to the release folder (/LFR/vs/x64/Release). The 'dll' file is located in '/LFR/python'
 
 ### Linux (e.g. a Raspberry Pi) building: 
 Install [GLFW](https://www.glfw.org/) and compile [Assimp](https://www.assimp.org/) first. 
