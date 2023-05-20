@@ -88,20 +88,20 @@ int InitWindow(const int width, const int height, const char *appname = "OpenGL"
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
-    /*if (!gladLoadGLES2Loader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }*/
-
-    
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGLES2Loader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    /*if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }*/
     
 
     return 0;
