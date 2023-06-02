@@ -61,10 +61,10 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
-- Rakesh John Amala Arokia Nathan and Oliver Bimber, Synthetic Aperture Anomaly Imaging (2023)
+- Rakesh John Amala Arokia Nathan and Oliver Bimber, Synthetic Aperture Anomaly Imaging, under review, (2023)
   - [arXiv (pre-print)](https://arxiv.org/abs/2304.13590) 
   - [Data: ](https://doi.org/10.5281/zenodo.7867080)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7867080.svg)](https://doi.org/10.5281/zenodo.7867080)
-- Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms (2022)
+- Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms, Nature Communications Engineering, (2023)
   - [arXiv (pre-print)](https://arxiv.org/abs/2212.14692) 
   - [Data: ](https://doi.org/10.5281/zenodo.7472380)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7472380.svg)](https://doi.org/10.5281/zenodo.7472380)
   - [Code](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)
