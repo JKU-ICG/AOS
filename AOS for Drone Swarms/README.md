@@ -7,8 +7,7 @@ This Weave ([FWF](https://www.fwf.ac.at/en/) & [DFG](https://www.dfg.de/en/index
 We demonstrate how efficient autonomous drone swarms can be in detecting and tracking occluded targets in dense forest, such as lost people during search and rescue missions. The exploration and optimization of local viewing conditions, like occlusion density and target view obliqueness, results in much faster and much more reliable findings compared to previous blind sampling strategies that are based on pre-defined waypoints. An adapted real-time particle swarm optimization and a new objective function are presented that are able to deal with dynamic and highly random through-foliage conditions. Synthetic aperture sensing is our fundamental sampling principle, while we apply drone swarms to approximate the optical signal of extremely wide and adaptable airborne lenses.
 Here we make the simulation code available that was used to compute the results presented in the article Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms.
 
-**Publication:** Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms, Nature Communications Engineering, (2023)
-  - [arXiv (pre-print)](https://arxiv.org/abs/2212.14692) 
+**Publication:** Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms, Nature Communications Engineering, (2023), [arXiv (pre-print)](https://arxiv.org/abs/2212.14692) 
 
 ![image](https://user-images.githubusercontent.com/83944465/209770734-9445a4e5-fb86-4074-953f-d58a67357e69.png)
 See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary. 
