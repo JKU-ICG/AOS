@@ -42,6 +42,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 06/01/23: **Additional research grants** for AOSonFire: Airborne Optical Sectioning for Early Wildfire Detection. In collaboration with Upper Austrian Fire Brigade Headquarters.
 - 04/24/2023: **AOS covered in April issues of [Drones Magazin](https://www.drones-magazin.de/) and [Drohnen Magazin](http://www.drohnenmagazin.com/)**
 - 03/29/2023: **AOS at [AERO Drones](https://www.aero-expo.de/themen-programm/aero-branchen/drohnen).** See AOS at AERODrones, Hall A2, Booth 113.
 - 03/01/2023: **New Weave (FWF&DFG) funded basic research project** on AOS for moving targets granted. In collaboration with German Aerospace Center (DLR) and Otto-von-Guericke University Magdeburg.
