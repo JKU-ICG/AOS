@@ -42,7 +42,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 08/3/23: **[Behind-the-paper story]([https://www.drones-magazin.de/](https://compscicommunity.springernature.com/posts/seeing-through-forest-with-drone-swarms))** of new Nature Com. Eng. article on AOS drone swarm strategies.
+- 08/3/23: **[Behind-the-paper story](https://compscicommunity.springernature.com/posts/seeing-through-forest-with-drone-swarms)** of new Nature Com. Eng. article on AOS drone swarm strategies.
 - 06/01/23: **Additional research grants** for AOSonFire: Airborne Optical Sectioning for Early Wildfire Detection. In collaboration with Upper Austrian Fire Brigade Headquarters.
 - 05/25/23: **Nature Communications Engineering** paper accepted. See [publications](#publications) (Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms)  
 - 04/24/2023: **AOS covered in April issues of [Drones Magazin](https://www.drones-magazin.de/) and [Drohnen Magazin](http://www.drohnenmagazin.com/)**
