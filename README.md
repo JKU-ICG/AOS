@@ -63,7 +63,9 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
-- Rakesh John Amala Arokia Nathan and Oliver Bimber, Synthetic Aperture Anomaly Imaging, under review, (2023)
+- Rakesh John Amala Arokia Nathan and Oliver Bimber, Synthetic Aperture Anomaly Imaging for Through-Foliage Target Detection, Remote Sensing, Volume 15, Number 18, (2023)
+  - [Remote Sensing (open access and online version)](https://www.mdpi.com/2072-4292/15/18/4369)
+  - [PDF Version (open access)](https://www.mdpi.com/2072-4292/15/18/4369/pdf) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2304.13590) 
   - [Data: ](https://doi.org/10.5281/zenodo.7867080)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7867080.svg)](https://doi.org/10.5281/zenodo.7867080)
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Drone swarm strategy for the detection and tracking of occluded targets in complex environments, Nature Communications Engineering 2, 55, https://doi.org/10.1038/s44172-023-00104-0, (2023)
