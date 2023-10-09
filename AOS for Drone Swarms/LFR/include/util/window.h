@@ -3,9 +3,9 @@
 #define WINDOW_H
 
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <glad/glad.h> // holds all OpenGL type declarations
 #define GLFW_INCLUDE_NONE
