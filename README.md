@@ -64,6 +64,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
+- Julia Pöschl, Adaptive Particle Swarm Optimization for through-foliage target detection with drone swarms (2023)
+  - [arXiv](http://arxiv.org/abs/2310.10320) 
 - Rakesh John Amala Arokia Nathan and Oliver Bimber, Synthetic Aperture Anomaly Imaging for Through-Foliage Target Detection, Remote Sensing, Volume 15, Number 18, (2023)
   - [Remote Sensing (open access and online version)](https://www.mdpi.com/2072-4292/15/18/4369)
   - [PDF Version (open access)](https://www.mdpi.com/2072-4292/15/18/4369/pdf) 
@@ -80,7 +82,6 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Eng (open access and online version)](https://www.mdpi.com/2673-4117/3/4/38) 
   - [PDF Version (open access)]( https://www.mdpi.com/2673-4117/3/4/38/pdf) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2211.04293) 
-  
 - Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Inverse Airborne Optical Sectioning, Drones, Volume 6, Number 9, (2022)
   - [Drones (open access and online version)](https://www.mdpi.com/2504-446X/6/9/231)
   - [arXiv (pre-print)](https://arxiv.org/abs/2207.13344) 
