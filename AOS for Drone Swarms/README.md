@@ -7,7 +7,7 @@ This Weave ([FWF](https://www.fwf.ac.at/en/) & [DFG](https://www.dfg.de/en/index
 We demonstrate how efficient autonomous drone swarms can be in detecting and tracking occluded targets in dense forest, such as lost people during search and rescue missions. The exploration and optimization of local viewing conditions, like occlusion density and target view obliqueness, results in much faster and much more reliable findings compared to previous blind sampling strategies that are based on pre-defined waypoints. An adapted real-time particle swarm optimization and a new objective function are presented that are able to deal with dynamic and highly random through-foliage conditions. Synthetic aperture sensing is our fundamental sampling principle, while we apply drone swarms to approximate the optical signal of extremely wide and adaptable airborne lenses.
 Here we make the simulation code available that was used to compute the results presented in the article Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms.
 
-**Publication:** Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms, Nature Communications Engineering, (2023), [arXiv (pre-print)](https://arxiv.org/abs/2212.14692) 
+**Publication:** Rakesh John Amala Arokia Nathan, Indrajit Kurmi and Oliver Bimber, Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms, Nature Communications Engineering, (2023), [Nature Com. Eng. (open access)](https://www.nature.com/articles/s44172-023-00104-0#:~:text=Our%20approach%20using%20autonomously%20exploring,or%20security%20threats%20during%20patrols.) 
 
 ![image](https://user-images.githubusercontent.com/83944465/209770734-9445a4e5-fb86-4074-953f-d58a67357e69.png)
 See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary. 
@@ -15,6 +15,7 @@ See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary.
 
 ## Install
 - [Visual studio code with Live Server extension](https://code.visualstudio.com/download)
+- [Visual studio - Desktop Development with C++](https://visualstudio.microsoft.com/downloads/)
 - [Python 3.7.9](https://www.python.org/downloads/release/python-379/)
 - Follow the instructions in [`/LFR/python/README`](./LFR/python/README.md) for the installation of Light-Field Renderer.
 
