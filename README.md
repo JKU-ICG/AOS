@@ -16,7 +16,7 @@ Please refer to:
 - **[AOS for DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**: Our DJI compatible AOS app.
 - **[AOS for Drone Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Our basic research on applying AOS to drone swarms.
 - **[AOS for Own Projects](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Own%20Projects)**: Source code supporting your own AOS projects.
-- **[AOS Simulation]([https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Own%20Projects](https://github.com/bostelma/gazebo_sim/tree/main))**: Latest Gazebo-based AOS simulator by Otto-von-Guericke-University Magdeburg. 
+- **[AOS Simulation](https://github.com/bostelma/gazebo_sim/tree/main)**: Latest Gazebo-based AOS simulator by Otto-von-Guericke-University Magdeburg. 
 
 This research is supported by variaty of [sponsors](#sponsors). See [news](#news) for latest updates.
 
