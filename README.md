@@ -42,7 +42,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 05/09/2023: **Synthetic Aperture Anomaly Imaging** published in J. Remote Sensing. See [publications](#publications)
+- 10/31/2023: **New research project AOSonFire** started (early wildfire detection using AOS). 
+- 09/05/2023: **Synthetic Aperture Anomaly Imaging** published in J. Remote Sensing. See [publications](#publications)
 - 08/3/23: **[Behind-the-paper story](https://compscicommunity.springernature.com/posts/seeing-through-forest-with-drone-swarms)** of new Nature Com. Eng. article on AOS drone swarm strategies.
 - 06/01/23: **Additional research grants** for AOSonFire: Airborne Optical Sectioning for Early Wildfire Detection. In collaboration with Upper Austrian Fire Brigade Headquarters.
 - 05/25/23: **Nature Communications Engineering** paper accepted. See [publications](#publications) (Synthetic Aperture Sensing for Occlusion Removal with Drone Swarms)  
