@@ -71,7 +71,7 @@ Start the simulator (/AOS-simulator/aos-simulation-master) using visual studio c
 ```
 
 ## ClientServer Infrastructure for DJI Swarm Communication and Control
-![image](https://user-images.githubusercontent.com/83944465/209770734-9445a4e5-fb86-4074-953f-d58a67357e69.png)
+![image](https://github.com/JKU-ICG/AOS/blob/stable_release/ClientServer.jpg)
 
 
 
