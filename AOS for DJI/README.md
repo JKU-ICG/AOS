@@ -18,7 +18,7 @@ FPV operaion with DJI M3T and AOS.
 
 New features: 
 
-- **Stereo-AOS**: First-person-view (FPV) stereoscopic AOS visualization supported (via stereoscopic HMDs attached to the remote controls). 
+- **FPV Stereoscopic Visualization**: First-person-view (FPV) stereoscopic AOS visualization supported (via stereoscopic HMDs attached to the remote controls). 
 - **New real-time AOS anomaly detection**: Instead of integrating images and applying anomaly detection to the integral, we now apply anomaly detection to single images and integrate the anomaly masks. This leads to much better and clearer detection results. A new GPU implementation of the RX anomaly detector supports real-time rates.
 - **Better control**: No soft-buttons or -sliders to be operated on the touch-screen are used anymore. Instead, all functionality of the app is mapped to hard-buttons and -sticks. This allows more robust control and supports first-person-view (FPV) flying by attaching goggles to the HDMI port of the smart controller.  
 - **Simplified user interface**: All unnecessary features were removed to support easy and intuitive operations.
