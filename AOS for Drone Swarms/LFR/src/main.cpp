@@ -205,7 +205,14 @@ int main(int argc, char** argv)
     // set the startup view
     camera.Position = lf->getPosition(currView);
     camera.Front = lf->getForward(currView);
-    camera.Up = lf->getUp(currView);
+    // RAKESH CHANGES
+
+    glm::vec3 newUpVector(0.0f, -1.0f, 0.0f); // Define the new up vector
+    camera.Up = glm::normalize(newUpVector);
+    //camera.Up = lf->getUp(currView);
+
+    // RAKESH CHANGES
+    
     
     // set startup DEM transformation
     lf->setDEMTransformation( glm::vec3(0,0,demTranslationZ), glm::vec3(0) );
@@ -280,7 +287,15 @@ int main(int argc, char** argv)
                         // jump to view!
                         camera.Position = lf->getPosition(currView);
                         camera.Front = lf->getForward(currView);
-                        camera.Up = lf->getUp(currView);
+
+			// RAKESH CHANGES
+
+                        glm::vec3 newUpVector(0.0f, -1.0f, 0.0f); // Define the new up vector
+                        camera.Up = glm::normalize(newUpVector);
+                        //camera.Up = lf->getUp(currView);
+                        
+                        // RAKESH CHANGES
+			    
                         //camera.updateYawPitch();
                     }
                     sprintf_s(buffer, 512, "[%c] pinhole", pinholeActive ? 'x' : ' ');
