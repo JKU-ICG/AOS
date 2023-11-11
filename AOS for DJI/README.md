@@ -83,6 +83,7 @@ Versions:
 - **v3.3:** supports zoom camera in flight mode
 - **v3.4:** added GUI elements
 - **v3.5:** network RTK integrated
+- **v3.6:** supports stereoscopic viewing and communication with ground stations
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
