@@ -32,6 +32,10 @@ In Progress:
 - **DEM integration**: Automatic loading of digital elevation models (DEM) and alignment of the focal plane based on the DEM.  
 - **Automatic Person Classification**: Using [our deep learning model](https://www.nature.com/articles/s42256-020-00261-3.epdf?sharing_token=CkVF30c-ohDFg7Bfz7vbXNRgN0jAjWel9jnR3ZoTv0Njw2M16sXA0c1i0-K0I8hyWAyPHw0VoEqSzrkBwYYyW6fhTSE6UR1hLVXodIJxrUXLGCuefrcgODgq7zmQeEDTqcs5bDAPpwteMKEXPcztPtUexI1JTEkxXmS4opWo-LA%3D) for automatically identifying persons in integral images.  
 
+<p align="center">
+  <img src="https://github.com/JKU-ICG/AOS/blob/stable_release/img/AOS_modes.jpg />
+</p>
+   
 ![modes](https://github.com/JKU-ICG/AOS/blob/stable_release/img/AOS_modes.jpg)
 
 Modes of operation (v3.6).
