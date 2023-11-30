@@ -78,8 +78,8 @@ Common process of operation (see also video above, with several scanning example
 
 Compatibility:
 
-- **Tested DJI drones:** Mavic 3T Enterprise <br />
-- **Tested DJI smart controller:** DJI RC Pro Enterprise (Android 10.0) <br />
+- **Tested DJI drones:** Mavic 3T and 30T Enterprise <br />
+- **Tested DJI smart controller:** DJI RC Pro and Plus Enterprise (Android 10.0) <br />
 
 Versions:
 
