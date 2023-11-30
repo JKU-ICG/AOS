@@ -14,7 +14,7 @@ FPV operaion with DJI M3T and AOS.
 
 **Note:** Before installing the app on the RC previous versions of it must be uninstalled and the RC must be online to receive a new DJI key. Before staring the app, the drone must be ready (wait a bit after turning it on) and all other apps that could connect to the drone (e.g., DJI Pilot or other third-party apps) must be forcefully stopped (see description at the bottom [here](https://developer.dji.com/doc/mobile-sdk-tutorial/en/quick-start/run-sample.html)). But usually chosing "close all" in the running apps list will do it also.
 
-
+We support **DJI M3T** and **DJI M30T**. A video on how to use the AOS app on a DJI M30T is [here](https://youtu.be/sdT-qeMPIh4) (see also instructions below).
 
 New features: 
 
