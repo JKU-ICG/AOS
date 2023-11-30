@@ -36,7 +36,8 @@ In Progress:
   <img src="https://github.com/JKU-ICG/AOS/blob/stable_release/img/AOS_modes.jpg"/>
 </p>
 
-<h0 align="center"> Modes of operation (v3.6).</h0>
+<h2 align="center">Modes of operation (v3.6).</h2>
+
 
   
 
