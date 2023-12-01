@@ -67,7 +67,10 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
-- Robert Kerschner, Rakesh John Amala Arokia Nathan, Rafal Mantiuk, Oliver Bimber, Stereoscopic Depth Perception Through Foliage (2023)
+- Mohamed Youssef and Oliver Bimber, Fusion of Single and Integral Multispectral Aerial Images, under review (2023)
+  - [arXiv (pre-print)](https://arxiv.org/abs/2311.17515)
+  - [Data ans Code: ](https://zenodo.org/records/10210035) 
+- Robert Kerschner, Rakesh John Amala Arokia Nathan, Rafal Mantiuk, Oliver Bimber, Stereoscopic Depth Perception Through Foliage, under review (2023)
   - [arXiv](https://arxiv.org/abs/2310.16120)   
 - Julia Pöschl, Adaptive Particle Swarm Optimization for through-foliage target detection with drone swarms (2023)
   - [arXiv](http://arxiv.org/abs/2310.10320) 
