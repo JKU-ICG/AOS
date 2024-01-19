@@ -78,7 +78,10 @@ We have developed our own client-server infrastructure for controlling our swarm
 
 A map visulaization module can be connected to the server for real-time mapping of the swarm (drones' positions, heading, telemetry, and video data). A digital zoom extends the limited zoom capabilities of conventional map services. Here is a simple live recording of only three drones (note that the screen recording is downsampled to low spatial and temporal resolution): 
 
-https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be
+<p align="center">
+  https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be
+</p>
+
 
 
 
