@@ -43,6 +43,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 12/25/2023: **DL-based fusion of AOS integral and conventional images**: See [publications](#publications)
 - 11/9/2023: **Stereoscopic AOS**: First-person-view (FPV) stereoscopic AOS visualization supported for [DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI) (via stereoscopic HMDs attached to the remote controls). 
 - 10/31/2023: **New research project AOSonFire** started (early wildfire detection using AOS). Together with Upper Austrian Fire Brigade Headquarters. 
 - 09/05/2023: **Synthetic Aperture Anomaly Imaging** published in J. Remote Sensing. See [publications](#publications)
