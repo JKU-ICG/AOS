@@ -74,7 +74,7 @@ Start the simulator (/AOS-simulator/aos-simulation-master) using visual studio c
 
 We have developed our own client-server infrastructure for controlling our swarm (currently based on DIJ Mavic 3T). Real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms.     
 
-![image](https://github.com/JKU-ICG/AOS/blob/stable_release/ClientServer.jpg)
+![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer.jpg)
 
 
 
