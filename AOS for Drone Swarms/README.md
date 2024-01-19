@@ -74,7 +74,7 @@ Start the simulator (/AOS-simulator/aos-simulation-master) using visual studio c
 
 We have developed our own client-server infrastructure for controlling our swarm (currently based on DIJ Mavic 3T). Real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms.     
 
-![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer.jpg)
+![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
 
 A map visulaization module can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. Here is a simple live recording of only three drones (note that the screen recording is downsampled to low spatial and temporal resolution): 
 
