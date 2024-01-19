@@ -72,11 +72,11 @@ Start the simulator (/AOS-simulator/aos-simulation-master) using visual studio c
 
 ## Client-Server Infrastructure for DJI Swarm Communication and Control
 
-We have developed our own client-server infrastructure for controlling our swarm (currently based on DIJ Mavic 3T). Real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms.     
+We have developed our own client-server infrastructure (contributed by Daniel Mehrwald) for controlling our swarm (currently based on DIJ Mavic 3T). Real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms.     
 
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
 
-A map visulaization module can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. Here is a simple live recording of only three drones (note that the screen recording is downsampled to low spatial and temporal resolution): 
+A map visulaization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. Here is a simple live recording of only three drones (note that the screen recording is downsampled to low spatial and temporal resolution): 
 
 <div align="center">
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
