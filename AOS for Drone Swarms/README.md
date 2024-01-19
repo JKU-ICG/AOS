@@ -76,5 +76,7 @@ We have developed our own client-server infrastructure for controlling our swarm
 
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer.jpg)
 
+https://github.com/JKU-ICG/AOS/blob/stable_release/img/map_1.mp4
+
 
 
