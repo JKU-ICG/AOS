@@ -82,7 +82,7 @@ A map visulaization module can be connected to the server for real-time mapping 
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
 </div>
 
-The AOS module implements swarm sampling (currently with our modified particle swarm optimization approach, as explained above [Nature Com. Eng. (open access)](https://www.nature.com/articles/s44172-023-00104-0#:~:text=Our%20approach%20using%20autonomously%20exploring,or%20security%20threats%20during%20patrols.)). A waypoint mission planning module is in preperation. In contrast to the AOS module, it will allow interactive waypoint planning on a map for AOS sampling.  
+The AOS module implements swarm sampling (currently with our modified particle swarm optimization approach, as explained above [Nature Com. Eng. (open access)](https://www.nature.com/articles/s44172-023-00104-0#:~:text=Our%20approach%20using%20autonomously%20exploring,or%20security%20threats%20during%20patrols.). A waypoint mission planning module is in preperation. In contrast to the AOS module, it will allow interactive waypoint planning on a map for AOS sampling.  
 
 
 
