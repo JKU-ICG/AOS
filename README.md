@@ -75,7 +75,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Data ans Code: ](https://zenodo.org/records/10210035)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10210035.svg)](https://doi.org/10.5281/zenodo.10210035)
 - Robert Kerschner, Rakesh John Amala Arokia Nathan, Rafal Mantiuk, Oliver Bimber, Stereoscopic Depth Perception Through Foliage, under review (2023)
   - [arXiv](https://arxiv.org/abs/2310.16120)
-  -[Data ans Code: ](https://zenodo.org/records/8423145)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8423145.svg)](https://doi.org/10.5281/zenodo.8423145)
+  - [Data ans Code: ](https://zenodo.org/records/8423145)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8423145.svg)](https://doi.org/10.5281/zenodo.8423145)
 - Julia Pöschl, Adaptive Particle Swarm Optimization for through-foliage target detection with drone swarms (2023)
   - [arXiv](http://arxiv.org/abs/2310.10320) 
 - Rakesh John Amala Arokia Nathan and Oliver Bimber, Synthetic Aperture Anomaly Imaging for Through-Foliage Target Detection, Remote Sensing, Volume 15, Number 18, (2023)
