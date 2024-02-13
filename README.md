@@ -70,6 +70,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
+- Rakesh John Amala Arokia Nathan, Sigrid Strand, Dmitriy Shutin, Oliver Bimber, Reciprocal Visibility, under review (2024)
+  - [arXiv (pre-print)](https://arxiv.org/abs/2402.06991)
 - Mohamed Youssef and Oliver Bimber, Fusion of Single and Integral Multispectral Aerial Images, under review (2023)
   - [arXiv (pre-print)](https://arxiv.org/abs/2311.17515)
   - [Data and Code: ](https://zenodo.org/records/10210035)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10210035.svg)](https://doi.org/10.5281/zenodo.10210035)
