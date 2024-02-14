@@ -73,7 +73,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Publications
 - Rakesh John Amala Arokia Nathan, Sigrid Strand, Dmitriy Shutin, Oliver Bimber, Reciprocal Visibility, under review (2024)
   - [arXiv (pre-print)](https://arxiv.org/abs/2402.06991)
-- Mohamed Youssef and Oliver Bimber, Fusion of Single and Integral Multispectral Aerial Images, J. Remote Sens., 16(4), 673, (2024)
+- Mohamed Youssef and Oliver Bimber, Fusion of Single and Integral Multispectral Aerial Images, Remote Sens., 16(4), 673, (2024)
   - [Remote Sensing (open access and online version)](https://www.mdpi.com/2072-4292/16/4/673)
   - [PDF Version (open access)](https://www.mdpi.com/2072-4292/16/4/673/pdf) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2311.17515)
