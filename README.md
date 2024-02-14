@@ -43,6 +43,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 2/14/2024: **New image fusion approach presented**: See [publications](#publications)
 - 1/19/2024: **Real-time map visualization of swarms**: See [AOS for Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)
 - 12/25/2023: **DL-based fusion of multispectral integral and single images**: See [publications](#publications)
 - 11/9/2023: **Stereoscopic AOS**: First-person-view (FPV) stereoscopic AOS visualization supported for [DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI) (via stereoscopic HMDs attached to the remote controls).
