@@ -11,6 +11,7 @@ In 2022, a team of the Otto-von-Guericke-University Magdeburg re-implented the f
 - Lukas Bostelmann-Arp, Christoph Steup, and Mostaghim
   - [Gazebo-based AOS simulator](https://github.com/bostelma/gazebo_sim/tree/main)
  
-The Gazebo-based simulator was later used for the generation of training data to support machine learing architectures, such as for AOS image restoration.  
+The Gazebo-based AOS simulator was later used for the generation of training data to support machine learing architectures, such as for AOS image restoration. Available simulated training datasets are:
+- [Image Restoration](https://drive.google.com/drive/folders/1UC6sGGWkRpJjqyYOnqByaa_mxeucFmqJ): 33.000 simulations with random 100 trees/ha and 200 trees/ha and random person figure poses and positions. 
 
 
