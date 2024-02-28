@@ -13,10 +13,10 @@ This repository contains software modules for drone-based search and rescue appl
 
 Please refer to:
 
+- **[AOS Simulation](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Simulation)**: Several options for simulating AOS and pre-computed simulated training data. 
 - **[AOS for DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**: Our DJI compatible AOS app.
 - **[AOS for Drone Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Our basic research on applying AOS to drone swarms.
 - **[AOS for Own Projects](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Own%20Projects)**: Source code supporting your own AOS projects.
-- **[AOS Simulation](https://github.com/bostelma/gazebo_sim/tree/main)**: Latest Gazebo-based AOS simulator by Otto-von-Guericke-University Magdeburg. 
 
 This research is supported by variaty of [sponsors](#sponsors). See [news](#news) for latest updates.
 
