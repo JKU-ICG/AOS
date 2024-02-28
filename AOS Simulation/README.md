@@ -9,6 +9,6 @@ A first version of our AOS simulator was implemented by Francis Seits in 2022. I
 
 In 2022, Lukas Bostelmann-Arp and team of the Otto-von-Guericke-University Magdeburg re-implented the first simulator version in Gazebo in 2023. It became significantly faster and offered several additional options, such as therma camera and depth camera simulation. 
 
-- **[Gazebo-based AOS simulator by Otto-von-Guericke-University Magdeburg](https://github.com/bostelma/gazebo_sim/tree/main)** 
+- [Gazebo-based AOS simulator by Otto-von-Guericke-University Magdeburg](https://github.com/bostelma/gazebo_sim/tree/main) 
 
 
