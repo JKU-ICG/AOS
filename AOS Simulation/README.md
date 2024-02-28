@@ -7,8 +7,8 @@ A first version of our AOS simulator was implemented by Francis Seits in 2022. I
   - [simulator](https://aos.tensorware.app)
   - [code](https://github.com/tensorware/aos-simulation)
 
-In 2022, Lukas Bostelmann-Arp and team of the Otto-von-Guericke-University Magdeburg re-implented the first simulator version in Gazebo in 2023. It became significantly faster and offered several additional options, such as therma camera and depth camera simulation. 
-
-- [Gazebo-based AOS simulator by Otto-von-Guericke-University Magdeburg](https://github.com/bostelma/gazebo_sim/tree/main) 
+In 2022, a team of the Otto-von-Guericke-University Magdeburg re-implented the first simulator version in Gazebo in 2023. It became significantly faster and offered several additional options, such as thermal camera and depth camera simulation. 
+- Lukas Bostelmann-Arp, Christoph Steup, and Mostaghim
+  - [Gazebo-based AOS simulator by Otto-von-Guericke-University Magdeburg](https://github.com/bostelma/gazebo_sim/tree/main) 
 
 
