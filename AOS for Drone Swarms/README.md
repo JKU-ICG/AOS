@@ -82,9 +82,7 @@ A map visulaization module (contributed by Patrick Sack) can be connected to the
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
 </div>
 
-The AOS module implements swarm sampling (currently with our modified particle swarm optimization approach, as explained above [Nature Com. Eng. (open access)](https://www.nature.com/articles/s44172-023-00104-0#:~:text=Our%20approach%20using%20autonomously%20exploring,or%20security%20threats%20during%20patrols.). A waypoint mission planning module is in preperation. In contrast to the AOS module, it will allow interactive waypoint planning on a map for AOS sampling.  
-
-The AOS module currently implements what has been simulated in [Nature Com. Eng. (open access)](https://www.nature.com/articles/s44172-023-00104-0#:~:text=Our%20approach%20using%20autonomously%20exploring,or%20security%20threats%20during%20patrols.).  
+The AOS module implements the autonomous swarm sampling (currently with our modified particle swarm optimization approach, as explained above [Nature Com. Eng. (open access)](https://www.nature.com/articles/s44172-023-00104-0#:~:text=Our%20approach%20using%20autonomously%20exploring,or%20security%20threats%20during%20patrols.). A waypoint mission planning module is in preperation. In contrast to the autonomous AOS module, it will allow interactive waypoint planning on a map for AOS sampling. It will support planning for single drones as well as swarms.  
 
 Our mobile server equipment (provided by the German Aerospace Center, DLR) can drive 10 platforms in real-time (downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data). It consists of a high end PC (5.8GHz Intel i9-13900KF processor (24 cores), 24GB Nvidia Geforce RTX 4090 OC GPU, 64GB RAM), a 16x Gigabit switch for fast internal data transmission between remote controllers, PC, and a router. The router connects to an external 5G link for networked RTK data transmission. The Bosch power 1500 profi battery ensures power supply in the field for approximatly 10 hours.  
 
