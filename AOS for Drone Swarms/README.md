@@ -88,6 +88,6 @@ Our mobile server equipment (provided by the German Aerospace Center, DLR) can d
 
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/mobile_setup.jpg)
 
-## Client-Server Infrastructure for DJI Swarm Communication and Control
+## Field Experiments
 
 Coming soon...
