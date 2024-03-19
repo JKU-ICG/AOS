@@ -43,6 +43,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 3/19/2024: **Waypoint planning for swarms**: See [AOS for Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)
 - 3/8/2024: **AOS on TV**: [Marys Magazin (ORF2, ARD Aplha)](https://www.ardmediathek.de/video/mayrs-magazin-wissen-fuer-alle/mayrs-magazin-wissen-fuer-alle/ard-alpha/Y3JpZDovL2JyLmRlL3ZpZGVvLzA0YWE3ZDM0LTQzYzUtNDk3MS1hNjE4LTZjOGM5MDE3NmRkNA).
 - 2/29/2024: **Simulated AOS training data made available**: See [AOS Simulation](https://github.com/JKU-ICG/AOS/blob/stable_release/AOS%20Simulation)
 - 2/14/2024: **New image fusion approach presented (with first results on wildfire monitoring)**: See [publications](#publications)
