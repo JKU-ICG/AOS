@@ -85,7 +85,7 @@ A map visulaization module (contributed by Patrick Sack) can be connected to the
 The AOS module implements the autonomous swarm sampling (currently with our modified particle swarm optimization approach, as explained above [Nature Com. Eng. (open access)](https://www.nature.com/articles/s44172-023-00104-0#:~:text=Our%20approach%20using%20autonomously%20exploring,or%20security%20threats%20during%20patrols.). A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning on a map for AOS sampling. It supports planning for single drones as well as swarms - including collision inspection over flight time.  
 
 <div align="center">
-	<video src="[https://github.com/JKU-ICG/AOS/assets/83944465/638368ed-0f29-406d-9556-48dfae8c13a3](https://github.com/JKU-ICG/AOS/assets/83944465/59dcd9f3-b1bc-45f2-a467-3f46b0d61bf3)" width="400" />
+	<video src="https://github.com/JKU-ICG/AOS/assets/83944465/dd64a1d8-44ad-423e-b650-0843ac04bb39" width="400" />
 </div>
 
 Our autarkic and mobile ground station (components provided by the German Aerospace Center, DLR) can drive 10 platforms in real-time (downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data). It consists of a high end PC (5.8GHz Intel i9-13900KF processor (24 cores), 24GB Nvidia Geforce RTX 4090 OC GPU, 64GB RAM), a 16x Gigabit switch for fast internal data transmission between remote controllers, PC, and an external 5G link for networked RTK data transmission. The Bosch power 1500 profi battery ensures power supply in the field for approximatly 10 hours.  
