@@ -2,7 +2,7 @@
 
 The following links summarize sources of real and simulated data:  
 
-- [Sumulated AOS training datasets for image restoration](https://drive.google.com/drive/folders/1UC6sGGWkRpJjqyYOnqByaa_mxeucFmqJ): 33.000 simulations with random 100 trees/ha and 200 trees/ha, person poses and positions, sun light angles, environment  temperatures ([details](https://drive.google.com/file/d/1uOETHrtqDaO0xSOuTF-BduyRNrNKvWNs/view?usp=drive_link)). 
+- [Sumulated AOS training datasets for person classification and image restoration](https://drive.google.com/drive/folders/1UC6sGGWkRpJjqyYOnqByaa_mxeucFmqJ): 33.000 simulations with random 100 trees/ha and 200 trees/ha, person poses and positions, sun light angles, environment  temperatures ([details](https://drive.google.com/file/d/1uOETHrtqDaO0xSOuTF-BduyRNrNKvWNs/view?usp=drive_link)). 
 
 
 
