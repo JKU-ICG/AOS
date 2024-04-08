@@ -14,7 +14,5 @@ The following links summarize sources of real and simulated data:
 - [Real Data for Autonomous Person Classification: ](https://doi.org/10.5281/zenodo.4349220) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4349220.svg)](https://doi.org/10.5281/zenodo.4349220)
 - [Real Data for Person Classification with AOS: ](https://doi.org/10.5281/zenodo.3894773) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3894773.svg)](https://doi.org/10.5281/zenodo.3894773)
 - [Supporting RGB and Thermal Integral Image Dataset (for Person Classification with AOS): ](https://doi.org/10.5281/zenodo.6382373) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6382373.svg)](https://doi.org/10.5281/zenodo.6382373)
-- 
-
-
+- [Real Data for Nesting Observation with AOS.](https://figshare.com/ articles/Data_Airborne_Optical_Sectioning_for_Nesting_Observation/11836296)
 
