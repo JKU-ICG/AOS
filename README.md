@@ -13,7 +13,7 @@ This repository contains software modules for drone-based search and rescue appl
 
 Please refer to:
 
-- **[AOS Data](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Data)**: Sources of simulated an real AOS data. 
+- **[AOS Data](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Data)**: Summarized sources of simulated an real AOS data. 
 - **[AOS Simulation](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Simulation)**: Several options for simulating AOS and pre-computed simulated training data. 
 - **[AOS for DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**: Our DJI compatible AOS app.
 - **[AOS for Drone Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Our basic research on applying AOS to drone swarms.
