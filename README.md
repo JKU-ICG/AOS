@@ -38,7 +38,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Sponsors and Collaborators
 - Austrian Science Funds (FWF)
 - German Science Funds (DFG)
-- State of Upper Austria (OÖ), Nationalstiftung für Forschung, Technologie und Entwicklung (FTE)
+- State of Upper Austria (OÖ)
+- Nationalstiftung für Forschung, Technologie und Entwicklung (FTE)
 - Linz Institute of Technology (LIT)
 - German Aerospace Center (DLR)
 - Upper Austrian Fire Brigade Association (OÖLFV)
