@@ -38,10 +38,10 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Sponsors and Collaborators
 - Austrian Science Funds (FWF)
 - German Science Funds (DFG)
-- State of Upper Austria, Nationalstiftung für Forschung, Technologie und Entwicklung
+- State of Upper Austria (OÖ), Nationalstiftung für Forschung, Technologie und Entwicklung (FTE)
 - Linz Institute of Technology (LIT)
 - German Aerospace Center (DLR)
-- Upper Austrian Fire Brigade Headquarters 
+- Upper Austrian Fire Brigade (OÖLFV)
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
