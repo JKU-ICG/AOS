@@ -35,11 +35,12 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 <br />Web: www.jku.at/cg 
 <br />Email: oliver.bimber@jku.at
 
-## Sponsors
+## Sponsors and Collaborators
 - Austrian Science Funds (FWF)
 - German Science Funds (DFG)
 - State of Upper Austria, Nationalstiftung für Forschung, Technologie und Entwicklung
-- Linz Institute of Technology (LIT) 
+- Linz Institute of Technology (LIT)
+- German Aerospace Center (DLR)
 - Upper Austrian Fire Brigade Headquarters 
 - Federal Office of Metrology and Surveying (BEV)
 
