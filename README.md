@@ -41,7 +41,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - State of Upper Austria (OÖ), Nationalstiftung für Forschung, Technologie und Entwicklung (FTE)
 - Linz Institute of Technology (LIT)
 - German Aerospace Center (DLR)
-- Upper Austrian Fire Brigade (OÖLFV)
+- Upper Austrian Fire Brigade Association (OÖLFV)
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
