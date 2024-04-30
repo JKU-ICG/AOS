@@ -95,3 +95,5 @@ Our autarkic and mobile ground station (components provided by the German Aerosp
 ## Field Experiments
 
 Coming soon...
+
+[![Everything Is AWESOME](https://github.com/JKU-ICG/AOS/blob/stable_release/img/First_Field_Experiments_Poecking.png)](https://www.youtube.com/watch?v=uiMJt6otmSQ "Everything Is AWESOME")
