@@ -76,7 +76,7 @@ We have developed our own client-server infrastructure (contributed by Daniel Me
 
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
 
-A map visulaization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. Here is a simple live recording of only three drones (note that the screen recording is downsampled to low spatial and temporal resolution): 
+A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. Here is a simple live recording of only three drones (note that the screen recording is downsampled to low spatial and temporal resolution): 
 
 <div align="center">
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
