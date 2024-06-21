@@ -97,6 +97,5 @@ Our autarkic and mobile ground station (components provided by the German Aerosp
 First field experiments with a swarm of 6 DJI Mavic 3T drones have been carried out together with the German Aearospace Center (DLR) on 26.-28.4.2024 at a military site (General-Fellgiebel-Kaserne, Pöcking) near lake Starnberg. Due to hot temperatures of 23 degrees in shade (much higher in areas of direct sunlight reflection, such as open ground spots and tree canopy), person tracking in forest with thermal imaging was not feasible. Instead, anomaly detection was applied to RGB images (instead of thermal images) and a car was tracked. The car was limited to driving on forest paths. Since occlusion was limited, we consider this experiment an open field case. Yet, all drones operated fully autonomously using  our adapted real-time particle swarm optimization in combination with AOS, and the the above-described soft- and hardware system. See [Video](https://www.youtube.com/watch?v=uiMJt6otmSQ).       
 
 [![Swarm Open Field](https://github.com/JKU-ICG/AOS/blob/stable_release/img/First_Field_Experiments_Poecking.png)](https://www.youtube.com/watch?v=uiMJt6otmSQ "Swarm Open Field")
-See 
 
 A summary of all field experiments and an evaluation of the detection and tracking precision can be found **[here](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)**.
