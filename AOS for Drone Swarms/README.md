@@ -100,4 +100,6 @@ First field experiments with a swarm of 6 DJI Mavic 3T drones have been carried 
 
 A summary of all field experiments and an evaluation of the detection and tracking precision can be found **[here](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)**.
 
+## Software
+
 Our AOS groundstation (the software architecture explained above) is available **[here](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)**. 
