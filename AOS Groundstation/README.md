@@ -5,6 +5,11 @@ For our swarm implementation, we present [a complete hard- and software framewor
 - **[AOS for DJI app](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**: Our DJI app to be installed on the remote controller.
 - **[AOS server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Server for video, telemetry, and waypoint streaming to be installed on a Windows PC.
 - **[AOS map visualization](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Visualization module for real-time drone mapping in a webbrowser.
-- **[AOS waypoint planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Module for waypoint mission planning in a webbrowser. 
+- **[AOS waypoint planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Module for waypoint mission planning in a webbrowser.
 
+## Installation
+Coming soon...
+
+## Usage
+Coming soon...
 
