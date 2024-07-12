@@ -99,3 +99,5 @@ First field experiments with a swarm of 6 DJI Mavic 3T drones have been carried 
 [![Swarm Open Field](https://github.com/JKU-ICG/AOS/blob/stable_release/img/First_Field_Experiments_Poecking.png)](https://www.youtube.com/watch?v=uiMJt6otmSQ "Swarm Open Field")
 
 A summary of all field experiments and an evaluation of the detection and tracking precision can be found **[here](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)**.
+
+Our AOS groundstation (the software archtecture explained abobe) is available **[here](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)**. 
