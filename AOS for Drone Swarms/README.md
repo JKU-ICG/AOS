@@ -70,7 +70,12 @@ Start the simulator (/AOS-simulator/aos-simulation-master) using visual studio c
 }
 ```
 
-## Client-Server Infrastructure for DJI Swarm Communication and Control
+## An Autonomous Drone Swarm for Detecting and Tracking Anomalies in Dense Vegetation
+
+Swarms of drones offer an increased sensing aperture, and by mimicking the behavior observed in natural swarms allows adapting the aperture to local conditions for enhanceding sampling. Here, we demonstrate that such an approach makes detecting and tracking heavily occluded targets is feasible in practice with such an approach. While object classification applied to conventional aerial images cannot generalize well the randomness of occlusion and is therefore inefficient even under sparse conditions, anomaly detection applied to synthetic aperture integral images is robust for dense vegetation, such as forest, and independent of pre-trained classes. Our autonomous swarm searchesexplores the environment for unknown or unexpected appearances and tracks them while continuously adapting its sampling pattern to optimize for local viewing conditions. In our real-life field experiments with a swarm of six drones, we achieved an average positional accuracy of 0.39 m with an average precision 93.2% and an average recall of 95.9%. Here, adapted particle swarm optimization considers detection confidences and predicted target appearance. We show that sensor noise can be effectively included effectively in the synthetic aperture image integration process without a computationally costly optimization of high-dimensional parameter spaces. Finally, we present a complete hard- and software framework that supports low-latency transmission (approx. 80 ms round-trip-time) and fast processing (approx, 600 ms per formation step) of extensive (70-120 Mbits/s) video and telemetry data, and swarm control for swarms of up to ten drones.
+
+
+### Client-Server Infrastructure for DJI Swarm Communication and Control
 
 We have developed our own client-server infrastructure (contributed by Daniel Mehrwald) for controlling our swarm (currently based on DIJ Mavic 3T). Real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms.     
 
@@ -92,13 +97,13 @@ Our autarkic and mobile ground station (components provided by the German Aerosp
 
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/mobile_setup.jpg)
 
-## Field Experiments
+### Field Experiments
 
 First field experiments with a swarm of 6 DJI Mavic 3T drones have been carried out together with the German Aearospace Center (DLR) All drones operated fully autonomously using our adapted real-time particle swarm optimization in combination with AOS, and the the above-described soft- and hardware system. A summary of all field experiments and an evaluation of the detection and tracking precision can be found **[here](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)**.       
 
 [![Swarm Open Field](https://github.com/JKU-ICG/AOS/blob/stable_release/img/First_Field_Experiments_Poecking.png)](https://www.youtube.com/watch?v=uiMJt6otmSQ "Swarm Open Field")
 
 
-## Software
+### Software
 
 Our AOS groundstation (the software architecture explained above) is available **[here](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)**. 
