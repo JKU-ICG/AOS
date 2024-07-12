@@ -13,7 +13,7 @@ Here we make the simulation code available that was used to compute the results 
 See **[Video Abstract](https://youtu.be/nb0K7n03qFU)** for a summary. 
 
 
-## Install
+### Install
 - [Visual studio code with Live Server extension](https://code.visualstudio.com/download)
 - [Visual studio - Desktop Development with C++](https://visualstudio.microsoft.com/downloads/)
 - [Python 3.7.9](https://www.python.org/downloads/release/python-379/)
@@ -51,7 +51,7 @@ emptyblobthreshold = 0.0   # T
 ```
 Run the sections in droneswarms.ipynb after starting the simulator with set parameters.
 
-## AOS-Simulator
+### AOS-Simulator
 
 The simulation is based on three.js and runs on all major platforms and web browsers.
 Start the simulator (/AOS-simulator/aos-simulation-master) using visual studio code. Select Go Live from the status bar to turn the server on/off.
