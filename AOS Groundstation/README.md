@@ -10,6 +10,6 @@ For our swarm implementation, we present [a complete hard- and software framewor
 ## Installation
 Coming soon...
 
-## Usage
+## How to use it
 Coming soon...
 
