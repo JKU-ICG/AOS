@@ -18,6 +18,7 @@ Please refer to:
 - **[AOS for DJI](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**: Our DJI compatible AOS app.
 - **[AOS for Drone Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Our basic research on applying AOS to drone swarms.
 - **[AOS for Own Projects](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Own%20Projects)**: Source code supporting your own AOS projects.
+- **[AOS Groundstation](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)**: Software to operate single or multiple drones from a PC.
 
 This research is supported by variaty of [sponsors](#sponsors). See [news](#news) for latest updates.
 
