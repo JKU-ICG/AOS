@@ -85,6 +85,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Rakesh John Amala Arokia Nathan, Sigrid Strand, Daniel, Mehrwald, Dmitriy Shutin, Oliver Bimber, An Autonomous Drone Swarm for Detecting and Tracking Anomalies among Dense Vegetation, under review (2024)
   - [arXiv (pre-print)](https://arxiv.org/abs/2407.10754)
   - [Video Abstract](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)
+  - [Data: ](https://doi.org/10.5281/zenodo.12720784)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12720784.svg)](https://doi.org/10.5281/zenodo.12720784)
 - Rakesh John Amala Arokia Nathan, Sigrid Strand, Dmitriy Shutin, Oliver Bimber, Reciprocal Visibility, under review (2024)
   - [arXiv (pre-print)](https://arxiv.org/abs/2402.06991)
 - Mohamed Youssef and Oliver Bimber, Fusion of Single and Integral Multispectral Aerial Images, Remote Sens., 16(4), 673, (2024)
