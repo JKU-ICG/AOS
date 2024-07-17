@@ -7,6 +7,8 @@ For our swarm implementation, we present [a complete hard- and software framewor
 - **[AOS Map Visualization](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Visualization module for real-time drone mapping in a webbrowser.
 - **[AOS Waypoint Planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Module for waypoint mission planning in a webbrowser.
 
+![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
+
 ## Download
 Coming soon...
 
