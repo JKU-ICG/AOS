@@ -23,6 +23,13 @@ Coming soon...
 ### AOS Map Visualization
 
 ### AOS Waypoint Planning
+- Add waypoints to the map by left click in the map.
+- To move a waypoint to a new positions, you can drag and drop the marker by a left mouse click.
+- Removing waypoints works by selecting a waypoint with a left mouse click on the marker and use the "remove waypoint" button. You can also remove a waypoint by a right clicking on the marker.
+- Input parameters are taken over from previous waypoints by default, except the for GPS coordinates.
+- Changes for a waypoint must be submitted by clicking on the "update waypoint" button.
+- The data can be send to the server by using the "send waypoints to server" button.
+- Only latest missions are stored. They can be loaded when no new mission is planned by clicking on "send waypoints to server".
 
 ## License
 * Data: Creative Commons Attribution 4.0 International
