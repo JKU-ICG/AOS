@@ -31,7 +31,16 @@ Basics on how to use and install our DJI compatible app on the remote controller
 ### AOS Server
 Our client-server infrastructure (contributed by Daniel Mehrwald) supports real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms. It runs on a Windows PC with sufficient GPU power (we use an Nvidia RTX 4090). 
 
-- XXX
+- Ensure that the Windows PC and all drones are connected to the same network.
+- Navigate to the **Scan Network for Connected Drones** section.
+- Click on the **Scan** button. This will display a list of active IP addresses on the network.
+- Select the IP address of the active remote controllers from the list and click on the **SendTo** button.
+- Go to the **Drone Connection/Live Video Stream** section and select **Connect**.
+- Press the **record** (top-side, left): on the remote controller twice to initialize the connection.
+- For connecting to additional drones, use the **Drone Nr arrow** button to switch to the next drone.
+- Repeat the connecting, and initialization steps for each drone.
+- By default, hardware decoding (**hevc_cuvid**) is enabled. If your PC does not have a GPU, change to software decoding (**hevc**) in the **select decoder** menu before selcecting **Connect**
+
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/9416c325-0cec-423e-b1b0-bcf0eb463706" width="400" />
