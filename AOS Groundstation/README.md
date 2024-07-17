@@ -28,6 +28,7 @@ Basics on how to use and install our DJI compatible app on the remote controller
 - Upon completion of the waypoint flight, press the **shutter button** (top-side, right) to disable virtual stick mode and regain manual control of the drone using the remote controller.
   
 **Manual usage of the app**
+
 **Note:** Manual usage of the app is restricted by default. Follow these steps to enable this feature.
   - In the settings menu, select the **AOS Scan** toggle button (default state is OFF) to display the serial number of the remote controller.
   - Send an email containing the serial number of your remote controller to request an RC-individual keycode.
