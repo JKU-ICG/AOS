@@ -35,7 +35,7 @@ In Progress:
 <p align="center">
   <img src="https://github.com/JKU-ICG/AOS/blob/stable_release/img/AOS_modes.jpg"/>
 </p>
-<h3 align="center">Modes of operation (v3.6).</h3>
+<h3 align="center">Modes of operation (v3.7).</h3>
 
   
 
@@ -90,6 +90,7 @@ Versions:
 - **v3.4:** added GUI elements
 - **v3.5:** network RTK integrated
 - **v3.6:** supports stereoscopic viewing and communication with ground stations
+- **v3.7:** supports communication with our ground stations
 
 **Copyright:** Institute of Computer Graphics, Johannes Kepler University Linz <br />
 **Contact:** Univ.-Prof. Dr. Ing. habil. Oliver Bimber, Email: oliver.bimber@jku.at <br />
