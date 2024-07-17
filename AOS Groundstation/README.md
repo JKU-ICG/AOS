@@ -16,3 +16,6 @@ Coming soon...
 ## How to use it
 Coming soon...
 
+## License
+* Data: Creative Commons Attribution 4.0 International
+* Software Modules: You are free to modify and use our software non-commercially; Commercial usage is restricted (see the [LICENSE.txt](LICENSE.txt))
