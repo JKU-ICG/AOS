@@ -16,7 +16,8 @@ Coming soon...
 Coming soon...
 
 ## How to use it
-Coming soon...
+After installing all modules on the PC and the DJI app on the remote controller(s), and after making sure that all devices are in the same network, you need to start AOS_Groundstation.bat. It will automatically launch all modules on the PC: server, map visualization, waypoint mission planning. You first need to connect the drones to the server (see AOS server), then plan your wayoint missions and transmit it to the server (see AOS Waypoint Mission PLanning). You need to press XXX for the drones to take off. After they reached the altitudes of the first waypoints above the initial take-off position, you need to press XXX to start the mission. After the mission is completed, the drones return to their initial altitudes of the first waypoint above the initial take-off position. You need to press XXX to land them. Note, that for take.off and landing, the first and last meter have to be flown manually for safety reasons. So the drones will not directly take off from or land to the ground.  
+
 
 ### AOS for DJI app
 Basics on how to use and install our DJI compatible app on remote controllers can be found [here](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI). The latest version (v3.7) supports the communication with the AOS server. The direct (manual) usage of AOS in the app is restrictuted to prevent dual use. To enable this feature in the app, a RC-individual keycode has to be requested (by email). This will only given to civil (blue-light) organizations. The transmission of videodata, telemetry, and waypoints as well as waypoint flights through the sverver, however, are unrestricted.
