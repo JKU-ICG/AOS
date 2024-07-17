@@ -19,6 +19,9 @@ Coming soon...
 Coming soon...
 
 ### AOS for DJI app
+Basics on how to use and install our DJI compatible app on remote controllers can be found [here](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI). The latest version (v3.7) supports the communication with the AOS server. The direct (manual) usage of AOS in the app is restrictuted due prevent dual use. To enable this feature in the app, a RC-individual keycode has to be requested. This will only given to civil (blue-light) organizations. The usage trough the server, however, is unrestricted.
+
+- XX
 
 
 
