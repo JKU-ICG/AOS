@@ -25,7 +25,9 @@ Our client-server infrastructure (contributed by Daniel Mehrwald) supports real-
 
 - XXX
 
-![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/9416c325-0cec-423e-b1b0-bcf0eb463706" width="400" />
+</div>
 
 ### AOS Map Visualization
 A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. It runs in your default webbrowser.  
