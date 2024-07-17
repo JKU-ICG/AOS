@@ -5,7 +5,7 @@ For our swarm implementation, we present [a complete hard- and software framewor
 - **[AOS for DJI App](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**: Our DJI app to be installed on the remote controller.
 - **[AOS Server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Server for video, telemetry, and waypoint streaming to be installed on a Windows PC.
 - **[AOS Map Visualization](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Visualization module for real-time drone mapping in a webbrowser.
-- **[AOS Waypoint Planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Module for waypoint mission planning in a webbrowser.
+- **[AOS Waypoint Mission Planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Module for waypoint mission planning in a webbrowser.
 
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
 
@@ -41,7 +41,7 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
 </div>
 
-### AOS Waypoint Planning
+### AOS Waypoint Mission Planning
 A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning on a map and supports planning for single drones as well as swarms - including collision inspection over flight time. It runs in your default webbrowser.
 
 - Add waypoints to the map by left click in the map.
