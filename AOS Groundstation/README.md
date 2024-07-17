@@ -21,6 +21,11 @@ Coming soon...
 ### AOS Server
 
 ### AOS Map Visualization
+A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. 
+
+- The map is used in the same way as any other online map (scrolling, zooming, switching to satelite view, etc).
+- Clicking on the drone icons (that visualize position and heading) toggels the live video / telemetry window.
+  
 <div align="center">
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
 </div>
