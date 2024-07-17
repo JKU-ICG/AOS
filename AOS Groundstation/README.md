@@ -18,10 +18,17 @@ Coming soon...
 
 ### AOS for DJI app
 
+
+
 ### AOS Server
+Our client-server infrastructure (contributed by Daniel Mehrwald) supports real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms. It runs on a Windows PC with sufficient GPU power (we use an Nvidia RTX 4090). 
+
+- XXX
+
+![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
 
 ### AOS Map Visualization
-A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. 
+A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. It runs in your default webbrowser.  
 
 - The map is used in the same way as any other online map (scrolling, zooming, switching to satelite view, etc).
 - Clicking on the drone icons (which visualize position and heading) turns on/off the live video/telemetry window.
@@ -31,7 +38,7 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
 </div>
 
 ### AOS Waypoint Planning
-A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning on a map and supports planning for single drones as well as swarms - including collision inspection over flight time.
+A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning on a map and supports planning for single drones as well as swarms - including collision inspection over flight time. It runs in your default webbrowser.
 
 - Add waypoints to the map by left click in the map.
 - To move a waypoint to a new positions, you can drag and drop the marker by a left mouse click.
