@@ -21,8 +21,15 @@ Coming soon...
 ### AOS Server
 
 ### AOS Map Visualization
+<div align="center">
+  <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
+</div>
 
 ### AOS Waypoint Planning
+<div align="center">
+	<video src="https://github.com/JKU-ICG/AOS/assets/83944465/dd64a1d8-44ad-423e-b650-0843ac04bb39" width="400" />
+</div>
+
 - Add waypoints to the map by left click in the map.
 - To move a waypoint to a new positions, you can drag and drop the marker by a left mouse click.
 - Removing waypoints works by selecting a waypoint with a left mouse click on the marker and use the "remove waypoint" button. You can also remove a waypoint by a right clicking on the marker.
