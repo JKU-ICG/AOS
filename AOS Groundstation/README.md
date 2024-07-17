@@ -24,8 +24,10 @@ Basics on how to use and install our DJI compatible app on the remote controller
 
 - XX
 
-
-
+<div align="center">
+	 <video src="https://user-images.githubusercontent.com/83944465/217470172-74a2b272-2cd4-431c-9e21-b91938a340f2.mp4" width="400" />
+</div>
+		 
 ### AOS Server
 Our client-server infrastructure (contributed by Daniel Mehrwald) supports real-time downstreaming of video- and telemetry-data, as well as upstreaming of waypoint- and control-data was tested for up to 10 platforms. It runs on a Windows PC with sufficient GPU power (we use an Nvidia RTX 4090). 
 
