@@ -36,7 +36,7 @@ Our client-server infrastructure (contributed by Daniel Mehrwald) supports real-
 - Click on the **Scan** button. This will display a list of active IP addresses on the network.
 - Select the IP address of the active remote controllers from the list and click on the **SendTo** button.
 - Go to the **Drone Connection/Live Video Stream** section and select **Connect**.
-- Press the **record** (top-side, left): on the remote controller twice to initialize the connection.
+- Press the **record** (top-side, left): on the remote controller twice to initialize the connection. This enables the real time steaming of video and telemetry data.
 - For connecting to additional drones, use the **Drone Nr arrow** button to switch to the next drone.
 - Repeat the connecting, and initialization steps for each drone.
 - By default, hardware decoding (**hevc_cuvid**) is enabled. If your PC does not have a GPU, change to software decoding (**hevc**) in the **select decoder** menu before selcecting **Connect**
