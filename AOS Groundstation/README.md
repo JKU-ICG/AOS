@@ -26,6 +26,8 @@ Coming soon...
 </div>
 
 ### AOS Waypoint Planning
+A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning on a map and supports planning for single drones as well as swarms - including collision inspection over flight time.
+
 - Add waypoints to the map by left click in the map.
 - To move a waypoint to a new positions, you can drag and drop the marker by a left mouse click.
 - Removing waypoints works by selecting a waypoint with a left mouse click on the marker and use the "remove waypoint" button. You can also remove a waypoint by a right clicking on the marker.
