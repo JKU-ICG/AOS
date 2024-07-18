@@ -33,7 +33,7 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 
 ### AOS Server
 - Execute the "DroneSwarmServer-1.0.11.1-Setup.exe" file and follow the on-screen prompts to install the necessary drivers.
-- After installation, a **DroneSwarmServer-1.0.11.1** folder is created in desktop (default location and can be changed while executing the setup file) which contains the AOS Server application and python dynamic module. -- Copy the contents of this folder and transfer them to AOS Server folder inside the AOS Ground Station folder.
+- After installation, a **DroneSwarmServer-1.0.11.1** folder is created in desktop (default location and can be changed while executing the setup file) which contains the AOS Server application and python dynamic module. - Copy the contents of this folder and transfer them to AOS Server folder inside the AOS Ground Station folder.
 
 **Note:** Restart the pc after the installations.
 
