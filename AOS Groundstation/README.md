@@ -10,7 +10,9 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
 
 ## Download
-Coming soon...
+
+- Download the AOS Groundstation repository  using git or as a ZIP file and extract its contents.
+- Download **[Mosquitto](https://mosquitto.org/files/binary/win64/mosquitto-2.0.18-install-windows-x64.exe)**
 
 ## Installation
 Coming soon...
@@ -34,7 +36,7 @@ Basics on how to use and install our DJI compatible app on the remote controller
   - Send an email containing the serial number of your remote controller to request an RC-individual keycode.
   - Enter the received keycode in the **Enter AOS key** field. Select **CONFIGURE AOS KEY** to apply the keycode.
   - Toggle the **AOS Scan** button to ON state which enables the manual usage feature.
-  - Note: When the **AOS Scan** button is ON, manual usage feature of the app is enabled. When OFF, the app is configured for performing waypoint flights with the AOS Server.
+  - When the **AOS Scan** button is ON, manual usage feature of the app is enabled. When OFF, the app is configured for performing waypoint flights with the AOS Server.
 
 
 <div align="center">
