@@ -15,10 +15,13 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 - Download **[Mosquitto](https://mosquitto.org/files/binary/win64/mosquitto-2.0.18-install-windows-x64.exe)**
 
 ## Installation
-Coming soon...
+
+### Mosquitto
+
+### AOS Server
 
 ## How to use it
-After installing all modules on the PC and the DJI app on the remote controller(s), and after making sure that all devices are in the same network, you need to start AOS_Groundstation.bat. It will automatically launch all modules on the PC: server, map visualization, waypoint mission planning. You first need to connect the drones to the server (see AOS server), then plan your waypoint missions and transmit it to the server (see AOS Waypoint Mission Planning). You need to press **T** for the drones to take off. After they reached the altitudes of the first waypoints above the initial take-off position, you need to press **W** to start the mission. After the mission is completed, the drones return to their initial altitudes of the first waypoint above the initial take-off position. You need to press **L** to land them. Note, that for take-off and landing, the first and last meter have to be flown manually for safety reasons. So the drones will not directly take off from or land to the ground. The provided python code in  AOS Server gives an example on how to use all of these modules in own projects.   
+After installing all modules on the PC and the DJI app on the remote controller(s), and after making sure that all devices are in the same network, you need to start AOS_Groundstation.bat as administrator. It will automatically launch all modules on the PC: server, map visualization, waypoint mission planning. You first need to connect the drones to the server (see AOS server), then plan your waypoint missions and transmit it to the server (see AOS Waypoint Mission Planning). You need to press **T** for the drones to take off. After they reached the altitudes of the first waypoints above the initial take-off position, you need to press **W** to start the mission. After the mission is completed, the drones return to their initial altitudes of the first waypoint above the initial take-off position. You need to press **L** to land them. Note, that for take-off and landing, the first and last meter have to be flown manually for safety reasons. So the drones will not directly take off from or land to the ground. The provided python code in  AOS Server gives an example on how to use all of these modules in own projects.   
 
 
 ### AOS for DJI app
