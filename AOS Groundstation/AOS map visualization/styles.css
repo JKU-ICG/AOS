@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+    font-family: system-ui;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+
+}
+
+#map {
+    width: 100%;
+    height: 100%
+}
+
+.center-text {
+    text-align: center;
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.margin-10 {
+    margin: 10px;
+}
+
+.droneImage-tooltip {
+    width: 100%;
+    margin:0px;
+    padding:0px;
+}
+
+.mp-0 {
+    margin: 0px;
+    padding: 0px;
+}
+
+.m-0 {
+    margin: 0px;
+}
+
+.custom-tooltip {
+    width: 200px;
+    position: absolute;
+    background-color: white;
+    z-index: 1000;
+    margin: 0px;
+    padding: 0px;
+    overflow-wrap: break-word;
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>AOS MAP</title>
+      <link rel="icon" type="image/x-icon" href="img\favicon-32x32.png">
+      <!-- <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/> CDN  without ChatGPT--> 
+      <!-- <script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script> -->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/leaflet-rotatedmarker@0.2.0/leaflet.rotatedMarker.min.js"></script>
+      <link rel="stylesheet" type="text/css" href=".\styles.css"/>
+    </head>
+
+   <body>
+    <style>
+        .number-icon-default
+        {
+            background-image: 'droneShadow.png';
+            text-align:center;
+            color:Black;   
+            text-shadow: 1px 1px #000000;
+            font-size: large;
+            font-weight: bold;
+        }
+    </style>
+    <div id="map"></div>
+    <script>
+        
+        // Creating a Layer object
+        var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxNativeZoom: 19, maxZoom:25});      
+        var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxNativeZoom: 19, maxZoom:25,
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+        
+        // Creating map options
+        var mapOptions = {
+            center: [51.5, -0.09],
+            zoom: 10,
+            wheelPxPerZoomLevel: 120,
+            layers: [osm]
+        };
+        
+        // Creating a map object
+        var map = new L.map('map', mapOptions);
+        
+        var baseMaps = {
+            "OSM": osm,
+            "ESRI": esri
+        };
+        var overlayMaps = {};
+
+        var layerControl = L.control.layers(baseMaps, overlayMaps, {position: 'bottomleft'}).addTo(map);
+        
+
+    </script>
+    <script src="bundlejs_aosmap_functionality_v5.js"> // latest version bundle_new.js</script>
+   </body>
+</html>
+
