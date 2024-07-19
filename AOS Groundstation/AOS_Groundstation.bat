@@ -20,5 +20,3 @@ REM Open two HTML files
 start "" "AOS waypoint planning\index.html"
 start "" "AOS map visualization\AOS-Map.html"
 
-REM Start the executable file
-start "" "AOS server\AOS Broker.exe"
