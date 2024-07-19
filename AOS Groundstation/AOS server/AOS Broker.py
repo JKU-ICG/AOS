@@ -6,21 +6,14 @@ import numpy as np
 import cv2
 import time
 import matplotlib as plt
-import math
 import matplotlib.pyplot as plt
 import logging
 import base64
 import math
 import subprocess
-import json
 import ds_wrapper as w
 import keyboard
 from paho.mqtt import client as mqtt_client
-import logging
-import json
-import base64
-import math
-import threading
 import os
 
 ###################################### Parameters to be set ###############################################
