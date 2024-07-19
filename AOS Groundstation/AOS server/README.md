@@ -1,13 +1,12 @@
-# AOS for Drone Swarms (AOS_DJI_SDKv5 - Wrapper/Server)
+# Installation Procedure
 
-## Install
 - Install [Git for Windows x64](https://git-scm.com/download/win)
 - Install [Visual studio 2022 Community Edition](https://visualstudio.microsoft.com/de/vs/community/) with
   * -- C++ MFC for latest v143 build tools (x86 & x64)
   * -- C++/CLI support for v143 build tools (latest)
 - Install [Python 3.7.9](https://www.python.org/downloads/release/python-379/) and update the Python path in the environment variables list.
 - Install [CMake for Windows](https://cmake.org/download/) (Windows x64 Installer).
-- Install [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) for Windows 11 (CUDA Toolkit 12.2.1 and CUDA Toolkit 11.8.0 are tested and working, lastest should also work).
+- Install [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) for Windows 11 (CUDA Toolkit 12.2.1 and CUDA Toolkit 11.8.0 are tested and working, latest should also work).
 - Install [Npcap](https://npcap.com/dist/npcap-1.79.exe) Packet capture library for Windows
 
 ## Getting the source code
