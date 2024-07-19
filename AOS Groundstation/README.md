@@ -11,7 +11,7 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 
 ## Download
 
-- Download the AOS Groundstation repository  using git or as a ZIP file and extract its contents.
+- Download the AOS Groundstation repository using git or as a ZIP file and extract its contents.
 - Download **[Mosquitto](https://mosquitto.org/files/binary/win64/mosquitto-2.0.18-install-windows-x64.exe)**
 
 ## Installation
@@ -28,13 +28,12 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
   - password_file C:\Program Files\mosquitto\password.txt
   - persistence_file mosquitto.db
   - persistence_location C:\Program Files\mosquitto
+- Create a password.txt file in the mosquitto directory.
 - Open a terminal with administrator rights, navigate to the C:\Program Files\mosquitto directory, and execute the following command to create a user with a password:
    - mosquitto_passwd -b C:\Program Files\mosquitto\password.txt user user
 
 ### AOS Server
-- Execute the **DroneSwarmServer-1.0.11.1-Setup.exe** file and follow the on-screen prompts to install the necessary drivers.
-- After installation, a **DroneSwarmServer-1.0.11.1** folder is created in desktop (default location and can be changed while executing the setup file) which contains the AOS Server application and python dynamic module.
-- Copy the contents of this folder and transfer them to AOS Server folder inside the AOS Ground Station folder.
+- Build and install the DroneSwarmServer application according to the instructions provided in **[AOS Server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20server)**
 
 **Note:** Restart the pc after the installations.
 
