@@ -50,7 +50,7 @@
   * ```cd FFmpeg```
   * ```git reset --hard af25a4b```
   * ```mkdir include```
-  * Copy everything from ```C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.2\include``` to the newly created **_include_** directroy (**_D:\mytestProject\FFmpeg\include_**)
+  * Copy everything from ```C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.x\include``` to the newly created **_include_** directroy (**_D:\mytestProject\FFmpeg\include_**)
   * ```mkdir lib```
   * Copy everything from ```C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.x\lib\x64``` to the newly created **_lib_** directroy (**_D:\mytestProject\FFmpeg\lib_**)
   * ```cd include```
@@ -59,7 +59,7 @@
   * ```cd nv-codec-headers```
   * Edit first line in **_Makefile_** from **_PREFIX = /usr/local_** to **_PREFIX = /ucrt64_**
   * ```make install```
-  * ```cd ..```
+  * ```cd ../..```
   * Now configure FFmpeg with ```./configure --disable-vulkan --disable-vdpau --disable-vaapi --enable-cuda --disable-cuda-llvm --enable-cuvid --enable-asm --enable-x86asm --disable-avdevice --disable-doc --disable-ffplay --disable-ffprobe --disable-shared --enable-static --disable-bzlib --disable-libopenjpeg --disable-iconv --disable-zlib --enable-nvdec --enable-nvenc --enable-nonfree --enable-ffnvcodec --enable-nonfree --prefix=/c/FFmpeg-7.0.1 --toolchain=msvc --target-os=win64 --arch=x86_64 --extra-ldflags="/MACHINE:X64 /NODEFAULTLIB:libcmt /LIBPATH:\"D:\\\mytestProject\\\FFmpeg\\\lib\"" --extra-cflags="-MD -I \"D:\\\mytestProject\\\FFmpeg\\\include\" -I \"D:\\\mytestProject\\\FFmpeg\\\include\\\ffnvcodec\""```
   * After configure is done type ```make V=1 -j10``` and hit enter
   * After build is done type ```make install V=1 -j10``` and hit enter, your FFmpeg libraries are now in ```C:\FFmpeg-7.0.1``` folder
