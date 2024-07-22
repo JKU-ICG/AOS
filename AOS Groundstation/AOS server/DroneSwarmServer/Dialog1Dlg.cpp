@@ -518,7 +518,6 @@ int CDialog1Dlg::AVThread(int droneNumber)
 
 			sws_freeContext(context);
 
-			pFrameRGB->coded_picture_number = pFrame->coded_picture_number;
 			pFrameRGB->interlaced_frame = pFrame->interlaced_frame;
 			pFrameRGB->repeat_pict = pFrame->repeat_pict;
 			pFrameRGB->top_field_first = pFrame->top_field_first;
