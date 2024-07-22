@@ -8,6 +8,7 @@
 - Install [CMake for Windows](https://cmake.org/download/) (Windows x64 Installer).
 - Install [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) for Windows 11 (CUDA Toolkit 12.2.1 and CUDA Toolkit 11.8.0 are tested and working, latest should also work).
 - Install [Npcap](https://npcap.com/dist/npcap-1.79.exe) Packet capture library for Windows
+- Install [MSYS2](https://www.msys2.org/) needed for FFmpeg compilation
 
 ## Getting the source code
 - Choose a location for your project from within a Explorer window.
@@ -16,7 +17,7 @@
 - Then type ```git clone https://github.com/JKU-ICG/AOS.git``` and hit enter.
 
 ## Building 
-- Open x64 Native Tools Command Prompt for VS 2022, go to search and type 'x64'
+- Open x64 Native Tools Command Prompt for VS 2022, go to search and type 'x64' and double click on the search result
   <img width="512" alt="prompt" src="https://github.com/user-attachments/assets/8a361eb0-ba6c-45f9-ba43-5b9a45477570">
   * From there change directory to Droneswarm_Wrapper. e.g ```cd D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarm_Wrapper```
   * ```mkdir build```
@@ -38,11 +39,32 @@
   * Open **_Eclipse Paho C.sln_** with Visual Studio 2022 by double click on it, choose Release as build type and build the MQTT Client libraries **_(build -> build Solution)_**
   * From the ```build\src\Release``` directory copy **_paho-mqtt3c-static.lib_** and **_paho-mqtt3a-static.lib_** to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
   * From the ```src``` directory copy **_MQTTAsync.h MQTTClient.h MQTTClientPersistence.h MQTTExportDeclarations.h MQTTProperties.h MQTTReasonCodes.h MQTTSubscribeOpts.h_** files to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
-- We used **[FFmpeg 6.1](https://github.com/FFmpeg/FFmpeg/tree/release/6.1)** compiled with **_NVIDIA hardware decoder_** support, using this configure switches ```./configure --disable-vulkan --disable-vdpau --disable-vaapi --enable-cuda --enable-cuvid --enable-asm --enable-x86asm --disable-avdevice --disable-cuda-llvm  --disable-doc --disable-ffplay --disable-ffprobe --disable-shared --enable-static --disable-bzlib --disable-libopenjpeg --disable-iconv --disable-zlib --enable-nvdec --enable-nvenc --enable-ffnvcodec --enable-nonfree --toolchain=msvc --arch=x86_64 --extra-ldflags="/MACHINE:X64 /NODEFAULTLIB:libcmt"```, the toolchain we used was Microsoft Visual C++ 2022
-  * Please follow this external guide to compile it [MSVC Compiliation Guide](https://trac.ffmpeg.org/wiki/CompilationGuide/MSVC)
-  * After ```make install V=1``` look where your binaries and header files got copied
-  * From the **_lib_** folder copy **_libavcodec.a libavfilter.a libavformat.a libavutil.a libswresample.a libswscale.a_** over to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
-  * From the **_include_** folder copy this sub directories + contains **_libavcodec libavfilter libavformat libavutil libswresample libswscale_** to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
+- We used **[FFmpeg 6.1](https://github.com/FFmpeg/FFmpeg/tree/release/6.1)** compiled with **_NVIDIA hardware decoder_** support, however due to newer CUDA Tool Kits in this build instrction we use **FFmpeg 7.0.1**
+  * Open again x64 Native Tools Command Prompt for VS 2022, go to search and type 'x64' and double click on the search result
+  * From there change directory to your MSYS2 installation e.g ```cd D:\mytestProject\msys64```
+  * Then type ```msys2_shell -ucrt64 -use-full-path``` -> a MSYS2 shell will be opened
+  * From the MSYS2 shell rename the linker command in order to use the Microsoft linker cmd instead with ```mv /usr/bin/link.exe /usr/bin/link.orig```
+  * Install some packages needed to build FFmpeg with ```pacman -S make pkg-config diffutils```
+  * Change directory to your project location -> e.g ```cd /d/mytestProject```
+  * Then get the FFmpeg sources with ```git clone https://github.com/FFmpeg/FFmpeg.git```
+  * ```cd FFmpeg```
+  * ```git reset --hard af25a4b```
+  * ```mkdir include```
+  * Copy everything from ```C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.2\include``` to the newly created **_include_** directroy (**_D:\mytestProject\FFmpeg\include_**)
+  * ```mkdir lib```
+  * Copy everything from ```C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.x\lib\x64``` to the newly created **_lib_** directroy (**_D:\mytestProject\FFmpeg\lib_**)
+  * ```cd include```
+  * ```git clone https://github.com/FFmpeg/nv-codec-headers.git```
+  * ```cp -R nv-codec-headers/include/ffnvcodec/ .```
+  * ```cd nv-codec-headers```
+  * Edit first line in **_Makefile_** from **_PREFIX = /usr/local_** to **_PREFIX = /ucrt64_**
+  * ```make install```
+  * ```cd ..```
+  * Now configure FFmpeg with ```./configure --disable-vulkan --disable-vdpau --disable-vaapi --enable-cuda --disable-cuda-llvm --enable-cuvid --enable-asm --enable-x86asm --disable-avdevice --disable-doc --disable-ffplay --disable-ffprobe --disable-shared --enable-static --disable-bzlib --disable-libopenjpeg --disable-iconv --disable-zlib --enable-nvdec --enable-nvenc --enable-nonfree --enable-ffnvcodec --enable-nonfree --prefix=/c/FFmpeg-7.0.1 --toolchain=msvc --target-os=win64 --arch=x86_64 --extra-ldflags="/MACHINE:X64 /NODEFAULTLIB:libcmt /LIBPATH:\"D:\\\mytestProject\\\FFmpeg\\\lib\"" --extra-cflags="-MD -I \"D:\\\mytestProject\\\FFmpeg\\\include\" -I \"D:\\\mytestProject\\\FFmpeg\\\include\\\ffnvcodec\""```
+  * After configure is done type ```make V=1 -j10``` and hit enter
+  * After build is done type ```make install V=1 -j10``` and hit enter, your FFmpeg libraries are now in ```C:\FFmpeg-7.0.1``` folder
+  * From the **_C:\FFmpeg-7.0.1\lib_** folder copy **_libavcodec.a libavfilter.a libavformat.a libavutil.a libswresample.a libswscale.a_** over to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
+  * From the **_C:\FFmpeg-7.0.1\include_** folder copy this sub directories + contains **_libavcodec libavfilter libavformat libavutil libswresample libswscale_** to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
   * Then execute the file **_gen_win_library.bat_** from your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory by double click on it.
 - Open **_DroneSwarmServer.sln_** with Visual Studio 2022 by double click on it and build the server **_(build -> build DroneSwamServer)_**, this will give you the (DroneSwarmServer.exe) executeable.
 - The **_DroneSwarmServer_** executeable and **_ds_wrapper.cp37-win_amd64.pyd_** must be in the same folder.
