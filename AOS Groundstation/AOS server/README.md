@@ -39,13 +39,13 @@
   * Open **_Eclipse Paho C.sln_** with Visual Studio 2022 by double click on it, choose Release as build type and build the MQTT Client libraries **_(build -> build Solution)_**
   * From the ```build\src\Release``` directory copy **_paho-mqtt3c-static.lib_** and **_paho-mqtt3a-static.lib_** to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
   * From the ```src``` directory copy **_MQTTAsync.h MQTTClient.h MQTTClientPersistence.h MQTTExportDeclarations.h MQTTProperties.h MQTTReasonCodes.h MQTTSubscribeOpts.h_** files to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
-- We used **[FFmpeg 6.1](https://github.com/FFmpeg/FFmpeg/tree/release/6.1)** compiled with **_NVIDIA hardware decoder_** support, however due to newer CUDA Tool Kits in this build instrction we use **FFmpeg 7.0.1**
+- We used **[FFmpeg 6.1](https://github.com/FFmpeg/FFmpeg/tree/release/6.1)** compiled with **_NVIDIA hardware decoder_** support, however due to newer CUDA Tool Kits in this build instruction we use **FFmpeg 7.0.1**
   * Open again x64 Native Tools Command Prompt for VS 2022, go to search and type 'x64' and double click on the search result
   * From there change directory to your MSYS2 installation e.g ```cd D:\mytestProject\msys64```
   * Then type ```msys2_shell -ucrt64 -use-full-path``` -> a MSYS2 shell will be opened
   * From the MSYS2 shell rename the linker command in order to use the Microsoft linker cmd instead with ```mv /usr/bin/link.exe /usr/bin/link.orig```
   * Install some packages needed to build FFmpeg with ```pacman -S make pkg-config diffutils```
-  * Change directory to your project location -> e.g ```cd /d/mytestProject``` **(Your directory structure should not conatin any spaces!)**
+  * Change directory to your project location -> e.g ```cd /d/mytestProject``` **(Your directory structure should not contain any spaces!)**
   * Then get the FFmpeg sources with ```git clone https://github.com/FFmpeg/FFmpeg.git```
   * ```cd FFmpeg```
   * ```git reset --hard af25a4b```
