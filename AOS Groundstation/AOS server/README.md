@@ -45,7 +45,7 @@
   * Then type ```msys2_shell -ucrt64 -use-full-path``` -> a MSYS2 shell will be opened
   * From the MSYS2 shell rename the linker command in order to use the Microsoft linker cmd instead with ```mv /usr/bin/link.exe /usr/bin/link.orig```
   * Install some packages needed to build FFmpeg with ```pacman -S make pkg-config diffutils```
-  * Change directory to your project location -> e.g ```cd /d/mytestProject```
+  * Change directory to your project location -> e.g ```cd /d/mytestProject``` **(Your directory structure should not conatin any spaces!)**
   * Then get the FFmpeg sources with ```git clone https://github.com/FFmpeg/FFmpeg.git```
   * ```cd FFmpeg```
   * ```git reset --hard af25a4b```
