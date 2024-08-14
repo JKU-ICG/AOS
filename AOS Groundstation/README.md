@@ -22,7 +22,7 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 - Open the **mosquitto.conf** file located in the mosquitto directory and add the following configuration lines:
   - listener 9001
   - protocol websockets
-  - listener 1883
+  - listener 1884
   - protocol mqtt
   - persistence true
   - allow_anonymous false
@@ -31,7 +31,7 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
   - persistence_location C:\Program Files\mosquitto
 - Create a password.txt file in the mosquitto directory.
 - Open a terminal with administrator rights, navigate to the C:\Program Files\mosquitto directory, and execute the following command to create a user with a password:
-   - mosquitto_passwd -b C:\Program Files\mosquitto\password.txt user user
+   - mosquitto_passwd -b "C:\Program Files\mosquitto\password.txt" user user
 
 ### AOS Server
 - Build and install the DroneSwarmServer application according to the instructions provided in **[AOS Server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20server)**
