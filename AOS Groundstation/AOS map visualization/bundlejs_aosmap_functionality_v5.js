@@ -15454,7 +15454,7 @@ const net_1 = __importDefault(require("net"));
 const debug_1 = __importDefault(require("debug"));
 const debug = (0, debug_1.default)('mqttjs:tcp');
 const buildStream = (client, opts) => {
-    opts.port = opts.port || 1883;
+    opts.port = opts.port || 1884;
     opts.hostname = opts.hostname || opts.host || 'localhost';
     const { port } = opts;
     const host = opts.hostname;
