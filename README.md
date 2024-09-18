@@ -87,7 +87,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [arXiv (pre-print)](https://arxiv.org/abs/2407.10754)
   - [Video Abstract](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)
   - [Data: ](https://doi.org/10.5281/zenodo.12720784)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12720784.svg)](https://doi.org/10.5281/zenodo.12720784)
-- Rakesh John Amala Arokia Nathan, Sigrid Strand, Dmitriy Shutin, Oliver Bimber, Reciprocal Visibility, under review (2024)
+- Rakesh John Amala Arokia Nathan, Sigrid Strand, Dmitriy Shutin, Oliver Bimber, Reciprocal Visibility for Guided Occlusion Removal With Drones, IEEE Geosci. Remote Sens. Lett. 21, 1 – 5 (2024).
+  - [IEEE (open access and online version)](https://ieeexplore.ieee.org/document/10659026)
   - [arXiv (pre-print)](https://arxiv.org/abs/2402.06991)
 - Mohamed Youssef and Oliver Bimber, Fusion of Single and Integral Multispectral Aerial Images, Remote Sens., 16(4), 673, (2024)
   - [Remote Sensing (open access and online version)](https://www.mdpi.com/2072-4292/16/4/673)
