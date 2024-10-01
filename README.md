@@ -47,6 +47,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 09/27/2024: **Stereoscopic Depth Perception Through Foliage** accapted for publicaion in Nature Scientific Reports
 - 7/20/2024: **AOS Groundstation for controlling single and multiple drones available**: See [Source Code](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)
 - 7/09/2024: **AOS featured in Scientific American**: See [Article](https://www.scientificamerican.com/article/how-drones-are-revolutionizing-search-and-rescue/)
 - 6/21/2024: **All Field-Experiments with our Drone Swarm**: See [Video Playlist](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM) and [AOS for Swarms](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)
@@ -95,7 +96,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [PDF Version (open access)](https://www.mdpi.com/2072-4292/16/4/673/pdf) 
   - [arXiv (pre-print)](https://arxiv.org/abs/2311.17515)
   - [Data and Code: ](https://zenodo.org/records/10210035)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10210035.svg)](https://doi.org/10.5281/zenodo.10210035)
-- Robert Kerschner, Rakesh John Amala Arokia Nathan, Rafal Mantiuk, Oliver Bimber, Stereoscopic Depth Perception Through Foliage, under review (2023)
+- Robert Kerschner, Rakesh John Amala Arokia Nathan, Rafal Mantiuk, Oliver Bimber, Stereoscopic Depth Perception Through Foliage, accapted for publicaion in Nature Scientific Reports (2024)
   - [arXiv](https://arxiv.org/abs/2310.16120)
   - [Data: ](https://zenodo.org/records/8423145)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8423145.svg)](https://doi.org/10.5281/zenodo.8423145)
 - Julia Pöschl, Adaptive Particle Swarm Optimization for through-foliage target detection with drone swarms (2023)
