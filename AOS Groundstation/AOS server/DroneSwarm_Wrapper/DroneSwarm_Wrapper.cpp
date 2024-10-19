@@ -49,6 +49,7 @@ END_MESSAGE_MAP()
 
 
 static HWND dlg = nullptr;
+typedef volatile uint8_t* v_uint8_t;
 
 // CDroneSwarmWrapperApp construction
 
@@ -168,7 +169,7 @@ __declspec(dllexport) void* data2Server(int DroneNumber)
 
 int isHWDecoderEnabled()
 {
-#define MEMOFFSET 3999000
+#define MEMOFFSETHWD 3999000
     bool status = true;
     uint64_t temp;
     int len = 1;
@@ -176,25 +177,25 @@ int isHWDecoderEnabled()
     memcpy(&temp, lpvMem, sizeof(uint64_t));
     const uint64_t intp = temp;
 
-    ((uint8_t*)lpvMem + 1 + MEMOFFSET)[0] = status;
+    memcpy(((uint8_t*)lpvMem + 1 + MEMOFFSETHWD), &status, sizeof(bool));
+
+    v_uint8_t st = (v_uint8_t)lpvMem + 1 + MEMOFFSETHWD;
 
     PostMessage((HWND)intp, WM_PYWRAPPER_ISHWDECODERENABLED, (WPARAM)nullptr, (LPARAM)nullptr);
 
     while (status)
     {
-        uint8_t * st = (uint8_t*)lpvMem + 1 + MEMOFFSET;
         if (!st[0])
             break;
-        Sleep(1);
     }
-    return (int)((uint8_t*)lpvMem + MEMOFFSET)[0];
+    return (int)((uint8_t*)lpvMem + MEMOFFSETHWD)[0];
 }
 
 int sendWayPointData(const char* data, int DroneNumber)
 {
     int ret;
     MSG msg = { 0 };
-    int offset = (DroneNumber - 1) * SHMEMSLOTSIZE;
+    int slot_offset = (DroneNumber - 1) * SHMEMSLOTSIZE;
     uint64_t len = CString(data).GetLength();
 
     if (len <= 0)
@@ -207,19 +208,20 @@ int sendWayPointData(const char* data, int DroneNumber)
     memcpy(&temp, lpvMem, sizeof(uint64_t));
     const uint64_t intp = temp;
     
-    memcpy((uint8_t*)lpvMem + 9 + offset, &len, sizeof(uint64_t));
+    memcpy((uint8_t*)lpvMem + 9 + slot_offset, &len, sizeof(uint64_t));
     bool status = true;
     
-    ((uint8_t*)lpvMem + 17 + offset)[0] = status;
-    memcpy((uint8_t*)lpvMem + 18 + offset, data, len);
+    memcpy(((uint8_t*)lpvMem + 17 + slot_offset), &status, sizeof(bool));
+
+    v_uint8_t st = (v_uint8_t)lpvMem + 17 + slot_offset;
+
+    memcpy((uint8_t*)lpvMem + 18 + slot_offset, data, len);
     ret = PostMessage((HWND)intp, WM_PYWRAPPER_WAYPOINTS, (WPARAM)nullptr, (LPARAM)DroneNumber);
 
     while (status)
     {
-        uint8_t* st = (uint8_t*)lpvMem + 17 + offset;
         if (!st[0])
             break;
-        Sleep(5);
     }
     return ret;
 }
@@ -228,34 +230,72 @@ py::array getImageAndTelemetryData(int DroneNumber)
 {
     bool status = true;
     uint64_t temp;
-    int offset = (DroneNumber - 1) * SHMEMSLOTSIZE;
+    int slot_offset = (DroneNumber - 1) * SHMEMSLOTSIZE;
 
     memcpy(&temp, lpvMem, sizeof(uint64_t));
     const uint64_t intp = temp;
 
-    ((uint8_t*)lpvMem + 1033 + offset)[0] = status;
+    memcpy(((uint8_t*)lpvMem + 1033 + slot_offset), &status, sizeof(bool));
+
+    v_uint8_t st = (v_uint8_t)lpvMem + 1033 + slot_offset;
 
     PostMessage((HWND)intp, WM_PYWRAPPER_IMAGEANDTELEMETRYDATA, (WPARAM)nullptr, (LPARAM)DroneNumber);
 
     while (status)
     {
-        uint8_t* st = (uint8_t*)lpvMem + 1033 + offset;
         if (!st[0])
             break;
-        Sleep(5);
     }
 
-    memcpy(&temp, (uint8_t*)lpvMem + 1025 + offset, sizeof(uint64_t));
+    memcpy(&temp, (uint8_t*)lpvMem + 1025 + slot_offset, sizeof(uint64_t));
     const uint64_t len1 = temp;
 
-    memcpy(&temp, (uint8_t*)lpvMem + 1034 + len1 + offset, sizeof(uint64_t));
+    memcpy(&temp, (uint8_t*)lpvMem + 1034 + len1 + slot_offset, sizeof(uint64_t));
     const uint64_t len2 = temp;
 
     return py::array(py::buffer_info(
-        (uint8_t*)lpvMem + 1034 + offset,
+        (uint8_t*)lpvMem + 1034 + slot_offset,
         sizeof(uint8_t),
         py::format_descriptor<uint8_t>::format(),
         len1 + len2 + 8, false));
+}
+
+py::array getEncodedImageData(const char* data, int DroneNumber)
+{
+#define MEMOFFSETIMG 4000000
+    bool status = true;
+    uint64_t temp;
+    int slot_offset = (DroneNumber - 1) * SHMEMSLOTSIZE;
+    uint64_t len = CString(data).GetLength();
+
+    memcpy(&temp, lpvMem, sizeof(uint64_t));
+    const uint64_t intp = temp;
+
+    memcpy(((uint8_t*)lpvMem + 17 + slot_offset + MEMOFFSETIMG), &status, sizeof(bool));
+
+    v_uint8_t st = (v_uint8_t)lpvMem + 17 + slot_offset + MEMOFFSETIMG;
+
+    memcpy((uint8_t*)lpvMem + 9 + slot_offset + MEMOFFSETIMG, &len, sizeof(uint64_t));
+
+    memcpy((uint8_t*)lpvMem + 18 + slot_offset + MEMOFFSETIMG, data, len);
+
+    PostMessage((HWND)intp, WM_PYWRAPPER_ENCODEDIMAGEDATA, (WPARAM)nullptr, (LPARAM)DroneNumber);
+
+    while (status)
+    {
+        if (!st[0])
+            break;
+    }
+
+    memcpy(&temp, (uint8_t*)lpvMem + 9 + slot_offset + MEMOFFSETIMG, sizeof(uint64_t));
+    const uint8_t image_len = temp;
+    len = temp;
+
+    return py::array(py::buffer_info(
+        (uint8_t*)lpvMem + 18 + slot_offset + MEMOFFSETIMG,
+        sizeof(uint8_t),
+        py::format_descriptor<uint8_t>::format(),
+        len, false));
 }
 
 PYBIND11_MODULE(ds_wrapper, m)
@@ -263,5 +303,6 @@ PYBIND11_MODULE(ds_wrapper, m)
     m.doc() = "pybind11 DroneSwarmServer wrapper module";
     m.def("isHWDecoderEnabled", isHWDecoderEnabled, "This function asks if we are HW or SW decoding a drone video stream");
     m.def("sendWayPointData", sendWayPointData, "This function sends Waypoints to a drone");
-    m.def("getImageAndTelemetryData", getImageAndTelemetryData, "This functions gets the Camera Image and Telemetry data from the drone");
+    m.def("getImageAndTelemetryData", getImageAndTelemetryData, "This function gets the Camera Image and Telemetry data from the drone");
+    m.def("getEncodedImageData", getEncodedImageData, "This function gets a encoded/compressed pre-processed Camera Image");
 }

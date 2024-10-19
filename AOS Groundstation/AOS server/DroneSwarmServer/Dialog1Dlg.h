@@ -5,7 +5,7 @@
 extern "C"
 {
 #include "libavformat/avformat.h"
-//#include "libavformat/rtsp.h"
+#include "libavformat/rtsp.h"
 #include "libavcodec/avcodec.h"
 #include "libavutil/avutil.h"
 #include "libswscale/swscale.h"
@@ -23,6 +23,7 @@ extern "C"
 #define WM_FROM_PYWRAPPER WM_USER+17
 #define WM_PYWRAPPER_IMAGEANDTELEMETRYDATA WM_USER+18
 #define WM_FROM_DLG3 WM_USER+19
+#define WM_PYWRAPPER_ENCODEDIMAGEDATA WM_USER+20
 #define WM_PYWRAPPER_ISHWDECODERENABLED WM_USER+21
 #define WM_THREAD_STOP     100
 #define IDT_TIMER  WM_USER + 200 
@@ -34,9 +35,9 @@ extern "C"
 // Stuff for Console 
 static const WORD MAX_CONSOLE_LINES = 1500;
 typedef BOOL(WINAPI* SetConsoleIconFunc)(HICON);
+typedef volatile uint8_t* v_uint8_t;
 SetConsoleIconFunc p_SetConsoleIcon;
 FILE* stream[3];
-extern volatile bool hasFocus;
 
 int log_sel[] = { AV_LOG_QUIET, AV_LOG_PANIC, AV_LOG_FATAL, AV_LOG_ERROR, AV_LOG_WARNING, AV_LOG_INFO, AV_LOG_VERBOSE, AV_LOG_DEBUG, AV_LOG_TRACE };
 int QoSsel[] = { QoS0 , QoS1 , QoS2 };
@@ -64,15 +65,20 @@ protected:
 	afx_msg LRESULT Renderer(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT SendWayPoint2Drone(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT GetImageAndTelemetryData(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT GetEncodedImageData(WPARAM wparam, LPARAM lParam);
 	afx_msg LRESULT IsHWDecoderEnabled(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT SetIPArray(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedCheck1();
+	afx_msg void OnCbnSelchangeCombo1();
+	afx_msg void OnTRBNThumbPosChangingSlider1(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDeltaposSpin2(NMHDR* pNMHDR, LRESULT* pResult);
 
 public:
 	int AVThread(int droneNumber);
 	BOOL StartThread();
 	void StopThread();
 	static UINT	WorkThread(LPVOID pParam);
-	static UINT	WorkThread2(LPVOID pParam);
 	CWinThread* pThread[10];
 	CWinThread* pMqttThread;
 	int isConnected[10];
@@ -83,20 +89,22 @@ public:
 	void ShowFrameBMP(AVFrame* pFrame, int width, int height, int interlaced);
 	void RedirectIOToConsole();
 	int SendWayPoint2Drone2(int drone);
+	int GetEncodedImageData2(int drone);
+	static int MQTTmsgarrv(void* context, char* topicName, int topicLen, MQTTClient_message* message);
+	static void MQTTmsgdeliv(void* context, MQTTClient_deliveryToken dt);
+	static void MQTTconnlost(void* context, char* cause);
 	AVFormatContext* pFormatCtx = nullptr;
 	CString telemetryData[10];
 	CString threadmsg[10];
 	CString mainDlgmsg;
 	CString IPperDrone[10];
 	CString PortperDrone[10];
+	int MQTTDrone_Number;
 	int droneNum;
 	int dNum;
 	long interval;
 	UINT Timeval;
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedCheck1();
-	afx_msg void OnCbnSelchangeCombo1();
-	afx_msg void OnTRBNThumbPosChangingSlider1(NMHDR* pNMHDR, LRESULT* pResult);
+	CSpinButtonCtrl m_Spin1;
 
 private:
 	CButton m_ButtonCtrl1;
@@ -126,7 +134,5 @@ private:
 	CEdit m_EditCtrl15;
 	CEdit m_EditCtrl16;
 	CStatic m_Static6;
-public:
-	afx_msg void OnDeltaposSpin2(NMHDR* pNMHDR, LRESULT* pResult);
-	CSpinButtonCtrl m_Spin1;
+
 };

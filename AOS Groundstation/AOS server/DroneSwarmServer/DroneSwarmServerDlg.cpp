@@ -13,8 +13,6 @@
 #define new DEBUG_NEW
 #endif
 
-volatile bool hasFocus;
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx

@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>ds_wrapper.lib;paho-mqtt3a-static.lib;paho-mqtt3c-static.lib;Windowsapp.lib;libavutil.lib;libavcodec.lib;libswscale.lib;libswresample.lib;libavformat.lib;setupapi.lib;Secur32.lib;winmm.lib;imm32.lib;bcrypt.lib;Mf.lib;Mfplat.lib;mfuuid.lib;mfreadwrite.lib;Strmiids.lib;ucrtd.lib;iphlpapi.lib;ws2_32.lib;packet.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ds_wrapper.lib;paho-mqtt3a_d.lib;paho-mqtt3c_d.lib;Windowsapp.lib;libavutil.lib;libavcodec.lib;libswscale.lib;libswresample.lib;libavformat.lib;setupapi.lib;Secur32.lib;winmm.lib;imm32.lib;bcrypt.lib;Mf.lib;Mfplat.lib;mfuuid.lib;mfreadwrite.lib;Strmiids.lib;ucrtd.lib;iphlpapi.lib;ws2_32.lib;packet.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib;msvcrtd.lib;libucrtd.lib</IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
@@ -190,8 +190,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ds_wrapper.lib;paho-mqtt3a-static.lib;paho-mqtt3c-static.lib;libavutil.lib;libavcodec.lib;libswscale.lib;libswresample.lib;libavformat.lib;setupapi.lib;Secur32.lib;winmm.lib;imm32.lib;bcrypt.lib;Mf.lib;Mfplat.lib;mfuuid.lib;mfreadwrite.lib;Strmiids.lib;ucrt.lib;iphlpapi.lib;ws2_32.lib;packet.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>ds_wrapper.lib;paho-mqtt3a.lib;paho-mqtt3c.lib;libavutil.lib;libavcodec.lib;libswscale.lib;libswresample.lib;libavformat.lib;setupapi.lib;Secur32.lib;winmm.lib;imm32.lib;bcrypt.lib;Mf.lib;Mfplat.lib;mfuuid.lib;mfreadwrite.lib;Strmiids.lib;ucrt.lib;iphlpapi.lib;ws2_32.lib;packet.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:MULTIPLE /IGNORE:4006 %(AdditionalOptions)</AdditionalOptions>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;libucrt.lib</IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>

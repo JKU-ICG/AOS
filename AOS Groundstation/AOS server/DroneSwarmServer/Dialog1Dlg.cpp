@@ -21,10 +21,7 @@ IMPLEMENT_DYNAMIC(CDialog1Dlg, CDialogEx)
 
 using namespace std;
 
-namespace
-{
-	once_flag flag;
-}
+auto flag = std::make_unique<std::once_flag>();
 
 CDialog1Dlg::CDialog1Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDialog1Dlg::IDD, pParent)
@@ -34,7 +31,6 @@ CDialog1Dlg::CDialog1Dlg(CWnd* pParent /*=NULL*/)
 #endif
 	droneNum = 1;
 	interval = 1;
-	hasFocus = true;
 	memset(&isConnected, 0, sizeof(isConnected));
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -86,6 +82,7 @@ BEGIN_MESSAGE_MAP(CDialog1Dlg, CDialogEx)
 	ON_MESSAGE(WM_THREAD_RENDER, &CDialog1Dlg::Renderer)
 	ON_MESSAGE(WM_PYWRAPPER_WAYPOINTS, &CDialog1Dlg::SendWayPoint2Drone)
 	ON_MESSAGE(WM_PYWRAPPER_IMAGEANDTELEMETRYDATA, &CDialog1Dlg::GetImageAndTelemetryData)
+	ON_MESSAGE(WM_PYWRAPPER_ENCODEDIMAGEDATA, &CDialog1Dlg::GetEncodedImageData)
 	ON_MESSAGE(WM_PYWRAPPER_ISHWDECODERENABLED, &CDialog1Dlg::IsHWDecoderEnabled)
 	ON_MESSAGE(WM_FROM_DLG3, &CDialog1Dlg::SetIPArray)
 	ON_BN_CLICKED(IDC_BUTTON1, &CDialog1Dlg::OnBnClickedButton1)
@@ -444,9 +441,9 @@ int CDialog1Dlg::AVThread(int droneNumber)
 					if ((int)msg.lParam == droneNumber)
 					{
 						int nBytes = av_image_get_buffer_size(AV_PIX_FMT_NV12, pFormatCtx->streams[videoStream]->codecpar->width, pFormatCtx->streams[videoStream]->codecpar->height, 16);
-						/*RTSPState* rtsp_state = (RTSPState*)pFormatCtx->priv_data;
+						RTSPState* rtsp_state = (RTSPState*)pFormatCtx->priv_data;
 						RTSPStream* rtsp_stream = rtsp_state->rtsp_streams[0];
-						RTPDemuxContext* rtp_demux_context = (RTPDemuxContext*)rtsp_stream->transport_priv;*/
+						RTPDemuxContext* rtp_demux_context = (RTPDemuxContext*)rtsp_stream->transport_priv;
 						void* sharedMem = data2Server(droneNumber);
 						uint64_t temp = nBytes;
 						memcpy((uint8_t*)sharedMem + 1025, &temp, sizeof(uint64_t));
@@ -466,7 +463,7 @@ int CDialog1Dlg::AVThread(int droneNumber)
 						temp = telemetryData[droneNumber - 1].GetLength();
 						memcpy((uint8_t*)sharedMem + 1034 + (nBytes), &temp, sizeof(uint64_t));
 						memcpy((uint8_t*)sharedMem + 1042 + (nBytes), telemetryData[droneNumber - 1].GetBuffer(), telemetryData[droneNumber - 1].GetLength());
-						((uint8_t*)sharedMem + 1033)[0] = false;
+						((v_uint8_t)sharedMem + 1033)[0] = false;
 						break;
 					}
 					DispatchMessage(&msg);
@@ -502,12 +499,12 @@ int CDialog1Dlg::AVThread(int droneNumber)
 		if (pFrame->key_frame == TRUE)
 		{
 			call_once(
-				flag, [this, droneNumber]() {
+				*flag, [this, droneNumber]() {
 					threadmsg[droneNumber - 1].Format("Drone: %d Decoded frame is keyframe!", droneNumber);
 					PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(threadmsg[droneNumber - 1].GetBuffer()), NULL); });
 		}
 		// Did we get a video frame?
-		if (frameFinished == 0 && droneNum == droneNumber && pFrame->linesize[0] > 0 && hasFocus)
+		if (frameFinished == 0 && droneNum == droneNumber && pFrame->linesize[0] > 0)
 		{
 			// Convert the image from its native format to RGB
 			struct SwsContext* context = sws_getContext(pCodecCtx->width, pCodecCtx->height,
@@ -518,6 +515,7 @@ int CDialog1Dlg::AVThread(int droneNumber)
 
 			sws_freeContext(context);
 
+			pFrameRGB->coded_picture_number = pFrame->coded_picture_number;
 			pFrameRGB->interlaced_frame = pFrame->interlaced_frame;
 			pFrameRGB->repeat_pict = pFrame->repeat_pict;
 			pFrameRGB->top_field_first = pFrame->top_field_first;
@@ -633,6 +631,7 @@ void CDialog1Dlg::OnBnClickedButton1()
 		m_ButtonCtrl1.SetWindowTextA(_T("Connect"));
 		m_ComboBox2.EnableWindow(TRUE);
 		m_ComboBox3.EnableWindow(TRUE);
+		flag = std::make_unique<std::once_flag>();
 	}
 }
 
@@ -726,6 +725,54 @@ void CDialog1Dlg::OnDeltaposSpin2(NMHDR* pNMHDR, LRESULT* pResult)
 #define TOPIC       "MQTTWayPoints"
 #define TIMEOUT     10000L
 
+int CDialog1Dlg::MQTTmsgarrv(void* context, char* topicName, int topicLen, MQTTClient_message* message)
+{
+#define MEMOFFSET 4000000
+	CDialog1Dlg* dlg1 = theApp.m_pDlg1;
+
+	// Are we get the echo of our string or do we get image png data
+	if (((uint8_t*)message->payload + 1)[0] != 0x50 && ((uint8_t*)message->payload + 2)[0] != 0x4E && ((uint8_t*)message->payload + 3)[0] != 0x47)
+		return 1;
+
+	int droneNr = ((uint8_t*)context)[0];
+
+	dlg1->mainDlgmsg.Format("Drone: %d Message arrived topic: %s, with data size:%d\n", droneNr, topicName, message->payloadlen);
+	::PostMessage(dlg1->GetSafeHwnd(), WM_THREAD_TEXT, reinterpret_cast<WPARAM>(dlg1->mainDlgmsg.GetBuffer()), NULL);
+
+	void* temp = data2Server(droneNr);
+
+	// Store image size into second 64bit long memory block
+	uint64_t tLength = message->payloadlen;
+	memcpy((uint8_t*)temp + MEMOFFSET + 9, &tLength, sizeof(uint64_t));
+
+	memcpy((uint8_t*)temp + MEMOFFSET + 18, message->payload, message->payloadlen);
+
+	v_uint8_t st = (v_uint8_t)temp + 17 + MEMOFFSET;
+
+	MQTTClient_freeMessage(&message);
+	MQTTClient_free(topicName);
+
+	st[0] = false;
+
+	return 1;
+}
+
+void CDialog1Dlg::MQTTmsgdeliv(void* context, MQTTClient_deliveryToken dt)
+{
+	CDialog1Dlg* dlg1 = theApp.m_pDlg1;
+	int droneNr = ((uint8_t*)context)[0];
+	dlg1->mainDlgmsg.Format("Drone: %d MQTT Message with delivery token %d sent\n", droneNr, dt);
+	::PostMessage(dlg1->GetSafeHwnd(), WM_THREAD_TEXT, reinterpret_cast<WPARAM>(dlg1->mainDlgmsg.GetBuffer()), NULL);
+}
+
+void CDialog1Dlg::MQTTconnlost(void* context, char* cause)
+{
+	CDialog1Dlg* dlg1 = theApp.m_pDlg1;
+	int droneNr = ((uint8_t*)context)[0];
+	dlg1->mainDlgmsg.Format("Drone: %d MQTT Connection lost %s\n", droneNr, cause);
+	::PostMessage(dlg1->GetSafeHwnd(), WM_THREAD_TEXT, reinterpret_cast<WPARAM>(dlg1->mainDlgmsg.GetBuffer()), NULL);
+}
+
 LRESULT CDialog1Dlg::SendWayPoint2Drone(WPARAM wParam, LPARAM lParam)
 {
 	int drone = (int)lParam;
@@ -752,22 +799,22 @@ int CDialog1Dlg::SendWayPoint2Drone2(int drone)
 	memcpy(&temp, (uint8_t*)tmp + 9, sizeof(uint64_t));
 	const uint64_t len = temp;
 	uint8_t* data = (uint8_t*)tmp + 18;
-	uint8_t* st = (uint8_t*)tmp + 17;
+	v_uint8_t st = (v_uint8_t)tmp + 17;
 
 	if (drone > 10 || drone < 1)
 	{
 		mainDlgmsg.Format("Drone number %d is not supported! Please choose a different one.", drone);
 		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
-		st[0] = 0;
-		return 0;
+		st[0] = false;
+		return 1;
 	}
 
 	if (isConnected[drone - 1] == 0)
 	{
 		mainDlgmsg.Format("Drone: %d is not connected, WayPointData not send!", drone);
 		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
-		st[0] = 0;
-		return 0;
+		st[0] = false;
+		return 1;
 	}
 
 	const char* url = "tcp://%s:1883";
@@ -778,8 +825,8 @@ int CDialog1Dlg::SendWayPoint2Drone2(int drone)
 	{
 		mainDlgmsg.Format("Drone: %d Failed to create client, return code %d\n", drone, rc);
 		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
-		st[0] = 0;
-		return 0;
+		st[0] = false;
+		return rc;
 	}
 
 
@@ -790,8 +837,8 @@ int CDialog1Dlg::SendWayPoint2Drone2(int drone)
 		mainDlgmsg.Format("Drone: %d Failed to connect, return code %d\n", drone, rc);
 		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
 		MQTTClient_destroy(&client);
-		st[0] = 0;
-		return 0;
+		st[0] = false;
+		return rc;
 	}
 	else
 	{
@@ -809,8 +856,7 @@ int CDialog1Dlg::SendWayPoint2Drone2(int drone)
 		mainDlgmsg.Format("Drone: %d Failed to publish message, return code %d\n",drone , rc);
 		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
 		MQTTClient_destroy(&client);
-		st[0] = 0;
-		return 0;
+		goto cleanup;
 	}
 	int ttoken = token;
 	rc = -1;
@@ -827,9 +873,17 @@ int CDialog1Dlg::SendWayPoint2Drone2(int drone)
 		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
 	}
 
+cleanup:
+
+	if ((rc = MQTTClient_disconnect(client, 10000)) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to disconnect, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+	}
+
 	MQTTClient_destroy(&client);
 
-	st[0] = 0;
+	st[0] = false;
 
 	return rc;
 }
@@ -847,7 +901,7 @@ LRESULT CDialog1Dlg::GetImageAndTelemetryData(WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 
-	mainDlgmsg.Format("Drone: %d image data aquired to python", drone);
+	mainDlgmsg.Format("Drone: %d image data aquired to Python", drone);
 	PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
 
 	pThread[drone - 1]->PostThreadMessageA(WM_PYWRAPPER_IMAGEANDTELEMETRYDATA, wParam, lParam);
@@ -855,15 +909,152 @@ LRESULT CDialog1Dlg::GetImageAndTelemetryData(WPARAM wParam, LPARAM lParam)
 	return 1;
 }
 
+LRESULT CDialog1Dlg::GetEncodedImageData(WPARAM wparam, LPARAM lParam)
+{
+	int drone = (int)lParam;
+	std::thread t(&CDialog1Dlg::GetEncodedImageData2, this, drone);
+	// Detach the function from it's main process so we are not blocking any Dialog drawing
+	t.detach();
+
+	return 0;
+}
+
+int CDialog1Dlg::GetEncodedImageData2(int drone)
+{
+#define MEMOFFSETIMG 4000000
+	using namespace std::chrono;
+
+	int rc;
+	MQTTDrone_Number = drone;
+	MQTTClient client;
+	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+	MQTTClient_message pubmsg = MQTTClient_message_initializer;
+	MQTTClient_deliveryToken token = 0;
+	std::string t;
+
+	void* tmp = data2Server(drone);
+
+	uint64_t temp;
+	memcpy(&temp, (uint8_t*)tmp + 9 + MEMOFFSETIMG, sizeof(uint64_t));
+	const uint64_t len = temp;
+	uint8_t* data = (uint8_t*)tmp + 18 + MEMOFFSETIMG;
+	v_uint8_t st = (v_uint8_t)tmp + 17 + MEMOFFSETIMG;
+
+	if (drone > 10 || drone < 1)
+	{
+		mainDlgmsg.Format("Drone number %d is not supported! Please choose a different one.", drone);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+		st[0] = false;
+		return 1;
+	}
+
+	if (isConnected[drone - 1] == 0)
+	{
+		mainDlgmsg.Format("Drone: %d is not connected, Drone CMD not send!", drone);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+		st[0] = false;
+		return 1;
+	}
+
+	CString finalUrl;
+	finalUrl.Format("tcp://%s:1883", IPperDrone[drone - 1].GetBuffer());
+
+	if ((rc = MQTTClient_create(&client, finalUrl.GetBuffer(), CLIENTID, MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to create client, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+		st[0] = false;
+		return rc;
+	}
+
+	if ((rc = MQTTClient_setCallbacks(client, &MQTTDrone_Number, &CDialog1Dlg::MQTTconnlost, &CDialog1Dlg::MQTTmsgarrv, &CDialog1Dlg::MQTTmsgdeliv)) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to set callbacks, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+		MQTTClient_destroy(&client);
+		st[0] = false;
+		return rc;
+	}
+
+	conn_opts.keepAliveInterval = 20;
+	conn_opts.cleansession = 1;
+	if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to connect, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+		MQTTClient_destroy(&client);
+		st[0] = false;
+		return rc;
+	}
+	else
+	{
+		mainDlgmsg.Format("Drone: %d MQTT connected", drone);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+	}
+
+	if ((rc = MQTTClient_subscribe(client, TOPIC, m_ComboBox3.GetCurSel())) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to subscribe, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+		goto cleanup;
+	}
+
+	t = std::to_string(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
+
+	// When passing RTT from Python a round trip time test is performed, this also has to be enabled in AOS App
+	if (strcmp((const char*)data, "RTT") == 0)
+	{
+		pubmsg.payload = (void*)t.c_str();
+		pubmsg.payloadlen = static_cast<int>(t.length());
+	}
+	else
+	{
+		pubmsg.payload = data;
+		pubmsg.payloadlen = len;
+	}
+	pubmsg.qos = m_ComboBox3.GetCurSel();
+	pubmsg.retained = 0;
+
+	if ((rc = MQTTClient_publishMessage(client, TOPIC, &pubmsg, &token)) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to publish message, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+		goto cleanup;
+	}
+
+	while (st[0])
+		;
+
+cleanup:
+
+	if ((rc = MQTTClient_unsubscribe(client, TOPIC)) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to unsubscribe, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+	}
+
+	if ((rc = MQTTClient_disconnect(client, 10000)) != MQTTCLIENT_SUCCESS)
+	{
+		mainDlgmsg.Format("Drone: %d Failed to disconnect, return code %d\n", drone, rc);
+		PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
+	}
+
+	MQTTClient_destroy(&client);
+
+	st[0] = false;
+
+	return rc;
+}
+
 LRESULT CDialog1Dlg::IsHWDecoderEnabled(WPARAM wParam, LPARAM lParam)
 {
-#define MEMOFFSET 3999000
+#define MEMOFFSETHWD 3999000
 	bool HWdecoder = m_ComboBox2.GetCurSel();
 
 	void* tmp = data2Server(1);
 
-	((uint8_t*)tmp)[MEMOFFSET] = !HWdecoder;
-	((uint8_t*)tmp)[MEMOFFSET + 1] = 0;
+	((v_uint8_t)tmp)[MEMOFFSETHWD] = !HWdecoder;
+	((v_uint8_t)tmp)[MEMOFFSETHWD + 1] = 0;
 
 	mainDlgmsg.Format("DroneSwarmServer: info to Python, HW decoder is turned %s", HWdecoder ? "OFF" : "ON");
 	PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(mainDlgmsg.GetBuffer()), NULL);
