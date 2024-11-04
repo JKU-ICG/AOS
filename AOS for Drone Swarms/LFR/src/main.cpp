@@ -108,10 +108,13 @@ int main(int argc, char** argv)
 {
     
     // Options (&defaults):
-    std::string demFile = "../data/zero_plane.obj";
+    //std::string demFile = "../data/zero_plane.obj";
+    std::string demFile = "./zero_plane.obj";
     float fovDegree = 43.10803984095769F; // degrees
-    std::string posesFile = "../data/F0/poses/poses_first30.json";
-    std::string imgFolder = "../data/F0/images_ldr/";
+    //std::string posesFile = "../data/F0/poses/poses_first30.json";
+    //std::string imgFolder = "../data/F0/images_ldr/";
+    std::string posesFile = "./poses/RGB.json";
+    std::string imgFolder = "./images";    
     std::string maskImage = "";
     float demTranslationZ = 0.0f;
     bool tmp_replaceTiff = false;
