@@ -381,9 +381,9 @@ int main(int argc, char** argv)
                     { // same line
                         ImGui::InputFloat("##demz", &(dem_translate.z)); 
                         ImGui::SameLine();
-                        if (ImGui::Button("-")) { dem_translate.z -= 1; }
+                        if (ImGui::Button("-")) { dem_translate.z -= 0.1; }
                         ImGui::SameLine();
-                        if (ImGui::Button("+")) { dem_translate.z += 1; }
+                        if (ImGui::Button("+")) { dem_translate.z += 0.1; }
                         ImGui::SameLine();  ImGui::Text("(z)");
                     }
                     ImGui::SliderFloat3("Rotation", &(dem_rotate.x), -180, 180, "%.1f (deg)" );
