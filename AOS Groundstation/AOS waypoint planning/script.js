@@ -64,8 +64,8 @@ ns.v.showAnimation = false; // show animation of drones - toggle state
 
 
 ns.c.DRONECOLOURCODES = [
-    {id: 1,  colour : '#B30F0F'},
-    {id: 2,  colour : '#013A65'},
+    {id: 1,  colour: '#B30F0F'},
+    {id: 2,  colour: '#013A65'},
     {id: 3,  colour: '#A460DC'},
     {id: 4,  colour: '#B07ACB'},
     {id: 5,  colour: '#EB00A0'},
@@ -73,7 +73,7 @@ ns.c.DRONECOLOURCODES = [
     {id: 7,  colour: '#55647E'},
     {id: 8,  colour: '#784491'},
     {id: 9,  colour: '#2476FF'},
-    {id: 10, colour:  '#31571B'}
+    {id: 10, colour: '#31571B'}
 ];
 
 ns.c.ICONSIZE = 32;
@@ -84,6 +84,8 @@ ns.c.DEFAULTHOLDTIME = 0;
 ns.c.defaultAltitude = 20;
 ns.c.defaultSpeed = 0.5;
 ns.c.defaultHeading = 0;
+ns.c.defaultIntegrationWindow = 30;
+ns.c.defaultMinposeDistance = 0.5;
 
 // default values for position of drone-tooltip
 ns.c.TOOLTIP_OFFSET_X = 10;
@@ -92,16 +94,110 @@ ns.c.TOOLTIP_OFFSET_Y = 10;
 // API-Endpoint the server is listening on
 ns.c.apiEndpoint = "http://localhost:8000/dronedata";
 
+// ns.map.map.on('click', function(e) {
+//     var droneId = document.getElementById('droneSelect').value;
+//     if (!droneId) {
+//         alert('No drone selected. Select a drone to add waypoints.');
+//     } else {
+
+//         let pointIndex = ns.d.wayPointsDrones.filter(w => w.id === droneId).length;
+
+//         var waypointIcon = ns.m.createWaypointIcon(droneId + '.' + pointIndex, ns.m.getDroneColourCode(droneId));
+
+//         var marker = L.marker(e.latlng, {draggable: true, icon:waypointIcon}).addTo(ns.map.map);
+        
+//         var waypoint = {}
+//         waypoint.id = droneId;
+//         waypoint.marker = marker;
+//         waypoint.wayline = null;
+
+//         // set defaults for altitude, speed and hold on position
+//         var altitudeInput = document.getElementById('altitudeInput').value;
+//         if (altitudeInput === "") {
+//             altitudeInput = ns.c.defaultAltitude;
+//         };
+
+//         var speedInput = document.getElementById('speedInput').value;
+//         if (speedInput === "") {
+//             speedInput = ns.c.defaultSpeed;
+//         };
+
+//         var holdInput = document.getElementById('holdInput').value;
+//         if (holdInput === "") {
+//             holdInput = ns.c.DEFAULTHOLDTIME;
+//         };
+
+
+//         waypoint.data = {
+//             lat: marker.lat, 
+//             lng: marker.lng,
+//             altitude: altitudeInput,
+//             speed: speedInput,
+//             camera: document.getElementById('cameraSelect').value,
+//             holdInput: holdInput,
+//             gimbalPitch: document.getElementById('gimbalPitchInput').value,
+//             gimbalYaw: document.getElementById('gimbalYawInput').value,
+//             heading: document.getElementById('headingInput').value,
+//         }
+//         waypoint.timestamp = Date.now();
+
+//         ns.d.wayPointsDrones.push(waypoint)
+
+//         ns.d.selectedMarker = waypoint.marker;
+//         ns.m.updateWaypointInformation(ns.d.selectedMarker); // update waypoint information in sidebar
+
+//         ns.m.updateSelectedMarkerDiv();
+
+//         if (ns.m.isShowWaylines()) {
+//             ns.m.deleteWaylines();
+//             ns.m.calculateWaylines();
+//         };
+
+//         // update DroneAnimation
+//         if (ns.m.isShowAnimation()) {
+//             ns.m.updateDroneAnimation();
+//         };
+
+//         ns.m.waypointMarkerMethods(waypoint);
+//     }
+// });
+
+
+// New Additions
+
+function toggleButton(button) {
+    const currentState = button.getAttribute('data-state');
+    const newState = currentState === 'off' ? 'on' : 'off';
+    button.setAttribute('data-state', newState);
+    button.textContent = button.textContent.replace(currentState.capitalize(), newState.capitalize());
+    button.classList.toggle('btn-custom-off');
+    button.classList.toggle('btn-custom-on');
+}
+
+// Initialize buttons
+document.addEventListener('DOMContentLoaded', function() {
+    const integrationButton = document.getElementById('integrationButton');
+    const anomalyButton = document.getElementById('anomalyButton');
+    
+    integrationButton.classList.add('btn-custom-off');
+    anomalyButton.classList.add('btn-custom-off');
+    
+    integrationButton.addEventListener('click', function() {
+        toggleButton(this);
+    });
+    
+    anomalyButton.addEventListener('click', function() {
+        toggleButton(this);
+    });
+});
+
 ns.map.map.on('click', function(e) {
     var droneId = document.getElementById('droneSelect').value;
     if (!droneId) {
         alert('No drone selected. Select a drone to add waypoints.');
     } else {
-
         let pointIndex = ns.d.wayPointsDrones.filter(w => w.id === droneId).length;
-
         var waypointIcon = ns.m.createWaypointIcon(droneId + '.' + pointIndex, ns.m.getDroneColourCode(droneId));
-
         var marker = L.marker(e.latlng, {draggable: true, icon:waypointIcon}).addTo(ns.map.map);
         
         var waypoint = {}
@@ -110,24 +206,16 @@ ns.map.map.on('click', function(e) {
         waypoint.wayline = null;
 
         // set defaults for altitude, speed and hold on position
-        var altitudeInput = document.getElementById('altitudeInput').value;
-        if (altitudeInput === "") {
-            altitudeInput = ns.c.defaultAltitude;
-        };
+        var altitudeInput = document.getElementById('altitudeInput').value || ns.c.defaultAltitude;
+        var speedInput = document.getElementById('speedInput').value || ns.c.defaultSpeed;
+        var holdInput = document.getElementById('holdInput').value || ns.c.DEFAULTHOLDTIME;
 
-        var speedInput = document.getElementById('speedInput').value;
-        if (speedInput === "") {
-            speedInput = ns.c.defaultSpeed;
-        };
-
-        var holdInput = document.getElementById('holdInput').value;
-        if (holdInput === "") {
-            holdInput = ns.c.DEFAULTHOLDTIME;
-        };
-
+        // Get values from the new inputs
+        var integrationWindowInput = document.getElementById('integrationWindowInput').value || ns.c.defaultIntegrationWindow;
+        var minposeDistanceInput = document.getElementById('minposeDistanceInput').value || ns.c.defaultMinposeDistance;
 
         waypoint.data = {
-            lat: marker.lat, 
+            lat: marker.lat,
             lng: marker.lng,
             altitude: altitudeInput,
             speed: speedInput,
@@ -136,6 +224,10 @@ ns.map.map.on('click', function(e) {
             gimbalPitch: document.getElementById('gimbalPitchInput').value,
             gimbalYaw: document.getElementById('gimbalYawInput').value,
             heading: document.getElementById('headingInput').value,
+            integrationWindow: parseInt(integrationWindowInput),
+            minposeDistance: parseFloat(minposeDistanceInput),
+            integration: document.getElementById('integrationButton').getAttribute('data-state'),
+            anomaly: document.getElementById('anomalyButton').getAttribute('data-state')
         }
         waypoint.timestamp = Date.now();
 
@@ -159,7 +251,72 @@ ns.map.map.on('click', function(e) {
         ns.m.waypointMarkerMethods(waypoint);
     }
 });
+// Helper function to capitalize first letter (add this if you don't have it already)
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
 
+// changes 24.09.2024 (working)
+// ns.map.map.on('click', function(e) {
+//     var droneId = document.getElementById('droneSelect').value;
+//     if (!droneId) {
+//         alert('No drone selected. Select a drone to add waypoints.');
+//     } else {
+//         let pointIndex = ns.d.wayPointsDrones.filter(w => w.id === droneId).length;
+//         var waypointIcon = ns.m.createWaypointIcon(droneId + '.' + pointIndex, ns.m.getDroneColourCode(droneId));
+//         var marker = L.marker(e.latlng, {draggable: true, icon:waypointIcon}).addTo(ns.map.map);
+        
+//         var waypoint = {}
+//         waypoint.id = droneId;
+//         waypoint.marker = marker;
+//         waypoint.wayline = null;
+
+//         // set defaults for altitude, speed and hold on position
+//         var altitudeInput = document.getElementById('altitudeInput').value || ns.c.defaultAltitude;
+//         var speedInput = document.getElementById('speedInput').value || ns.c.defaultSpeed;
+//         var holdInput = document.getElementById('holdInput').value || ns.c.DEFAULTHOLDTIME;
+
+//         // Get values from the new inputs
+//         var integrationWindowInput = document.getElementById('integrationWindowInput').value || ns.c.defaultIntegrationWindow;
+//         var minposeDistanceInput = document.getElementById('minposeDistanceInput').value || ns.c.defaultMinposeDistance;
+
+//         waypoint.data = {
+//             lat: marker.lat,
+//             lng: marker.lng,
+//             altitude: altitudeInput,
+//             speed: speedInput,
+//             camera: document.getElementById('cameraSelect').value,
+//             holdInput: holdInput,
+//             gimbalPitch: document.getElementById('gimbalPitchInput').value,
+//             gimbalYaw: document.getElementById('gimbalYawInput').value,
+//             heading: document.getElementById('headingInput').value,
+//             integrationWindow: integrationWindowInput,
+//             minposeDistance: parseFloat(minposeDistanceInput)
+//         }
+//         waypoint.timestamp = Date.now();
+
+//         ns.d.wayPointsDrones.push(waypoint)
+
+//         ns.d.selectedMarker = waypoint.marker;
+//         ns.m.updateWaypointInformation(ns.d.selectedMarker); // update waypoint information in sidebar
+
+//         ns.m.updateSelectedMarkerDiv();
+
+//         if (ns.m.isShowWaylines()) {
+//             ns.m.deleteWaylines();
+//             ns.m.calculateWaylines();
+//         };
+
+//         // update DroneAnimation
+//         if (ns.m.isShowAnimation()) {
+//             ns.m.updateDroneAnimation();
+//         };
+
+//         ns.m.waypointMarkerMethods(waypoint);
+//     }
+// });
+
+// Additions are done
 
 // methods
 
@@ -248,63 +405,215 @@ ns.m.isShowWaylines = () => {
     return document.getElementById('showWaylines').value === 'show';
 }
 
-ns.m.updateWaypointInformation = (marker) => {
-    var waypoint = ns.d.wayPointsDrones.find(w => w.marker === marker);
+// ns.m.updateWaypointInformation = (marker) => {
+//     var waypoint = ns.d.wayPointsDrones.find(w => w.marker === marker);
     
-    const droneSelect = document.getElementById('droneSelect');
-    const latitudeInput = document.getElementById('latitude');
-    const longitudeInput = document.getElementById('longitude');
-    const altitudeInput = document.getElementById('altitudeInput');
-    const speedInput = document.getElementById('speedInput');
-    const cameraSelect = document.getElementById('cameraSelect');
-    const holdInput = document.getElementById('holdInput');
-    const gimbalPitchInput = document.getElementById('gimbalPitchInput');
-    const gimbalYawInput = document.getElementById('gimbalYawInput');
-    const headingInput = document.getElementById('headingInput');
+//     const droneSelect = document.getElementById('droneSelect');
+//     const latitudeInput = document.getElementById('latitude');
+//     const longitudeInput = document.getElementById('longitude');
+//     const altitudeInput = document.getElementById('altitudeInput');
+//     const speedInput = document.getElementById('speedInput');
+//     const cameraSelect = document.getElementById('cameraSelect');
+//     const holdInput = document.getElementById('holdInput');
+//     const gimbalPitchInput = document.getElementById('gimbalPitchInput');
+//     const gimbalYawInput = document.getElementById('gimbalYawInput');
+//     const headingInput = document.getElementById('headingInput');
+//     const integrationWindowInput = document.getElementById('integrationWindowInput');
+//     const minposeDistanceInput = document.getElementById('minposeDistanceInput');
+//     // const integrationButton = document.getElementById('integrationButton');
+//     // const anomalyButton = document.getElementById('anomalyButton');
 
-    var waypointData = waypoint.data;
+//     var waypointData = waypoint.data;
 
-    var position = marker.getLatLng();
+//     var position = marker.getLatLng();
 
-    droneSelect.value = waypoint.id;
-    latitudeInput.value = position.lat;
-    longitudeInput.value = position.lng;
-    altitudeInput.value = waypointData.altitude;
-    speedInput.value = waypointData.speed;
-    cameraSelect.value = waypointData.camera;
-    holdInput.value = waypointData.holdInput;
-    gimbalPitchInput.value = waypointData.gimbalPitch;
-    gimbalYawInput.value = waypointData.gimbalYaw;
-    headingInput.value = waypointData.heading;
-}
+//     // Update integration button
+//     var integrationButton = document.getElementById('integrationButton');
+//     integrationButton.setAttribute('data-state', waypoint.data.integration);
+//     integrationButton.textContent = 'Integration: ' + waypoint.data.integration.capitalize();
+//     integrationButton.classList.toggle('btn-custom-off', waypoint.data.integration === 'off');
+//     integrationButton.classList.toggle('btn-custom-on', waypoint.data.integration === 'on');
+
+//     // Update anomaly button
+//     var anomalyButton = document.getElementById('anomalyButton');
+//     anomalyButton.setAttribute('data-state', waypoint.data.anomaly);
+//     anomalyButton.textContent = 'Anomaly: ' + waypoint.data.anomaly.capitalize();
+//     anomalyButton.classList.toggle('btn-custom-off', waypoint.data.anomaly === 'off');
+//     anomalyButton.classList.toggle('btn-custom-on', waypoint.data.anomaly === 'on');
+
+//     droneSelect.value = waypoint.id;
+//     latitudeInput.value = position.lat;
+//     longitudeInput.value = position.lng;
+//     altitudeInput.value = waypointData.altitude;
+//     speedInput.value = waypointData.speed;
+//     cameraSelect.value = waypointData.camera;
+//     holdInput.value = waypointData.holdInput;
+//     gimbalPitchInput.value = waypointData.gimbalPitch;
+//     gimbalYawInput.value = waypointData.gimbalYaw;
+//     headingInput.value = waypointData.heading;
+//     integrationWindowInput.value = waypointData.integrationWindow;
+//     minposeDistanceInput.value = waypointData.minposeDistance;
+//     integrationButton.setAttribute('data-state', waypointData.integration);
+//     anomalyButton.setAttribute('data-state', waypointData.anomaly);
+// }
+
+// Function to initialize the real-time waypoint data update
+ns.m.updateWaypointInformation = (marker) => {
+
+    // Set the selected marker to the clicked waypoint marker
+    ns.d.selectedMarker = marker;
+
+    var waypoint = ns.d.wayPointsDrones.find(w => w.marker === marker);
+
+    // Proceed only if waypoint is found
+    if (!waypoint) {
+        console.error("Waypoint not found for the clicked marker.");
+        alert("Waypoint not found for the clicked marker.");
+        return;
+    }
+
+    // Log the waypoint data to the console when it's selected
+    console.log("Selected Waypoint Data:", waypoint.data);
+
+    // Populate input fields with current data
+    document.getElementById('latitude').value = marker.getLatLng().lat;
+    document.getElementById('longitude').value = marker.getLatLng().lng;	
+    
+    document.getElementById('droneSelect').value = waypoint.id;
+    document.getElementById('altitudeInput').value = waypoint.data.altitude;
+    document.getElementById('speedInput').value = waypoint.data.speed;
+    document.getElementById('cameraSelect').value = waypoint.data.camera;
+    document.getElementById('holdInput').value = waypoint.data.holdInput;
+    document.getElementById('gimbalPitchInput').value = waypoint.data.gimbalPitch;
+    document.getElementById('gimbalYawInput').value = waypoint.data.gimbalYaw;
+    document.getElementById('headingInput').value = waypoint.data.heading;
+    document.getElementById('integrationWindowInput').value = waypoint.data.integrationWindow;
+    document.getElementById('minposeDistanceInput').value = waypoint.data.minposeDistance;
+
+
+    // Set up real-time update listeners on input fields
+    const fieldsToWatch = [
+        'altitudeInput',
+        'speedInput',
+        'cameraSelect',
+        'holdInput',
+        'gimbalPitchInput',
+        'gimbalYawInput',
+        'headingInput',
+        'integrationWindowInput',
+        'minposeDistanceInput'
+    ];
+
+    fieldsToWatch.forEach(id => {
+        document.getElementById(id).addEventListener('input', function() {
+            // Call update on the currently selected marker only
+            ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
+            ns.m.refreshWaypointsAndAnimations();
+        });
+    });
+
+    // Update toggle buttons (integration and anomaly)
+    const integrationButton = document.getElementById('integrationButton');
+    const anomalyButton = document.getElementById('anomalyButton');
+
+    integrationButton.setAttribute('data-state', waypoint.data.integration);
+    integrationButton.textContent = 'Integration: ' + waypoint.data.integration.capitalize();
+    integrationButton.classList.toggle('btn-custom-off', waypoint.data.integration === 'off');
+    integrationButton.classList.toggle('btn-custom-on', waypoint.data.integration === 'on');
+
+    anomalyButton.setAttribute('data-state', waypoint.data.anomaly);
+    anomalyButton.textContent = 'Anomaly: ' + waypoint.data.anomaly.capitalize();
+    anomalyButton.classList.toggle('btn-custom-off', waypoint.data.anomaly === 'off');
+    anomalyButton.classList.toggle('btn-custom-on', waypoint.data.anomaly === 'on');
+
+    // Add click events for the toggles to trigger real-time updates
+    integrationButton.addEventListener('click', () => {
+        ns.m.updateWaypointDataSelectedMarker(marker);
+        ns.m.refreshWaypointsAndAnimations();
+    });
+
+    anomalyButton.addEventListener('click', () => {
+        ns.m.updateWaypointDataSelectedMarker(marker);
+        ns.m.refreshWaypointsAndAnimations();
+    });
+};
+
+// Refresh function to update waylines and animations in real-time
+ns.m.refreshWaypointsAndAnimations = () => {
+    ns.m.deleteWaylines();
+    ns.m.calculateWaylines();
+
+    if (ns.m.isShowAnimation()) {
+        ns.m.updateDroneAnimation();
+    }
+};
 
 ns.m.getPopupContentString = (waypointElement) => {
     // return `<div>id: ${waypointElement.id} - ` + waypointElement.marker.getLatLng().toString() + '</div>'
     return `<div>droneId: ${waypointElement.id} <br> altitude: ${waypointElement.data.altitude} <br> speed: ${waypointElement.data.speed} ` + '</div>'
 }
 
-ns.m.updateWaypointDataSelectedMarker = (marker) => {
-    var waypoint = ns.d.wayPointsDrones.find(w => w.marker === marker);
+// ns.m.updateWaypointDataSelectedMarker = (marker) => {
+//     var waypoint = ns.d.wayPointsDrones.find(w => w.marker === marker);
 
-    var waypointData = waypoint.data;
+//     var waypointData = waypoint.data;
     
-    var lat = document.getElementById('latitude').value;
-    var lng = document.getElementById('longitude').value;
+//     var lat = document.getElementById('latitude').value;
+//     var lng = document.getElementById('longitude').value;
 
-    if (lat != 0 && lng != 0) {
-        var latlng = L.latLng(document.getElementById('latitude').value, document.getElementById('longitude').value);
-        waypoint.marker.setLatLng(latlng);
-    };
+//     if (lat != 0 && lng != 0) {
+//         var latlng = L.latLng(document.getElementById('latitude').value, document.getElementById('longitude').value);
+//         waypoint.marker.setLatLng(latlng);
+//     };
 
-    waypoint.id = document.getElementById('droneSelect').value;
-    waypointData.altitude = document.getElementById('altitudeInput').value;
-    waypointData.speed = document.getElementById('speedInput').value;
+//     waypoint.id = document.getElementById('droneSelect').value;
+//     waypointData.altitude = document.getElementById('altitudeInput').value;
+//     waypointData.speed = document.getElementById('speedInput').value;
+//     waypointData.camera = document.getElementById('cameraSelect').value;
+//     waypointData.holdInput = document.getElementById('holdInput').value;
+//     waypointData.gimbalPitch = document.getElementById('gimbalPitchInput').value;
+//     waypointData.gimbalYaw = document.getElementById('gimbalYawInput').value;
+//     waypointData.heading = document.getElementById('headingInput').value;
+//     waypointData.integrationWindow = document.getElementById('integrationWindowInput').value;
+//     waypointData.minposeDistance = document.getElementById('minposeDistanceInput').value;
+//     waypointData.integration = document.getElementById('integrationButton').getAttribute('data-state');
+//     waypointData.anomaly = document.getElementById('anomalyButton').getAttribute('data-state');
+// }
+
+// Update waypoint data directly when input values change
+ns.m.updateWaypointDataSelectedMarker = (marker) => {
+    if (!marker) {
+        console.error("No marker selected for updating.");
+        // alert("No marker selected for updating.");
+        return;
+    }
+
+    const waypoint = ns.d.wayPointsDrones.find(w => w.marker === marker);
+
+    // Check if waypoint is found; if not, log error and return
+    if (!waypoint) {
+        console.error("Waypoint for the selected marker not found.");
+        // alert("Waypoint for the selected marker not found.");
+        return;
+    }
+    
+    const waypointData = waypoint.data;
+
+    waypointData.altitude = document.getElementById('altitudeInput').value || ns.c.defaultAltitude;
+    waypointData.speed = document.getElementById('speedInput').value || ns.c.defaultSpeed;
     waypointData.camera = document.getElementById('cameraSelect').value;
-    waypointData.holdInput = document.getElementById('holdInput').value;
+    waypointData.holdInput = document.getElementById('holdInput').value || ns.c.DEFAULTHOLDTIME;
     waypointData.gimbalPitch = document.getElementById('gimbalPitchInput').value;
     waypointData.gimbalYaw = document.getElementById('gimbalYawInput').value;
     waypointData.heading = document.getElementById('headingInput').value;
-}
+    waypointData.integrationWindow = document.getElementById('integrationWindowInput').value || ns.c.defaultIntegrationWindow;
+    waypointData.minposeDistance = document.getElementById('minposeDistanceInput').value || ns.c.defaultMinposeDistance;
+    waypointData.integration = document.getElementById('integrationButton').getAttribute('data-state');
+    waypointData.anomaly = document.getElementById('anomalyButton').getAttribute('data-state');
+
+    // Log the updated waypoint data to the console
+    console.log("Updated Waypoint Data:", waypointData);
+};
 
 ns.m.deleteMarker = () => {
     if (ns.d.selectedMarker !== null) {
@@ -759,6 +1068,10 @@ ns.m.createFlightPlanningObject = () => {
                     gimbalPitch : wp.data.gimbalPitch,
                     gimbalYaw : wp.data.gimbalYaw,
                     heading: wp.data.heading,
+                    integrationWindow: wp.data.integrationWindow,
+                    minposeDistance: wp.data.minposeDistance,
+                    integration: wp.data.integration,
+                    anomaly: wp.data.anomaly
                 }
             );
         });
@@ -806,6 +1119,10 @@ ns.m.retrieveFlightPlanningObject = (data) => {
                 gimbalPitch: waypointdata['gimbalPitch'],
                 gimbalYaw: waypointdata['gimbalYaw'],
                 heading: waypointdata['heading'],
+                integrationWindow: waypointdata['integrationWindow'],
+                minposeDistance: waypointdata['minposeDistance'],
+                integration: waypointdata['integration'],
+                anomaly: waypointdata['anomaly']
             },
             
             waypoint.timestamp = Date.now();
@@ -849,12 +1166,12 @@ ns.m.sendDroneDataToApi = () => {
                 ns.m.updateDroneAnimation();
             };
             
-            alert("The project has been submitted and loaded successfully.");
+            // alert("The project has been submitted and loaded successfully.");
         })
 
         .catch((error) => {
             console.log(error);
-            alert("An error occurred while sending the data to the server.")
+            // alert("An error occurred while sending the data to the server.")
         })
 };
 
@@ -892,24 +1209,6 @@ ns.m.setTooltipPosition = (tooltip, marker) => {
     tooltip.style.left = (pos.x + ns.c.TOOLTIP_OFFSET_X) + 'px';
     tooltip.style.top = (pos.y + ns.c.TOOLTIP_OFFSET_Y) + 'px';
 };
-
-// events
-document.getElementById('updateWaypoint').addEventListener('click', function() {
-    if (ns.d.selectedMarker !== null) {
-        ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
-        
-        ns.m.deleteWaylines();
-        ns.m.reorderAllWaypoints();
-        ns.m.calculateWaylines();
-        ns.m.updateSelectedMarkerDiv();
-
-        if (!ns.m.isShowWaylines()) {
-            ns.m.deleteWaylines();
-        };
-    } else {
-        alert('No marker selected.');
-    }
-});
 
 document.getElementById('showWaylines').addEventListener('click', function() {
     var button = document.getElementById('showWaylines');
@@ -979,5 +1278,52 @@ ns.map.map.on('zoomend', function() {
         ns.m.updateDroneAnimation();
     };
 });
+
+ns.m.deleteAllWaypointsExceptLast = () => {
+    let uniqueDroneIds = [...new Set(ns.d.wayPointsDrones.map(wp => wp.id))];
+
+    uniqueDroneIds.forEach(droneId => {
+        let waypointsForDrone = ns.d.wayPointsDrones.filter(wp => wp.id === droneId);
+
+        // If there are multiple waypoints, delete all except the last one
+        if (waypointsForDrone.length > 1) {
+            waypointsForDrone.slice(0, -1).forEach(waypoint => {
+                ns.map.map.removeLayer(waypoint.marker); // Remove marker from the map
+                ns.d.wayPointsDrones = ns.d.wayPointsDrones.filter(wp => wp !== waypoint); // Remove from memory
+            });
+        }
+
+        // Clear associated flowpoints and tooltips for this drone
+        let droneAnimation = ns.d.droneAnimation.find(d => d.id === parseInt(droneId));
+        if (droneAnimation) {
+            droneAnimation.flowpoints = []; // Clear flowpoints
+            ns.m.hideTooltip(droneAnimation.tooltip); // Hide tooltip
+        }
+
+        // Update the last waypoint's index and icon
+        let lastWaypoint = waypointsForDrone[waypointsForDrone.length - 1];
+        if (lastWaypoint) {
+            lastWaypoint.marker.setIcon(ns.m.createWaypointIcon(`${droneId}.0`, ns.m.getDroneColourCode(droneId)));
+        }
+    });
+
+    // Recalculate waylines and refresh animations
+    ns.m.deleteWaylines();
+    if (ns.m.isShowWaylines()) {
+        ns.m.calculateWaylines();
+    }
+
+    if (ns.m.isShowAnimation()) {
+        ns.m.updateDroneAnimation();
+    }
+
+    ns.m.updateSelectedMarkerDiv();
+};
+
+document.getElementById('removeAllExceptLastBtn').addEventListener('click', function() {
+    ns.m.deleteAllWaypointsExceptLast();
+});
+
+
 
 }(ps3));
