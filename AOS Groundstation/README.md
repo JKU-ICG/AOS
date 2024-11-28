@@ -85,7 +85,9 @@ Our client-server infrastructure (contributed by Daniel Mehrwald) supports real-
 A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. It runs in your default webbrowser.  
 
 - The map is used in the same way as any other online map (scrolling, zooming, switching to satellite view, etc).
-- Clicking on the drone icons (which visualize position and heading) turns on/off the live video/telemetry window.
+- Clicking on the drone icons with **ctrl** button (which visualizes position and heading) turns on/off the live video/telemetry window.
+- New sliders are added to AOS Map Visualization. You can change the view of the drone by sliding the sliders (heading, gimbal pitch and gimbal yaw) without defining a new waypoint mission. You only need to click (ctrl + click) the drone you want to change its view and slide the sliders.
+- You can also increase the size of the video screen of the selected drone. 
   
 <div align="center">
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
@@ -98,9 +100,9 @@ A waypoint mission planning module (contributed by Patrick Sack) has also been d
 - To move a waypoint to  new positions, you can drag and drop the marker by a left mouse click.
 - Removing waypoints works by selecting a waypoint with a left mouse click on the marker and use the "remove waypoint" button. You can also remove a waypoint by right clicking on the marker.
 - Input parameters are taken over from previous waypoints by default, except the for GPS coordinates.
-- 
 - The data can be sent to the server by using the "send waypoints to server" button.
-- Only latest missions are stored. They can be loaded when no new mission is planned by clicking on "send waypoints to server".
+- Only the latest missions are stored. They can be loaded when no new mission is planned by clicking on "send waypoints to server".
+- Input parameters of the waypoint can be changed when it is selected by clicking on it. 
 
 <div align="center">
 	<video src="https://github.com/JKU-ICG/AOS/assets/83944465/dd64a1d8-44ad-423e-b650-0843ac04bb39" width="400" />
