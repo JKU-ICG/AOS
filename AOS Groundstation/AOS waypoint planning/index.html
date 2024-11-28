@@ -68,16 +68,22 @@
                                 <option selected value="">select camera...</option>
                                 <option value="wide angle">wide angle</option>
                                 <option value="tele">tele</option>
-                                <option value="thermal image">thermal image</option>
-                                <option value="anomaly">anomaly</option>
-                                <option value="integral (RGB)">integral (RGB)</option>
-                                <option value="integral (thermal)">integral (thermal)</option>
-                                <option value="integral (anomaly)">integral (anomaly)</option>
+                                <option value="thermal image">thermal</option>
+
                             </select>
                         </div>
                         <div class="col">
                             <label class="form-label fs-6 fw-bold" for="holdInput">hold on position [s]</label>
                             <input type="number" min="0" step="1" class="form-control" id="holdInput">
+                        </div>
+                    </div>
+                    <!-- New buttons added here -->
+                    <div class="row my-1">
+                        <div class="col-6">
+                            <button id="integrationButton" type="button" class="btn w-100" data-state="off">Integration: Off</button>
+                        </div>
+                        <div class="col-6">
+                            <button id="anomalyButton" type="button" class="btn w-100" data-state="off">Anomaly: Off</button>
                         </div>
                     </div>
                     <div class="row my-1">
@@ -100,13 +106,29 @@
                             </form>
                         </div>
                     </div>
+                    <div class="row my-1">
+                        <div class="col">
+                            <label class="form-label fs-6 fw-bold" for="integrationWindowInput">Integration Window [sampling]</label>
+                            <form class="row m-1 items-center">
+                                <input class="form-control col pl-2" id="integrationWindowInput" min="0" value="30" max="100" type="number">
+                            </form>
+                        </div>
+                        <div class="col">
+                            <label class="form-label fs-6 fw-bold" for="minposeDistanceInput">Sampling Distance [m]</label>
+                            <form class="row m-1 items-center">
+                                <input class="form-control col pl-2" id="minposeDistanceInput" min="0.0" value="0.5" max="10.0" step="0.1" type="number">
+                            </form>
+                        </div>
+                    </div>
+                    
                     <div class="row mt-1">
-                        <button id="updateWaypoint" type="button" class="btn btn-primary col m-1">Update waypoint</button>
+                        <!-- <button id="updateWaypoint" type="button" class="btn btn-primary col m-1">Update waypoint</button> -->
+                        <button class="btn btn-primary col m-1" id="showAnimation" type="button" value="show">Hide animation</button>
                         <button id="showWaylines" type="button" value="show" class="btn btn-primary col m-1">Hide waylines</button>
                     </div>
-                    <div class="row my-1">
+                    <!-- <div class="row my-1">
                         <button class="btn btn-primary col m-1" id="showAnimation" type="button" value="show">Hide animation</button>
-                    </div>
+                    </div> -->
                     <div id="rangeSliderDiv" class="row">
                         <label for="droneAnimationSlider" class="col-form-label text-center m-0">Time line</label>
                         <input type="range" class="form-range m-0" min="0" step="1" max="1" value="0" id="droneAnimationSlider">
@@ -118,9 +140,12 @@
                 </div>
 
                 <div class="row m-2">
+                    <button id="removeAllExceptLastBtn" type="button" class="btn btn-warning my-1">Remove path except last wp</button>
                     <button id="removeMarkerBtn" type="button" class="btn btn-warning my-1">Remove waypoint</button>
+
                     <button id="removeAllMarkerOfDroneIdBtn" type="button" class="btn btn-warning my-1">Remove waypoints of selected drone-id</button>
                     <button id="removeAllMarkerBtn" type="button" class="btn btn-danger text-white my-1">Remove all waypoints</button>
+                    
                 </div>
             </div>
         </div>
