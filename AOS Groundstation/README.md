@@ -86,8 +86,8 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
 
 - The map is used in the same way as any other online map (scrolling, zooming, switching to satellite view, etc).
 - Clicking on the drone icons with **ctrl** button (which visualizes position and heading) turns on/off the live video/telemetry window.
-- New sliders are added to AOS Map Visualization. You can change the view of the drone by sliding the sliders (heading, gimbal pitch and gimbal yaw) without defining a new waypoint mission. You only need to click (ctrl + click) the drone you want to change its view and slide the sliders.
-- You can also increase the size of the video screen of the selected drone. 
+- New sliders are added to AOS Map Visualization. You can change the view of the drone by sliding the sliders (heading, gimbal pitch and gimbal yaw) without defining a new waypoint mission. You only need to click (or ctrl + click) the drone you want to change its view and slide the sliders.
+- You can also increase the video screen size of the selected drone. 
   
 <div align="center">
   <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
