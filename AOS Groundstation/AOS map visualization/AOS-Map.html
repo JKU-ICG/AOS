@@ -24,6 +24,70 @@
         }
     </style>
     <div id="map"></div>
+    <main>
+        <div class="content-wrapper">
+            <section class="control-panel">
+                <div class="control-group">
+                    <input type="range" id="focalPlane" min="-50.0" max="50.0" step="0.1" value="0.0">
+                    <label for="focalPlane">Focal Length: <span id="focalPlaneValue">0.0</span></label>
+                </div>
+                <div class="control-group">
+                    <input type="range" id="compass_correction" min="-50.0" max="50.0" step="0.1" value="0.0">
+                    <label for="compass_correction">Compass Correction: <span id="compassCorrectionValue">0.0</span></label>
+                </div>
+                <div class="control-group">
+                    <input type="range" id="RXThreshold" min="0.50" max="1.00" step="0.01" value="0.90">
+                    <label for="RXThreshold">RX Threshold: <span id="RXThresholdValue">0.90</span></label>
+                </div>
+                <div class="control-group">
+                    <input type="range" id="focalPlanePitch" min="-45.0" max="45.0" step="0.1" value="0.0">
+                    <label for="focalPlanePitch">Focal Plane Pitch: <span id="focalPlanePitchValue">0.0</span></label>
+                </div>
+                <div class="control-group">
+                    <input type="range" id="focalPlaneRoll" min="-45.0" max="45.0" step="0.1" value="0.0">
+                    <label for="focalPlaneRoll">Focal Plane Roll: <span id="focalPlaneRollValue">0.0</span></label>
+                </div>
+                <!-- <div id="sendButtonContainer"></div>
+                 -->
+                <div class="control-group">
+                    <button id="sendButton" class="send-button">Send</button>
+                </div>
+            </section>
+            <section class="map-container">
+                <div id="map"></div>
+            </section>
+            <!-- New section for Heading, Gimbal Pitch, and Gimbal Yaw sliders -->
+            <section class="control-panel new-slider-group">
+                <div class="control-group">
+                    <input type="range" id="heading" min="0.0" max="360.0" step="1.0" value="0.0">
+                    <label for="heading">Heading: <span id="headingValue">0.0</span></label>
+                </div>
+                <div class="control-group">
+                    <input type="range" id="gimbalPitch" min="-90.0" max="20.0" step="1.0" value="0.0">
+                    <label for="gimbalPitch">Gimbal Pitch: <span id="gimbalPitchValue">0.0</span></label>
+                </div>
+                <div class="control-group">
+                    <input type="range" id="gimbalYaw" min="-10.0" max="10.0" step="1.0" value="0.0">
+                    <label for="gimbalYaw">Gimbal Yaw: <span id="gimbalYawValue">0.0</span></label>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="tooltip-size-control">
+        <div>
+            <input type="range" id="tooltipSizeSlider" min="200" max="1980" value="200" step="10">
+            <label for="tooltipSizeSlider">Image Size: <span id="sliderValue">200</span>px</label>
+        </div>
+    </div>
+
+    
+
+    <!-- bottom screen -->
+    <!-- <div id="bottomRightStream" class="bottom-right-stream">
+        <img id="bottomRightImage" src="" alt="Drone 1 Stream">
+    </div> -->
+    
     <script>
         
         // Creating a Layer object
@@ -53,7 +117,7 @@
         
 
     </script>
-    <script src="bundlejs_aosmap_functionality_v5.js"> // latest version bundle_new.js</script>
+    <script src="bundlejs_aosmap_functionality_v5_send_sliders_main_clicking.js"> // latest version bundle_new.js</script>
    </body>
 </html>
 
