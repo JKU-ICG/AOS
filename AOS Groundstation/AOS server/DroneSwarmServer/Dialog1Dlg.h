@@ -96,7 +96,7 @@ public:
 	AVFormatContext* pFormatCtx = nullptr;
 	CString telemetryData[10];
 	CString threadmsg[10];
-	CString mainDlgmsg;
+	CString mainDlgmsg[10];
 	CString IPperDrone[10];
 	CString PortperDrone[10];
 	int MQTTDrone_Number;
@@ -109,6 +109,7 @@ public:
 private:
 	CButton m_ButtonCtrl1;
 	double getSystemScaleFactor();
+	int count_colon(std::string s);
 	HANDLE fonthandle;
 	CFont* font;
 	CComboBox m_ComboBox1;
