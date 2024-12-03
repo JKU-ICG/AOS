@@ -87,11 +87,7 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
 - The map is used in the same way as any other online map (scrolling, zooming, switching to satellite view, etc).
 - Clicking on the drone icons with **ctrl** button (which visualizes position and heading) turns on/off the live video/telemetry window.
 - New sliders are added to AOS Map Visualization. You can change the view of the drone by sliding the sliders (heading, gimbal pitch and gimbal yaw) without defining a new waypoint mission. You only need to click (or ctrl + click) the drone you want to change its view and slide the sliders.
-- You can also increase the video screen size of the selected drone. 
-  
-<div align="center">
-  <video src="https://github.com/JKU-ICG/AOS/assets/83944465/ddc7e786-a140-49e5-959f-63f22a11d2be" width="400" />
-</div>
+- Video screen size slider is added. It can be changed for the selected drone. 
 
 ### AOS Waypoint Mission Planning
 A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning on a map and supports planning for single drones as well as swarms - including collision inspection over flight time. It runs in your default webbrowser.
@@ -107,6 +103,7 @@ A waypoint mission planning module (contributed by Patrick Sack) has also been d
 <div align="center">
 	<video src="https://github.com/JKU-ICG/AOS/assets/83944465/dd64a1d8-44ad-423e-b650-0843ac04bb39" width="400" />
 </div>
+
 		
 ## License
 * Data: Creative Commons Attribution 4.0 International
