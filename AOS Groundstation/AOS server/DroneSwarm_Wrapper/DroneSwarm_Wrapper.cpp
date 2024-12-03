@@ -188,6 +188,9 @@ int isHWDecoderEnabled()
         if (!st[0])
             break;
     }
+
+    py::gil_scoped_acquire acquire;
+
     return (int)((uint8_t*)lpvMem + MEMOFFSETHWD)[0];
 }
 
@@ -223,6 +226,9 @@ int sendWayPointData(const char* data, int DroneNumber)
         if (!st[0])
             break;
     }
+
+    py::gil_scoped_acquire acquire;
+
     return ret;
 }
 
@@ -252,6 +258,8 @@ py::array getImageAndTelemetryData(int DroneNumber)
 
     memcpy(&temp, (uint8_t*)lpvMem + 1034 + len1 + slot_offset, sizeof(uint64_t));
     const uint64_t len2 = temp;
+
+    py::gil_scoped_acquire acquire;
 
     return py::array(py::buffer_info(
         (uint8_t*)lpvMem + 1034 + slot_offset,
@@ -291,6 +299,8 @@ py::array getEncodedImageData(const char* data, int DroneNumber)
     const uint8_t image_len = temp;
     len = temp;
 
+    py::gil_scoped_acquire acquire;
+
     return py::array(py::buffer_info(
         (uint8_t*)lpvMem + 18 + slot_offset + MEMOFFSETIMG,
         sizeof(uint8_t),
@@ -301,8 +311,8 @@ py::array getEncodedImageData(const char* data, int DroneNumber)
 PYBIND11_MODULE(ds_wrapper, m)
 {
     m.doc() = "pybind11 DroneSwarmServer wrapper module";
-    m.def("isHWDecoderEnabled", isHWDecoderEnabled, "This function asks if we are HW or SW decoding a drone video stream");
-    m.def("sendWayPointData", sendWayPointData, "This function sends Waypoints to a drone");
-    m.def("getImageAndTelemetryData", getImageAndTelemetryData, "This function gets the Camera Image and Telemetry data from the drone");
-    m.def("getEncodedImageData", getEncodedImageData, "This function gets a encoded/compressed pre-processed Camera Image");
+    m.def("isHWDecoderEnabled", isHWDecoderEnabled, py::call_guard<py::gil_scoped_release>(), "This function asks if we are HW or SW decoding a drone video stream");
+    m.def("sendWayPointData", sendWayPointData, py::call_guard<py::gil_scoped_release>(), "This function sends Waypoints to a drone");
+    m.def("getImageAndTelemetryData", getImageAndTelemetryData, py::call_guard<py::gil_scoped_release>(), "This function gets the Camera Image and Telemetry data from the drone");
+    m.def("getEncodedImageData", getEncodedImageData, py::call_guard<py::gil_scoped_release>(), "This function gets a encoded/compressed pre-processed Camera Image");
 }
