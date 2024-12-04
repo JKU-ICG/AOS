@@ -101,9 +101,8 @@ A waypoint mission planning module (contributed by Patrick Sack) has also been d
 - Input parameters of the waypoint can be changed when it is selected by clicking on it. 
 
 <div align="center">
-	<video src="https://github.com/JKU-ICG/AOS/assets/83944465/dd64a1d8-44ad-423e-b650-0843ac04bb39" width="400" />
+	<video src="https://github.com/user-attachments/assets/1ea8e7f5-da1a-4faf-a66e-808cd7f62f79" width="400" />
 </div>
-
 		
 ## License
 * Data: Creative Commons Attribution 4.0 International
