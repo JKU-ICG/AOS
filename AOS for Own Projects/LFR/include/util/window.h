@@ -123,6 +123,7 @@ int InitWindowAndGUI(int &width, int &height, const char* appname = "OpenGL")
         ImGui_ImplOpenGL3_Init(glsl_version);
 
         gui = true;
+        return 0;
     }
     else
         return -1;
