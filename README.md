@@ -47,6 +47,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 2/5/2025: **AOS for Forest Ecology**: See [publications](#publications)
 - 09/27/2024: **Stereoscopic Depth Perception Through Foliage** accepted for publication in Nature Scientific Reports.
 - 7/20/2024: **AOS Groundstation for controlling single and multiple drones available**: See [Source Code](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)
 - 7/09/2024: **AOS featured in Scientific American**: See [Article](https://www.scientificamerican.com/article/how-drones-are-revolutionizing-search-and-rescue/)
