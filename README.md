@@ -45,6 +45,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - German Aerospace Center (DLR)
 - Upper Austrian Fire Brigade Association (OÖLFV)
 - Federal Office of Metrology and Surveying (BEV)
+- University of Cambridge (UC)
+- Helmholtz-Centre for Environmental Research (UFZ)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 - 2/5/2025: **AOS for Forest Ecology**: See [publications](#publications)
