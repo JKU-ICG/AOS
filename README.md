@@ -45,7 +45,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - German Aerospace Center (DLR)
 - Upper Austrian Fire Brigade Association (OÖLFV)
 - Federal Office of Metrology and Surveying (BEV)
-- University of Cambridge (UC)
+- University of Cambridge (CAM)
 - Helmholtz-Centre for Environmental Research (UFZ)
 - Austrian Hail iInsurance (HV)
 
