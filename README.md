@@ -47,6 +47,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Federal Office of Metrology and Surveying (BEV)
 - University of Cambridge (UC)
 - Helmholtz-Centre for Environmental Research (UFZ)
+- Austrian Hail iInsurance (HV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 - 2/5/2025: **AOS for Forest Ecology**: See [publications](#publications)
