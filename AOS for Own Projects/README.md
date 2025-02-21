@@ -4,7 +4,6 @@ Here we provide basic [source code](#Modules) for own AOS projects and give an o
 
 ## Modules
 
-- [LFR_EXE](LFR_EXE/README.md)      (Windows executable): AOS renderer compiled for windows (no sourcecode needed).
 - [LFR_SIMPLE](LFR_SIMPLE/README.md)      (C++ and Python code): simplified version of AOS renderer (computes integral images).
 - [LFR](LFR/README.md)      (C++ and Python code): full version of AOS renderer (computes integral images).
 - [DET](DET/README.md)      (Python code): contains the person classification.
