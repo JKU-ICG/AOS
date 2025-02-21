@@ -5,7 +5,8 @@ Here we provide basic [source code](#Modules) for own AOS projects and give an o
 ## Modules
 
 - [LFR_EXE](LFR_EXE/README.md)      (Windows executable): AOS renderer compiled for windows (no sourcecode needed).
-- [LFR](LFR/README.md)      (C++ and Python code): computes integral images.
+- [LFR_SIMPLE](LFR_SIMPLE/README.md)      (C++ and Python code): simplified version of AOS renderer (computes integral images).
+- [LFR](LFR/README.md)      (C++ and Python code): AOS renderer (computes integral images).
 - [DET](DET/README.md)      (Python code): contains the person classification.
 - [CAM](CAM/README.md)      (Python code): the module for triggering, recording, and processing thermal images.
 - [PLAN](PLAN/README.md)    (Python code): implementation of our path planning and adaptive sampling technique.
