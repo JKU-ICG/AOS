@@ -50,7 +50,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Austrian Hail Insurance (HV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 3/19/2025: **AOS with fixed-wing drones**: first succesful experiments with data recorded on [Quantum Systems' Vector](https://quantum-systems.com/vector/) and [DLR's MACS-Naon aerial camera system](https://www.dlr.de/de/os/ueber-uns/abteilungen/sicherheitsforschung-und-anwendung/macs-modular-camera-systems) with focus on wild-fire detection.  
+- 5/12/2025: **JKU and DLR support German Police**: ...in searching for a tripple murderer. [Press Release](https://quantum-systems.com/vector/)  
+- 3/19/2025: **AOS with fixed-wing drones**: first succesful experiments with data recorded on [Quantum Systems' Vector](https://quantum-systems.com/vector/) and [DLR's MACS-Nano aerial camera system](https://www.dlr.de/de/os/ueber-uns/abteilungen/sicherheitsforschung-und-anwendung/macs-modular-camera-systems) with focus on wild-fire detection.  
 - 2/5/2025: **AOS for Forest Ecology**: See [publications](#publications)
 - 09/27/2024: **Stereoscopic Depth Perception Through Foliage** accepted for publication in Nature Scientific Reports.
 - 7/20/2024: **AOS Groundstation for controlling single and multiple drones available**: See [Source Code](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)
