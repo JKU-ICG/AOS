@@ -1,5 +1,3 @@
-
-
 var ps3 = {
 };
 
@@ -10,251 +8,475 @@ var ps3 = {
     ns.c = {}; // constants
     ns.map = {}; // Leaflet elements
 
-// Creating a Layer object
-ns.map.osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxNativeZoom: 19, maxZoom:25});      
-ns.map.esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxNativeZoom: 19, maxZoom:25,
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-});
+    // Creating a Layer object
+    ns.map.osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxNativeZoom: 19, maxZoom:25});      
+    ns.map.esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxNativeZoom: 19, maxZoom:25,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });
 
-// Creating map options
-ns.map.mapOptions = {
-    center: [48.336922, 14.320400],
-    zoom: 18,
-    wheelPxPerZoomLevel: 120,
-    layers: [ns.map.osm]
-};
+    // Creating map options
+    ns.map.mapOptions = {
+        center: [48.336922, 14.320400],
+        zoom: 18,
+        wheelPxPerZoomLevel: 120,
+        layers: [ns.map.osm]
+    };
 
-// Creating a map object
-ns.map.map = new L.map('map', ns.map.mapOptions);
+    // Creating a map object
+    ns.map.map = new L.map('map', ns.map.mapOptions);
 
-ns.d.baseMaps = {
-    "OSM": ns.map.osm,
-    "ESRI": ns.map.esri
-};
-ns.d.overlayMaps = {};
+    ns.d.baseMaps = {
+        "OSM": ns.map.osm,
+        "ESRI": ns.map.esri
+    };
+    ns.d.overlayMaps = {};
 
-ns.map.layerControl = L.control.layers(ns.d.baseMaps, ns.d.overlayMaps, {position: 'bottomleft'}).addTo(ns.map.map);
-ns.d.selectedMarker = null;
+    ns.map.layerControl = L.control.layers(ns.d.baseMaps, ns.d.overlayMaps, {position: 'bottomleft'}).addTo(ns.map.map);
+    ns.d.selectedMarker = null;
 
-ns.d.wayPointsDrones = [];
-// let wayPointsDrones = [
+    // This variable is used to persist the selected waypoint key across updates.
+    ns.d.persistedSelectedKey = null;
+
+    ns.d.wayPointsDrones = [];
+    // let wayPointsDrones = [
     //     {id : 1, marker: MARKEROBJECT, waypointdata : {}, wayline: null, timestamp: TIMESTAMP},
     //     {id : 1, marker: MARKEROBJECT, waypointdata : [], wayline: null, timestmap: TIMESTAMP},
     // ]
-    
-    
-ns.d.droneAnimation = []
+        
+    ns.d.droneAnimation = []
     // [{id : 1, flowpoints: [], tooltip: div},
-    // {id : 2, flowpoints: [], tooltip: div}]
-    
-ns.d.wayLinesDrones = [];  
+    //  {id : 2, flowpoints: [], tooltip: div}]
+        
+    ns.d.wayLinesDrones = [];  
     // [{id : 1, wayline : POLYGONLINEOBJECT},{id : 2, wayline : POLYGONLINEOBJECT}]
 
-// initialize wayLines with null value;
-ns.m.initWayLinesDrones = function() {
-    for (let i=1; i < 11; i++) {
-        ns.d.wayLinesDrones.push({id: i, wayline : null})
-    };
-};
-
-ns.m.initWayLinesDrones();
-
-ns.v.addMarkerToMap = true;
-ns.v.showAnimation = false; // show animation of drones - toggle state
-
-
-ns.c.DRONECOLOURCODES = [
-    {id: 1,  colour: '#B30F0F'},
-    {id: 2,  colour: '#013A65'},
-    {id: 3,  colour: '#A460DC'},
-    {id: 4,  colour: '#B07ACB'},
-    {id: 5,  colour: '#EB00A0'},
-    {id: 6,  colour: '#000000'},
-    {id: 7,  colour: '#55647E'},
-    {id: 8,  colour: '#784491'},
-    {id: 9,  colour: '#2476FF'},
-    {id: 10, colour: '#31571B'}
-];
-
-ns.c.ICONSIZE = 32;
-ns.c.DRONEMARKERSIZE = 30;
-
-// default values for creating flight object (if no values are given)
-ns.c.DEFAULTHOLDTIME = 0;
-ns.c.defaultAltitude = 20;
-ns.c.defaultSpeed = 0.5;
-ns.c.defaultHeading = 0;
-ns.c.defaultIntegrationWindow = 30;
-ns.c.defaultMinposeDistance = 0.5;
-
-// default values for position of drone-tooltip
-ns.c.TOOLTIP_OFFSET_X = 10;
-ns.c.TOOLTIP_OFFSET_Y = 10;
-
-// API-Endpoint the server is listening on
-ns.c.apiEndpoint = "http://localhost:8000/dronedata";
-
-// ns.map.map.on('click', function(e) {
-//     var droneId = document.getElementById('droneSelect').value;
-//     if (!droneId) {
-//         alert('No drone selected. Select a drone to add waypoints.');
-//     } else {
-
-//         let pointIndex = ns.d.wayPointsDrones.filter(w => w.id === droneId).length;
-
-//         var waypointIcon = ns.m.createWaypointIcon(droneId + '.' + pointIndex, ns.m.getDroneColourCode(droneId));
-
-//         var marker = L.marker(e.latlng, {draggable: true, icon:waypointIcon}).addTo(ns.map.map);
-        
-//         var waypoint = {}
-//         waypoint.id = droneId;
-//         waypoint.marker = marker;
-//         waypoint.wayline = null;
-
-//         // set defaults for altitude, speed and hold on position
-//         var altitudeInput = document.getElementById('altitudeInput').value;
-//         if (altitudeInput === "") {
-//             altitudeInput = ns.c.defaultAltitude;
-//         };
-
-//         var speedInput = document.getElementById('speedInput').value;
-//         if (speedInput === "") {
-//             speedInput = ns.c.defaultSpeed;
-//         };
-
-//         var holdInput = document.getElementById('holdInput').value;
-//         if (holdInput === "") {
-//             holdInput = ns.c.DEFAULTHOLDTIME;
-//         };
-
-
-//         waypoint.data = {
-//             lat: marker.lat, 
-//             lng: marker.lng,
-//             altitude: altitudeInput,
-//             speed: speedInput,
-//             camera: document.getElementById('cameraSelect').value,
-//             holdInput: holdInput,
-//             gimbalPitch: document.getElementById('gimbalPitchInput').value,
-//             gimbalYaw: document.getElementById('gimbalYawInput').value,
-//             heading: document.getElementById('headingInput').value,
-//         }
-//         waypoint.timestamp = Date.now();
-
-//         ns.d.wayPointsDrones.push(waypoint)
-
-//         ns.d.selectedMarker = waypoint.marker;
-//         ns.m.updateWaypointInformation(ns.d.selectedMarker); // update waypoint information in sidebar
-
-//         ns.m.updateSelectedMarkerDiv();
-
-//         if (ns.m.isShowWaylines()) {
-//             ns.m.deleteWaylines();
-//             ns.m.calculateWaylines();
-//         };
-
-//         // update DroneAnimation
-//         if (ns.m.isShowAnimation()) {
-//             ns.m.updateDroneAnimation();
-//         };
-
-//         ns.m.waypointMarkerMethods(waypoint);
-//     }
-// });
-
-
-// New Additions
-
-function toggleButton(button) {
-    const currentState = button.getAttribute('data-state');
-    const newState = currentState === 'off' ? 'on' : 'off';
-    button.setAttribute('data-state', newState);
-    button.textContent = button.textContent.replace(currentState.capitalize(), newState.capitalize());
-    button.classList.toggle('btn-custom-off');
-    button.classList.toggle('btn-custom-on');
-}
-
-// Initialize buttons
-document.addEventListener('DOMContentLoaded', function() {
-    const integrationButton = document.getElementById('integrationButton');
-    const anomalyButton = document.getElementById('anomalyButton');
-    
-    integrationButton.classList.add('btn-custom-off');
-    anomalyButton.classList.add('btn-custom-off');
-    
-    integrationButton.addEventListener('click', function() {
-        toggleButton(this);
-    });
-    
-    anomalyButton.addEventListener('click', function() {
-        toggleButton(this);
-    });
-});
-
-ns.map.map.on('click', function(e) {
-    var droneId = document.getElementById('droneSelect').value;
-    if (!droneId) {
-        alert('No drone selected. Select a drone to add waypoints.');
-    } else {
-        let pointIndex = ns.d.wayPointsDrones.filter(w => w.id === droneId).length;
-        var waypointIcon = ns.m.createWaypointIcon(droneId + '.' + pointIndex, ns.m.getDroneColourCode(droneId));
-        var marker = L.marker(e.latlng, {draggable: true, icon:waypointIcon}).addTo(ns.map.map);
-        
-        var waypoint = {}
-        waypoint.id = droneId;
-        waypoint.marker = marker;
-        waypoint.wayline = null;
-
-        // set defaults for altitude, speed and hold on position
-        var altitudeInput = document.getElementById('altitudeInput').value || ns.c.defaultAltitude;
-        var speedInput = document.getElementById('speedInput').value || ns.c.defaultSpeed;
-        var holdInput = document.getElementById('holdInput').value || ns.c.DEFAULTHOLDTIME;
-
-        // Get values from the new inputs
-        var integrationWindowInput = document.getElementById('integrationWindowInput').value || ns.c.defaultIntegrationWindow;
-        var minposeDistanceInput = document.getElementById('minposeDistanceInput').value || ns.c.defaultMinposeDistance;
-
-        waypoint.data = {
-            lat: marker.lat,
-            lng: marker.lng,
-            altitude: altitudeInput,
-            speed: speedInput,
-            camera: document.getElementById('cameraSelect').value,
-            holdInput: holdInput,
-            gimbalPitch: document.getElementById('gimbalPitchInput').value,
-            gimbalYaw: document.getElementById('gimbalYawInput').value,
-            heading: document.getElementById('headingInput').value,
-            integrationWindow: parseInt(integrationWindowInput),
-            minposeDistance: parseFloat(minposeDistanceInput),
-            integration: document.getElementById('integrationButton').getAttribute('data-state'),
-            anomaly: document.getElementById('anomalyButton').getAttribute('data-state')
+    // initialize wayLines with null value;
+    ns.m.initWayLinesDrones = function() {
+        for (let i = 1; i < 11; i++) {
+            ns.d.wayLinesDrones.push({id: i, wayline: null});
         }
-        waypoint.timestamp = Date.now();
+    };
 
-        ns.d.wayPointsDrones.push(waypoint)
+    ns.m.initWayLinesDrones();
 
-        ns.d.selectedMarker = waypoint.marker;
-        ns.m.updateWaypointInformation(ns.d.selectedMarker); // update waypoint information in sidebar
+    ns.v.addMarkerToMap = true;
+    ns.v.showAnimation = false; // show animation of drones - toggle state
 
-        ns.m.updateSelectedMarkerDiv();
+    ns.c.DRONECOLOURCODES = [
+        {id: 1,  colour: '#B30F0F'},
+        {id: 2,  colour: '#013A65'},
+        {id: 3,  colour: '#A460DC'},
+        {id: 4,  colour: '#B07ACB'},
+        {id: 5,  colour: '#EB00A0'},
+        {id: 6,  colour: '#000000'},
+        {id: 7,  colour: '#55647E'},
+        {id: 8,  colour: '#784491'},
+        {id: 9,  colour: '#2476FF'},
+        {id: 10, colour: '#31571B'}
+    ];
 
-        if (ns.m.isShowWaylines()) {
-            ns.m.deleteWaylines();
-            ns.m.calculateWaylines();
-        };
+    ns.c.ICONSIZE = 32;
+    ns.c.DRONEMARKERSIZE = 30;
 
-        // update DroneAnimation
-        if (ns.m.isShowAnimation()) {
-            ns.m.updateDroneAnimation();
-        };
+    // default values for creating flight object (if no values are given)
+    ns.c.DEFAULTHOLDTIME = 0;
+    ns.c.defaultAltitude = 20;
+    ns.c.defaultSpeed = 0.5;
+    ns.c.defaultHeading = 0;
+    ns.c.defaultIntegrationWindow = 30;
+    ns.c.defaultMinposeDistance = 0.5;
 
-        ns.m.waypointMarkerMethods(waypoint);
+    // default values for position of drone-tooltip
+    ns.c.TOOLTIP_OFFSET_X = 10;
+    ns.c.TOOLTIP_OFFSET_Y = 10;
+
+    // API-Endpoint the server is listening on
+    ns.c.apiEndpoint = "http://localhost:8000/dronedata";
+
+    // ------------------------------
+    // Collision Detection Section (Corrected with Flowpoint Existence Checks)
+    // ------------------------------
+
+    // Define the collision threshold in meters.
+    // ns.c.COLLISION_THRESHOLD = 2.0; // adjust as needed
+
+    document
+        .getElementById('detectCollisionsBtn')
+        .addEventListener('click', function() {
+            
+            // 1) read & parse the input
+            const raw = document.getElementById('collisionThresholdInput').value;
+            const val = parseFloat(raw);
+            // guard against empty / NaN
+            if (!isNaN(val) && val >= 0) {
+            ns.c.COLLISION_THRESHOLD = val;
+            }
+
+            // 2) now run detection with the updated threshold
+            const collisions = ns.m.detectCollisions3D();
+            console.log('using threshold', ns.c.COLLISION_THRESHOLD, 'm →', collisions);
+            ns.m.showCollisionMarkers(collisions);
+    });
+    
+    // Helper function: Haversine distance between two geographic points.
+    ns.m.haversineDistance = function(latlng1, latlng2) {
+        var R = 6371000; // Earth radius in meters
+        var lat1 = latlng1.lat * Math.PI / 180;
+        var lat2 = latlng2.lat * Math.PI / 180;
+        var dLat = (latlng2.lat - latlng1.lat) * Math.PI / 180;
+        var dLon = (latlng2.lng - latlng1.lng) * Math.PI / 180;
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    };
+
+    ns.m.calc3DDistance = function(fpA, fpB) {
+        if (!fpA?.latlng || !fpB?.latlng) {
+            console.error("Missing fp.latlng:", fpA, fpB);
+            return Infinity;
+        }
+        const h = ns.m.haversineDistance(fpA.latlng, fpB.latlng);
+        const dz = fpB.altitude - fpA.altitude;
+        return Math.sqrt(h*h + dz*dz);
+    };
+    
+    // Detect collisions, even single‑waypoint drones
+    ns.m.detectCollisions3D = function() {
+        ns.m.updateDroneAnimation();
+    
+        const collisions = [];
+        const seen = {};
+    
+        // build drones[] with at least one fp.latlng per drone
+        const drones = ns.d.droneAnimation.map(drone => {
+            let fp = [...drone.flowpoints];
+            const wps = ns.d.wayPointsDrones.filter(w => +w.id === drone.id);
+            if (fp.length === 0 && wps.length === 1) {
+                const geo = wps[0].marker.getLatLng();
+                fp = [{ latlng: geo, altitude:+wps[0].data.altitude, timestep:0 }];
+            }
+            return { id: drone.id, flowpoints: fp };
+        }).filter(d => d.flowpoints.length);
+    
+        if (drones.length < 2) return collisions;
+    
+        // pad to same length
+        const M = Math.max(...drones.map(d=>d.flowpoints.length));
+        drones.forEach(d => {
+            const last = d.flowpoints[d.flowpoints.length-1];
+            for (let t=d.flowpoints.length; t<M; t++) {
+                d.flowpoints.push({ ...last, timestep:t });
+            }
+        });
+    
+        // step through time & pairwise
+        for (let t=0; t<M; t++) {
+            for (let i=0; i<drones.length; i++) {
+                for (let j=i+1; j<drones.length; j++) {
+                    const key = `${Math.min(drones[i].id,drones[j].id)}-` +
+                                `${Math.max(drones[i].id,drones[j].id)}`;
+                    if (seen[key]) continue;
+    
+                    const A = drones[i].flowpoints[t];
+                    const B = drones[j].flowpoints[t];
+                    const d = ns.m.calc3DDistance(A, B);
+                    if (d <= ns.c.COLLISION_THRESHOLD) {
+                        const la = A.latlng, lb = B.latlng;
+                        const mid = { lat:(la.lat+lb.lat)/2, lng:(la.lng+lb.lng)/2 };
+                        collisions.push({
+                            time:       (A.timestep+B.timestep)/2,
+                            droneA:     drones[i].id,
+                            droneB:     drones[j].id,
+                            collisionPoint: mid,
+                            distance:   d
+                        });
+                        seen[key] = true;
+                    }
+                }
+            }
+        }
+        return collisions;
+    };
+    
+    // ns.m.showCollisionMarkers = function(collisions) {
+    //     // clear old
+    //     ns.d.collisionMarkers?.forEach(l=>ns.map.map.removeLayer(l));
+    //     ns.d.collisionMarkers = [];
+        
+    //     const regionRadiusPx = (ns.c.DRONEMARKERSIZE/2) + 5;
+
+    //     collisions.forEach(c => {
+    //         const { lat, lng } = c.collisionPoint;
+    
+    //         // true‑meters red circle
+    //         const rc = L.circle([lat,lng], {
+    //             radius:      regionRadiusPx,
+    //             color:       'red',
+    //             fillColor:   'red',
+    //             fillOpacity: 0.6,
+    //             weight:      2
+    //         }).addTo(ns.map.map);
+    
+    //         // fixed black dot
+    //         const bd = L.circleMarker([lat,lng], {
+    //             radius:      3,
+    //             color:       'black',
+    //             fillOpacity: 1,
+    //             weight:      1
+    //         }).addTo(ns.map.map);
+    
+    //         const popupMessage = `Drone ${c.droneA} collides with Drone ${c.droneB}  at (${lat.toFixed(8)}, ${lng.toFixed(8)}) with a distance of ${c.distance.toFixed(3)} m.`;
+        
+    //         bd.bindPopup(popupMessage, {
+    //             autoClose: false,
+    //             closeOnClick: false
+    //         }).openPopup();  // immediately open so the user sees it
+
+    
+    //         ns.d.collisionMarkers.push(rc, bd);
+    //     });
+    // };
+
+    // ------------------------------
+    // End of Collision Detection Section
+    // ------------------------------
+
+
+    // New Additions
+
+    // ns.m.showCollisionMarkers = function(collisions) {
+    //     // 1) clear out old markers
+    //     if (ns.d.collisionMarkers) {
+    //       ns.d.collisionMarkers.forEach(l => ns.map.map.removeLayer(l));
+    //     }
+    //     ns.d.collisionMarkers = [];
+      
+    //     // 2) pick a fixed pixel radius
+    //     //    let’s say we want it to be exactly the same diameter as your drone icon:
+    //     const pxRadius = ns.c.DRONEMARKERSIZE / 2 + 10;  // 5px of “halo” padding
+      
+    //     collisions.forEach(c => {
+    //       const { lat, lng } = c.collisionPoint;
+      
+    //       // a) PIXEL‑fixed red circleMarker
+    //         const redZone = L.circleMarker([lat, lng], {
+    //             radius:      pxRadius,       // **pixels** only
+    //             color:       'red',
+    //             fillColor:   'red',
+    //             fillOpacity: 0.4,
+    //             weight:      2
+    //         }).addTo(ns.map.map);
+        
+    //         // b) the small black dot stays the same
+    //         const blackDot = L.circleMarker([lat, lng], {
+    //             radius:      3,
+    //             color:       'black',
+    //             fillOpacity: 1,
+    //             weight:      1
+    //         }).addTo(ns.map.map);
+      
+    //         const popupMessage = `Drone ${c.droneA} collides with Drone ${c.droneB}  at (${lat.toFixed(8)}, ${lng.toFixed(8)}) with a distance of ${c.distance.toFixed(3)} m.`;
+
+    //         blackDot.bindPopup(popupMessage, {
+    //             autoClose: false,
+    //             closeOnClick: false
+    //         }).openPopup();  // immediately open so the user sees it
+
+      
+    //         ns.d.collisionMarkers.push(redZone, blackDot);
+    //     });
+    // };
+
+    ns.m.showCollisionMarkers = function(collisions) {
+        // 1) clear old markers
+        if (ns.d.collisionMarkers) {
+            ns.d.collisionMarkers.forEach(l => ns.map.map.removeLayer(l));
+        }
+        ns.d.collisionMarkers = [];
+
+        // 2) read the user’s threshold (in meters) from the input
+        let raw = document.getElementById('collisionThresholdInput').value;
+        let thr = parseFloat(raw);
+        // fallback to your constant if invalid
+        const thresholdMeters = (!isNaN(thr) && thr >= 0)
+            ? thr
+            : ns.c.COLLISION_THRESHOLD;
+
+        // 3) fixed‐pixel red halo radius (unchanged)
+        // const pxRadius = ns.c.DRONEMARKERSIZE/2 + 10;
+
+        collisions.forEach(c => {
+            const { lat, lng } = c.collisionPoint;
+            const midLatLng = [lat, lng];
+
+            // — black circle = threshold area (in CRUDE METERS)
+            const redArea = L.circle(midLatLng, {
+            radius:      thresholdMeters/2,
+            color:       'red',
+            weight:      2,
+            fillColor:   'red',
+            fillOpacity: 0.4,
+            }).addTo(ns.map.map);
+
+            // — little black dot = exact collision point
+            const blackDot = L.circleMarker(midLatLng, {
+            radius:      3,
+            color:       'black',
+            fillOpacity: 1,
+            weight:      1
+            }).addTo(ns.map.map);
+      
+            const popupMessage = `Drone ${c.droneA} collides with Drone ${c.droneB}  at (${lat.toFixed(8)}, ${lng.toFixed(8)}) with a distance of ${c.distance.toFixed(3)} m.`;
+
+            blackDot.bindPopup(popupMessage, {
+                autoClose: false,
+                closeOnClick: false
+            }).openPopup();  // immediately open so the user sees it
+
+      
+            ns.d.collisionMarkers.push(blackDot, redArea);
+        });
+    };
+    
+      
+    function toggleButton(button) {
+        const currentState = button.getAttribute('data-state');
+        const newState = currentState === 'off' ? 'on' : 'off';
+        button.setAttribute('data-state', newState);
+        button.textContent = button.textContent.replace(currentState.capitalize(), newState.capitalize());
+        button.classList.toggle('btn-custom-off');
+        button.classList.toggle('btn-custom-on');
     }
-});
-// Helper function to capitalize first letter (add this if you don't have it already)
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
+
+    // Initialize buttons and attach event listeners once after DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+        const integrationButton = document.getElementById('integrationButton');
+        const anomalyButton = document.getElementById('anomalyButton');
+        
+        integrationButton.classList.add('btn-custom-off');
+        anomalyButton.classList.add('btn-custom-off');
+        
+        integrationButton.addEventListener('click', function() {
+            toggleButton(this);
+            if(ns.d.selectedMarker){
+                ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
+                ns.m.refreshWaypointsAndAnimations();
+            }
+        });
+        
+        anomalyButton.addEventListener('click', function() {
+            toggleButton(this);
+            if(ns.d.selectedMarker){
+                ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
+                ns.m.refreshWaypointsAndAnimations();
+            }
+        });
+
+        // Attach both input and change event listeners for real-time updates
+        const fieldsToWatch = [
+            'altitudeInput',
+            'speedInput',
+            'cameraSelect',
+            'holdInput',
+            'gimbalPitchInput',
+            'gimbalYawInput',
+            'headingInput',
+            'integrationWindowInput',
+            'minposeDistanceInput'
+        ];
+        fieldsToWatch.forEach(id => {
+            const element = document.getElementById(id);
+            element.addEventListener('input', function() {
+                if(ns.d.selectedMarker){
+                    ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
+                    ns.m.refreshWaypointsAndAnimations();
+                }
+            });
+            element.addEventListener('change', function() {
+                if(ns.d.selectedMarker){
+                    ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
+                    ns.m.refreshWaypointsAndAnimations();
+                }
+            });
+        });
+        
+        // --- New: Event listener for the collision detection button ---
+        const detectCollisionsBtn = document.getElementById('detectCollisionsBtn');
+        if (detectCollisionsBtn) {
+            detectCollisionsBtn.addEventListener('click', function() {
+                var collisions = ns.m.detectCollisions3D();
+                console.log("Detected collisions:", collisions);
+                ns.m.showCollisionMarkers(collisions);
+            });
+        }
+        // --- End new addition ---
+    });
+
+    ns.map.map.on('click', function(e) {
+        var droneId = document.getElementById('droneSelect').value;
+        if (!droneId) {
+            alert('No drone selected. Select a drone to add waypoints.');
+        } else {
+            let pointIndex = ns.d.wayPointsDrones.filter(w => w.id === droneId).length;
+            var waypointIcon = ns.m.createWaypointIcon(droneId + '.' + pointIndex, ns.m.getDroneColourCode(droneId));
+            var marker = L.marker(e.latlng, {draggable: true, icon: waypointIcon}).addTo(ns.map.map);
+            
+            var waypoint = {};
+            waypoint.id = droneId;
+            waypoint.marker = marker;
+            waypoint.wayline = null;
+
+            // set defaults for altitude, speed and hold on position
+            var altitudeInput = document.getElementById('altitudeInput').value || ns.c.defaultAltitude;
+            var speedInput = document.getElementById('speedInput').value || ns.c.defaultSpeed;
+            var holdInput = document.getElementById('holdInput').value || ns.c.DEFAULTHOLDTIME;
+
+            // Get values from the new inputs
+            var integrationWindowInput = document.getElementById('integrationWindowInput').value || ns.c.defaultIntegrationWindow;
+            var minposeDistanceInput = document.getElementById('minposeDistanceInput').value || ns.c.defaultMinposeDistance;
+
+            waypoint.data = {
+                lat: marker.lat,
+                lng: marker.lng,
+                altitude: altitudeInput,
+                speed: speedInput,
+                camera: document.getElementById('cameraSelect').value,
+                holdInput: holdInput,
+                gimbalPitch: document.getElementById('gimbalPitchInput').value,
+                gimbalYaw: document.getElementById('gimbalYawInput').value,
+                heading: document.getElementById('headingInput').value,
+                integrationWindow: parseInt(integrationWindowInput),
+                minposeDistance: parseFloat(minposeDistanceInput),
+                integration: document.getElementById('integrationButton').getAttribute('data-state'),
+                anomaly: document.getElementById('anomalyButton').getAttribute('data-state')
+            };
+            waypoint.timestamp = Date.now();
+
+            ns.d.wayPointsDrones.push(waypoint);
+
+            ns.d.selectedMarker = waypoint.marker;
+            ns.m.updateWaypointInformation(ns.d.selectedMarker); // update waypoint information in sidebar
+
+            ns.m.updateSelectedMarkerDiv();
+
+            if (ns.m.isShowWaylines()) {
+                ns.m.deleteWaylines();
+                ns.m.calculateWaylines();
+            }
+
+            // update DroneAnimation
+            if (ns.m.isShowAnimation()) {
+                ns.m.updateDroneAnimation();
+            }
+
+            ns.m.waypointMarkerMethods(waypoint);
+        }
+    });
+    // Helper function to capitalize first letter (add this if you don't have it already)
+    String.prototype.capitalize = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    };
 
 // changes 24.09.2024 (working)
 // ns.map.map.on('click', function(e) {
@@ -322,6 +544,10 @@ String.prototype.capitalize = function() {
 
 ns.m.waypointMarkerMethods = (waypoint) => {
     waypoint.marker.on('click', function() {
+        // Modified: Check if this marker is already selected. If yes, do nothing.
+        if (ns.d.selectedMarker === waypoint.marker) {
+            return;
+        }
         ns.d.selectedMarker = waypoint.marker;
         // waypoint.marker.bindPopup(ns.m.getPopupContentString(waypoint)); // popup for marker
         ns.m.updateSelectedMarkerDiv();
@@ -457,7 +683,6 @@ ns.m.isShowWaylines = () => {
 //     anomalyButton.setAttribute('data-state', waypointData.anomaly);
 // }
 
-// Function to initialize the real-time waypoint data update
 ns.m.updateWaypointInformation = (marker) => {
 
     // Set the selected marker to the clicked waypoint marker
@@ -490,27 +715,8 @@ ns.m.updateWaypointInformation = (marker) => {
     document.getElementById('integrationWindowInput').value = waypoint.data.integrationWindow;
     document.getElementById('minposeDistanceInput').value = waypoint.data.minposeDistance;
 
-
-    // Set up real-time update listeners on input fields
-    const fieldsToWatch = [
-        'altitudeInput',
-        'speedInput',
-        'cameraSelect',
-        'holdInput',
-        'gimbalPitchInput',
-        'gimbalYawInput',
-        'headingInput',
-        'integrationWindowInput',
-        'minposeDistanceInput'
-    ];
-
-    fieldsToWatch.forEach(id => {
-        document.getElementById(id).addEventListener('input', function() {
-            // Call update on the currently selected marker only
-            ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
-            ns.m.refreshWaypointsAndAnimations();
-        });
-    });
+    // Note: Input event listeners have been attached globally on DOMContentLoaded.
+    // Therefore, they are not reattached here to avoid duplicates.
 
     // Update toggle buttons (integration and anomaly)
     const integrationButton = document.getElementById('integrationButton');
@@ -526,19 +732,9 @@ ns.m.updateWaypointInformation = (marker) => {
     anomalyButton.classList.toggle('btn-custom-off', waypoint.data.anomaly === 'off');
     anomalyButton.classList.toggle('btn-custom-on', waypoint.data.anomaly === 'on');
 
-    // Add click events for the toggles to trigger real-time updates
-    integrationButton.addEventListener('click', () => {
-        ns.m.updateWaypointDataSelectedMarker(marker);
-        ns.m.refreshWaypointsAndAnimations();
-    });
-
-    anomalyButton.addEventListener('click', () => {
-        ns.m.updateWaypointDataSelectedMarker(marker);
-        ns.m.refreshWaypointsAndAnimations();
-    });
+    // Removed reattaching of click events for toggle buttons here, as they are attached globally.
 };
 
-// Refresh function to update waylines and animations in real-time
 ns.m.refreshWaypointsAndAnimations = () => {
     ns.m.deleteWaylines();
     ns.m.calculateWaylines();
@@ -580,7 +776,6 @@ ns.m.getPopupContentString = (waypointElement) => {
 //     waypointData.anomaly = document.getElementById('anomalyButton').getAttribute('data-state');
 // }
 
-// Update waypoint data directly when input values change
 ns.m.updateWaypointDataSelectedMarker = (marker) => {
     if (!marker) {
         console.error("No marker selected for updating.");
@@ -812,97 +1007,88 @@ ns.m.calculateFlowPoints = () => {
 };
 
 ns.m.calculateDroneAnimation = (id) => {
-    let flowpoints = ns.d.droneAnimation.find(d => d.id === id).flowpoints;
-
-    let waypointElems = ns.d.wayPointsDrones.filter(w => parseInt(w.id) === id);
-
-    if (waypointElems.length > 0 ) {
-    let latLngs = waypointElems.map(x => x.marker.getLatLng());
-    let holdTimes = waypointElems.map(x => x.data.holdInput);
-    let speeds = waypointElems.map(x=>x.data.speed);
-    let distances = [];
-    let euclideanDistances = [];
-    let angles = [];
-    
-    let heading = waypointElems.map(x => x.data.heading).map(Number);
-    let angularDistances = ns.m.calcAngularDistancesHeading(heading);
-    
-    let altitudes = waypointElems.map(x => x.data.altitude).map(Number);
-    let altitudeDistances = ns.m.calcAltitudeDistances(altitudes);
-
-    for (let i = 0; i < (latLngs.length - 1); i++) {
-        var from = latLngs[i];
-        var to = latLngs[i+1];
-
-        distances.push(from.distanceTo(to));
-        euclideanDistances.push(ns.m.calcEuclideanDistance(from, to));
-        angles.push(ns.m.calculateAngleFromCoordinates(from, to));
+    const anim       = ns.d.droneAnimation.find(d => d.id === id);
+    const flowpoints = anim.flowpoints = [];
+    const wpElems    = ns.d.wayPointsDrones.filter(w => +w.id === id);
+  
+    if (wpElems.length === 0) return;
+  
+    // pull arrays for simpler access
+    const latLngs   = wpElems.map(w => w.marker.getLatLng());
+    const holdTimes = wpElems.map(w => parseInt(w.data.holdInput) || 0);
+    const speeds    = wpElems.map(w => parseFloat(w.data.speed) || ns.c.defaultSpeed);
+    const altitudes = wpElems.map(w => Number(w.data.altitude) || ns.c.defaultAltitude);
+    const headings  = wpElems.map(w => Number(w.data.heading) || ns.c.defaultHeading);
+  
+    // precompute segment info
+    const segCount = latLngs.length - 1;
+    const distances = [], pixels = [], angles = [],
+          altDeltas = [], headDeltas = [];
+  
+    for (let i = 0; i < segCount; i++) {
+      distances.push(latLngs[i].distanceTo(latLngs[i+1]));  
+      pixels.push(ns.m.calcEuclideanDistance(latLngs[i], latLngs[i+1]));  
+      angles.push(ns.m.calculateAngleFromCoordinates(latLngs[i], latLngs[i+1]));
+      altDeltas.push(altitudes[i+1] - altitudes[i]);
+      headDeltas.push(((headings[i+1] - headings[i] + 540) % 360) - 180);
     }
-
-    for (let i = 0; i < distances.length; i++) {
-        // flowpoints for hold at position
-        if (holdTimes[i] === '') {
-            var holdTime = 0;
-        } else {
-            var holdTime = parseInt(holdTimes[i]);
-        }
-
-
-        for (let t = 0; t <= holdTime; t++) {
-            flowpoints.push({
-                "timestep" : flowpoints.length,
-                "travelPoint" : ns.map.map.latLngToLayerPoint(latLngs[i]), 
-                "headingAngle" : heading[i],
-                "altitude" : altitudes[i]
-            })
-        };
-
-        // flowpoints for moving between to positions
-        if (speeds[i] === '') {
-            var speed = ns.c.defaultSpeed;
-        } else {
-            var speed = parseFloat(speeds[i])
-        }
-        var travelTime = Math.ceil(parseFloat(distances[i]) / speed);
-        
-        var speedInPixel = euclideanDistances[i] / travelTime;
-        
-        var angularSpeed = angularDistances[i] / travelTime;
-        var startHeadingAngle = heading[i];
-
-        var altitudeSpeed = altitudeDistances[i] / travelTime;
-        var startAltitude = altitudes[i];
-
-        for (let tt = 1; tt < travelTime; tt++) {
-            var distanceNextPoint = tt * speedInPixel;
-            
-            var currentAngle = startHeadingAngle + tt * angularSpeed;
-            var currentAltitude = startAltitude + tt * altitudeSpeed;
-
-            var travelPoint = ns.m.calculateTravelPoint(angles[i], distanceNextPoint, latLngs[i])
-
-            flowpoints.push({
-                "timestep" : flowpoints.length,
-                "travelPoint" : travelPoint, 
-                "headingAngle" : currentAngle,
-                "altitude" : currentAltitude
-            });
-
-        }
-
-        // flowpoints at end point of each waypoint
-        if (i === (distances.length - 1)) {
-            flowpoints.push({
-                "timestep" : flowpoints.length,
-                "travelPoint" : ns.map.map.latLngToLayerPoint(latLngs[i+1]), 
-                "headingAngle" : heading[heading.length - 1],
-                "altitude" : altitudes[altitudes.length - 1]
-            }) // adds finishing point to flowpoints
-        }
-
+  
+    // build flowpoints
+    for (let i = 0; i < segCount; i++) {
+      const startGeo   = latLngs[i],
+            distMeters = distances[i],
+            travelSec  = Math.max(1, Math.ceil(distMeters / speeds[i])),
+            pxPerSec   = pixels[i] / travelSec,
+            dLat       = latLngs[i+1].lat - startGeo.lat,
+            dLng       = latLngs[i+1].lng - startGeo.lng,
+            dAlt       = altDeltas[i],
+            dHead      = headDeltas[i];
+  
+      // 1) HOLD at the beginning
+      const startPt = ns.map.map.latLngToLayerPoint(startGeo);
+      for (let t = 0; t <= holdTimes[i]; t++) {
+        flowpoints.push({
+          timestep:     flowpoints.length,
+          travelPoint:  startPt,
+          latlng:       startGeo,
+          headingAngle: headings[i],
+          altitude:     altitudes[i]
+        });
+      }
+  
+      // 2) MOVE in 1‑second steps
+      for (let sec = 1; sec < travelSec; sec++) {
+        const frac = sec / travelSec;
+        const pix  = ns.m.calculateTravelPoint(angles[i], sec * pxPerSec, startGeo);
+        const geo  = L.latLng(
+          startGeo.lat + frac * dLat,
+          startGeo.lng + frac * dLng
+        );
+        flowpoints.push({
+          timestep:     flowpoints.length,
+          travelPoint:  pix,
+          latlng:       geo,
+          headingAngle: headings[i] + frac * dHead,
+          altitude:     altitudes[i] + frac * dAlt
+        });
+      }
+  
+      // 3) if this is the last segment, push the final waypoint
+      if (i === segCount - 1) {
+        const endGeo = latLngs[i+1];
+        const endPt  = ns.map.map.latLngToLayerPoint(endGeo);
+        flowpoints.push({
+          timestep:     flowpoints.length,
+          travelPoint:  endPt,
+          latlng:       endGeo,
+          headingAngle: headings[i+1],
+          altitude:     altitudes[i+1]
+        });
+      }
     }
-}
 };
+  
+
 
 ns.m.calcEuclideanDistance = (fromLatLng, toLatLng) => {
     var from = ns.map.map.latLngToLayerPoint(fromLatLng);
@@ -1081,10 +1267,11 @@ ns.m.createFlightPlanningObject = () => {
 
 ns.d.wayPointsDrones = [];
 // let wayPointsDrones = [
-    //     {id : 1, marker: MARKEROBJECT, waypointdata : {}, wayline: null, timestamp: TIMESTAMP},
-    //     {id : 1, marker: MARKEROBJECT, waypointdata : [], wayline: null, timestmap: TIMESTAMP},
-    // ]
+//     {id : 1, marker: MARKEROBJECT, waypointdata : {}, wayline: null, timestamp: TIMESTAMP},
+//     {id : 1, marker: MARKEROBJECT, waypointdata : [], wayline: null, timestmap: TIMESTAMP},
+// ]
 
+// Modified retrieveFlightPlanningObject to persist the selected waypoint using a unique key "droneId.index"
 ns.m.retrieveFlightPlanningObject = (data) => {
     ns.d.selectedMarker = null;
     ns.d.wayPointsDrones = [];
@@ -1123,21 +1310,42 @@ ns.m.retrieveFlightPlanningObject = (data) => {
                 minposeDistance: waypointdata['minposeDistance'],
                 integration: waypointdata['integration'],
                 anomaly: waypointdata['anomaly']
-            },
-            
+            };
             waypoint.timestamp = Date.now();
             
-            pointIndex++;
             ns.m.waypointMarkerMethods(waypoint);
             ns.d.wayPointsDrones.push(waypoint);
-    });
+
+            // Compute key as "droneId.index"
+            let key = `${id}.${pointIndex}`;
+            if (ns.d.persistedSelectedKey && key === ns.d.persistedSelectedKey) {
+                ns.d.selectedMarker = marker;
+                ns.m.updateWaypointInformation(marker);
+                ns.m.updateSelectedMarkerDiv();
+            }
+            pointIndex++;
+        });
+    }
+    // Clear persisted key once selection is restored
+    ns.d.persistedSelectedKey = null;
+};
+
+// Modified sendDroneDataToApi to store the selected waypoint key before sending
+ns.m.sendDroneDataToApi = () => {
+    // Persist the selected waypoint key if one is selected
+    if (ns.d.selectedMarker) {
+        var waypoint = ns.d.wayPointsDrones.find(w => w.marker === ns.d.selectedMarker);
+        if (waypoint) {
+            let waypointsOfDrone = ns.d.wayPointsDrones.filter(w => w.id === waypoint.id);
+            let index = waypointsOfDrone.indexOf(waypoint);
+            ns.d.persistedSelectedKey = `${waypoint.id}.${index}`;
+        }
+    } else {
+        ns.d.persistedSelectedKey = null;
     }
 
+    console.log("Before sending, persisted key:", ns.d.persistedSelectedKey);
 
-}
-
-ns.m.sendDroneDataToApi = () => {
-    console.log("before", ns.d.wayPointsDrones);
     const request = new Request(ns.c.apiEndpoint, {
         method: "POST",
         headers: {
@@ -1259,7 +1467,11 @@ document.getElementById('showAnimation').addEventListener('click', function() {
     }
 });
 
+// Modified send button: update selected waypoint data before sending.
 document.getElementById('sendWaypointsBtn').addEventListener('click', function(e) {
+    if(ns.d.selectedMarker){
+         ns.m.updateWaypointDataSelectedMarker(ns.d.selectedMarker);
+    }
     e.preventDefault();
     e.stopPropagation();
 
@@ -1324,6 +1536,5 @@ document.getElementById('removeAllExceptLastBtn').addEventListener('click', func
     ns.m.deleteAllWaypointsExceptLast();
 });
 
-
-
 }(ps3));
+    
