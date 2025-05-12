@@ -134,9 +134,49 @@
                         <input type="range" class="form-range m-0" min="0" step="1" max="1" value="0" id="droneAnimationSlider">
                     </div>
                 </div>
-                
+               
+                <!-- new Threshold setter row -->
+                <!-- <div class="row m-2 align-items-center">
+                    <div class="col-auto">
+                        <label class="col-form-label fs-6 fw-bold" for="collisionThresholdInput">Collision Threshold [m]</label>
+                    </div>
+                    <form class="col">
+                        <input type="number" min="0" step="0.1" class="form-control" id="collisionThresholdInput" value="2.0">
+                    </form>
+                </div>             
                 <div class="row m-2">
-                    <button id="sendWaypointsBtn" type="button" class="btn btn-primary">Send waypoints to server</button>
+                    <button id="detectCollisionsBtn" type="button" class="btn btn-danger w-100">Detect Collisions</button>
+                </div>  -->
+
+                <div class="row m-2 align-items-end">
+                    <!-- threshold input occupies 8 columns -->
+                    <div class="col-4">
+                      <label class="form-label fs-6 fw-bold" for="collisionThresholdInput">
+                        Collision Threshold [m]
+                      </label>
+                      <input 
+                        type="number" 
+                        min="0" step="0.1" 
+                        class="form-control" 
+                        id="collisionThresholdInput" 
+                        value="2.0"
+                      >
+                    </div>
+                  
+                    <!-- make the button span all of its 4 columns and large -->
+                    <div class="col-8">
+                      <button 
+                        id="detectCollisionsBtn" 
+                        type="button" 
+                        class="btn btn-danger btn-lg w-100"
+                      >
+                        Detect Collisions
+                      </button>
+                    </div>
+                </div>
+
+                <div class="row m-2">
+                    <button id="sendWaypointsBtn" type="button" class="btn btn-primary">Update</button>   <!-- Send waypoints to server  to Update-->
                 </div>
 
                 <div class="row m-2">
@@ -147,9 +187,12 @@
                     <button id="removeAllMarkerBtn" type="button" class="btn btn-danger text-white my-1">Remove all waypoints</button>
                     
                 </div>
+
+                
+                
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="script_updated_collosion_v2_v2.js"></script>
 </body>
 </html>
