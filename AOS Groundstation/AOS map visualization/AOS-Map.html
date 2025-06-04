@@ -1,123 +1,105 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <title>AOS MAP</title>
-      <link rel="icon" type="image/x-icon" href="img\favicon-32x32.png">
-      <!-- <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/> CDN  without ChatGPT--> 
-      <!-- <script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script> -->
-      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-      <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/leaflet-rotatedmarker@0.2.0/leaflet.rotatedMarker.min.js"></script>
-      <link rel="stylesheet" type="text/css" href=".\styles.css"/>
-    </head>
-
-   <body>
-    <style>
-        .number-icon-default
-        {
-            background-image: 'droneShadow.png';
-            text-align:center;
-            color:Black;   
-            text-shadow: 1px 1px #000000;
-            font-size: large;
-            font-weight: bold;
-        }
-    </style>
-    <div id="map"></div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AOS MAP</title>
+    <link rel="icon" type="image/x-icon" href="img/favicon-32x32.png" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-rotatedmarker@0.2.0/leaflet.rotatedMarker.min.js"></script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
     <main>
-        <div class="content-wrapper">
-            <section class="control-panel">
-                <div class="control-group">
-                    <input type="range" id="focalPlane" min="-50.0" max="50.0" step="0.1" value="0.0">
-                    <label for="focalPlane">Focal Length: <span id="focalPlaneValue">0.0</span></label>
-                </div>
-                <div class="control-group">
-                    <input type="range" id="compass_correction" min="-50.0" max="50.0" step="0.1" value="0.0">
-                    <label for="compass_correction">Compass Correction: <span id="compassCorrectionValue">0.0</span></label>
-                </div>
-                <div class="control-group">
-                    <input type="range" id="RXThreshold" min="0.50" max="1.00" step="0.01" value="0.90">
-                    <label for="RXThreshold">RX Threshold: <span id="RXThresholdValue">0.90</span></label>
-                </div>
-                <div class="control-group">
-                    <input type="range" id="focalPlanePitch" min="-45.0" max="45.0" step="0.1" value="0.0">
-                    <label for="focalPlanePitch">Focal Plane Pitch: <span id="focalPlanePitchValue">0.0</span></label>
-                </div>
-                <div class="control-group">
-                    <input type="range" id="focalPlaneRoll" min="-45.0" max="45.0" step="0.1" value="0.0">
-                    <label for="focalPlaneRoll">Focal Plane Roll: <span id="focalPlaneRollValue">0.0</span></label>
-                </div>
-                <!-- <div id="sendButtonContainer"></div>
-                 -->
-                <div class="control-group">
-                    <button id="sendButton" class="send-button">Send</button>
-                </div>
-            </section>
-            <section class="map-container">
-                <div id="map"></div>
-            </section>
-            <!-- New section for Heading, Gimbal Pitch, and Gimbal Yaw sliders -->
-            <section class="control-panel new-slider-group">
-                <div class="control-group">
-                    <input type="range" id="heading" min="0.0" max="360.0" step="1.0" value="0.0">
-                    <label for="heading">Heading: <span id="headingValue">0.0</span></label>
-                </div>
-                <div class="control-group">
-                    <input type="range" id="gimbalPitch" min="-90.0" max="20.0" step="1.0" value="0.0">
-                    <label for="gimbalPitch">Gimbal Pitch: <span id="gimbalPitchValue">0.0</span></label>
-                </div>
-                <div class="control-group">
-                    <input type="range" id="gimbalYaw" min="-10.0" max="10.0" step="1.0" value="0.0">
-                    <label for="gimbalYaw">Gimbal Yaw: <span id="gimbalYawValue">0.0</span></label>
-                </div>
-            </section>
+      <div class="content-wrapper">
+        <div class="map-container">
+          <div id="map"></div>
         </div>
+      </div>
     </main>
 
-    <div id="tooltip-size-control">
-        <div>
-            <input type="range" id="tooltipSizeSlider" min="200" max="1980" value="200" step="10">
-            <label for="tooltipSizeSlider">Image Size: <span id="sliderValue">200</span>px</label>
+    <!-- RIGHT-SIDE CONTROLS WRAPPER -->
+    <div class="right-controls">
+      <!-- AOS group -->
+      <details class="control-panel aos-group">
+        <summary>AOS</summary>
+        <div class="control-body">
+          <div class="control-group">
+            <input type="range" id="focalPlane" min="-50.0" max="50.0" step="0.1" value="0.0" />
+            <label for="focalPlane">Focal Length: <span id="focalPlaneValue">0.0</span></label>
+          </div>
+          <div class="control-group">
+            <input type="range" id="compass_correction" min="-50.0" max="50.0" step="0.1" value="0.0" />
+            <label for="compass_correction">Compass Correction: <span id="compassCorrectionValue">0.0</span></label>
+          </div>
+          <div class="control-group">
+            <input type="range" id="RXThreshold" min="0.50" max="1.00" step="0.01" value="0.90" />
+            <label for="RXThreshold">RX Threshold: <span id="RXThresholdValue">0.90</span></label>
+          </div>
+          <div class="control-group">
+            <input type="range" id="focalPlanePitch" min="-45.0" max="45.0" step="0.1" value="0.0" />
+            <label for="focalPlanePitch">Focal Plane Pitch: <span id="focalPlanePitchValue">0.0</span></label>
+          </div>
+          <div class="control-group">
+            <input type="range" id="focalPlaneRoll" min="-45.0" max="45.0" step="0.1" value="0.0" />
+            <label for="focalPlaneRoll">Focal Plane Roll: <span id="focalPlaneRollValue">0.0</span></label>
+          </div>
         </div>
+      </details>
+
+      <!-- Drone group -->
+      <details class="control-panel drone-group">
+        <summary>Drone</summary>
+        <div class="control-body">
+          <div class="control-group">
+            <input type="range" id="heading" min="0.0" max="360.0" step="1.0" value="0.0" />
+            <label for="heading">Heading: <span id="headingValue">0.0</span></label>
+          </div>
+          <div class="control-group">
+            <input type="range" id="gimbalPitch" min="-90.0" max="20.0" step="1.0" value="0.0" />
+            <label for="gimbalPitch">Gimbal Pitch: <span id="gimbalPitchValue">0.0</span></label>
+          </div>
+          <div class="control-group">
+            <input type="range" id="gimbalYaw" min="-10.0" max="10.0" step="1.0" value="0.0" />
+            <label for="gimbalYaw">Gimbal Yaw: <span id="gimbalYawValue">0.0</span></label>
+          </div>
+        </div>
+      </details>
+
+      <!-- Image Size group -->
+      <details class="control-panel size-group">
+        <summary>Image</summary>
+        <div class="control-body">
+          <div class="control-group">
+            <input type="range" id="tooltipSizeSlider" min="200" max="1980" step="10" value="200" />
+            <label for="tooltipSizeSlider">Image Size: <span id="sliderValue">200</span>px</label>
+          </div>
+        </div>
+      </details>
     </div>
 
-    
-
-    <!-- bottom screen -->
-    <!-- <div id="bottomRightStream" class="bottom-right-stream">
-        <img id="bottomRightImage" src="" alt="Drone 1 Stream">
-    </div> -->
-    
     <script>
-        
-        // Creating a Layer object
-        var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxNativeZoom: 19, maxZoom:25});      
-        var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxNativeZoom: 19, maxZoom:25,
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-        });
-        
-        // Creating map options
-        var mapOptions = {
-            center: [51.5, -0.09],
-            zoom: 10,
-            wheelPxPerZoomLevel: 120,
-            layers: [osm]
-        };
-        
-        // Creating a map object
-        var map = new L.map('map', mapOptions);
-        
-        var baseMaps = {
-            "OSM": osm,
-            "ESRI": esri
-        };
-        var overlayMaps = {};
+      // Creating a Layer object
+      var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxNativeZoom: 19, maxZoom: 25 });
+      var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxNativeZoom: 19,
+        maxZoom: 25,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS…'
+      });
 
-        var layerControl = L.control.layers(baseMaps, overlayMaps, {position: 'bottomleft'}).addTo(map);
-        
+      var mapOptions = {
+        center: [51.5, -0.09],
+        zoom: 10,
+        wheelPxPerZoomLevel: 120,
+        layers: [osm]
+      };
+      var map = new L.map('map', mapOptions);
 
+      var baseMaps = { "OSM": osm, "ESRI": esri };
+      var overlayMaps = {};
+      L.control.layers(baseMaps, overlayMaps, { position: 'bottomleft' }).addTo(map);
     </script>
-    <script src="bundlejs_aosmap_functionality_v5.js"> // latest version bundle_new.js</script>
-   </body>
+    <script src="bundlejs_aosmap_functionality_v5 copy 2.js"></script>
+  </body>
 </html>
-
