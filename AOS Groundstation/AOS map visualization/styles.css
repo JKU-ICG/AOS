@@ -1,14 +1,43 @@
-html, body {
+/* Global reset and base */
+html, body, main, .content-wrapper, .map-container {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
+}
+
+html, body {
     font-family: system-ui, sans-serif;
     background-color: #f4f4f4;
     color: #333;
 }
 
+/* Map container */
+.map-container {
+    position: relative;
+}
 
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Number icon default */
+.number-icon-default {
+    background-image: url("img/droneShadow.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    text-align: center;
+    color: black;
+    text-shadow: 1px 1px #000;
+    font-size: large;
+    font-weight: bold;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+}
+
+/* Labels and spans */
 label {
     display: block;
     margin-top: 0.25rem;
@@ -16,6 +45,12 @@ label {
     font-size: 0.8em;
 }
 
+label span {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+/* Range inputs */
 input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
@@ -32,16 +67,7 @@ input[type="range"]:hover {
     opacity: 1;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #007BFF;
-    cursor: pointer;
-}
-
+input[type="range"]::-webkit-slider-thumb,
 input[type="range"]::-moz-range-thumb {
     width: 12px;
     height: 12px;
@@ -50,19 +76,9 @@ input[type="range"]::-moz-range-thumb {
     cursor: pointer;
 }
 
-label span {
-    font-weight: bold;
-    font-size: 1em; /* Same size as the label text */
-}
-
-#map {
-    width: 100%;
-    height: 100%;
-}
-
+/* Utility classes */
 .center-text {
     text-align: center;
-    /* bolder text  */
     font-weight: bold;
 }
 
@@ -74,66 +90,95 @@ label span {
     margin: 10px;
 }
 
-.droneImage-tooltip {
-    width: 100%;
-    margin:0px;
-    padding:0px;
-}
 .mp-0 {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 .m-0 {
-    margin: 0px;
+    margin: 0;
 }
 
-#tooltip-size-control, .control-panel {
-    position: absolute;
-    background: white;
-    padding: 8px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    width: 300px;
-}
-
-#tooltip-size-control {
-    top: 10px;
-    right: 10px;
-}
-
-.control-panel {
-    top: 100px;
-    right: 10px;
-}
-
-.control-group, #tooltip-size-control > div {
-    margin-bottom: 0.5rem;
-}
-
+/* Custom tooltip */
 .custom-tooltip {
-    width: 200px; /* Default width, will be overridden by JavaScript */
+    width: 200px;
     position: absolute;
     background-color: white;
     z-index: 1000;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     overflow-wrap: break-word;
-    box-sizing: border-box; /* Include padding in width calculation */
+    box-sizing: border-box;
+}
+
+/* Right-side controls wrapper */
+.right-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1000;
+}
+
+/* Control panels */
+.control-panel,
+#tooltip-size-control {
+    background: #ffffff;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 300px;
+}
+
+/* Drone image tooltip */
+.droneImage-tooltip {
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .droneImage {
     transition: none !important;
 }
 
-.new-slider-group {
-    margin-top: 330px; /* Adds space between the previous and new group of sliders */
-    padding: 10px;
-    background-color: #f4f4f4; /* Slightly different background to highlight the section */
-    border-radius: 5px; /* Optional: rounds corners for a softer look */
+/* Soft translucent background with subtle blur */
+.control-panel {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
 }
 
-.control-group {
-    margin-bottom: 10px; /* Ensures consistent spacing within control groups */
+/* Keep the summary just text (no extra background) */
+.control-panel summary {
+  background: none !important;
+  font-weight: 700;  /* or “bold” */
+  /* optionally bump the size a bit: */
+  font-size: 1.1rem;
+}
+
+/* Also ensure the <summary> itself is transparent */
+.control-panel summary {
+  background: transparent !important;
+}
+/* Space between the summary title and the controls */
+.control-panel .control-body {
+  margin-top: 2rem;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .right-controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 0.5rem;
+    }
+    .control-panel,
+    #tooltip-size-control {
+        flex: 1 0 200px;
+    }
 }
