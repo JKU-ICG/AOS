@@ -14,6 +14,7 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 - Download the AOS Groundstation repository using git or as a ZIP file and extract its contents.
 - Download **[Mosquitto](https://mosquitto.org/files/binary/win64/mosquitto-2.0.18-install-windows-x64.exe)**
 - Download the **[AOS for DJI app](https://drive.google.com/file/d/1IXteVwdWi8-W926vCZI2gXri00goVNCK/view?usp=sharing)** to your drone.
+- Download **[Node.js](https://nodejs.org)**. 
 
 ## Installation
 
@@ -36,7 +37,18 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 ### AOS Server
 - Build and install the DroneSwarmServer application according to the instructions provided in **[AOS Server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20server)**
 
+###  Install Node.js
+  
+- Install msi file that you have downloaded. Follow the installer prompts.  
+- Confirm installation:
+   ```bash
+   node --version   # e.g. v18.16.0
+   npm --version    # e.g. 9.5.0
+   ```
+---
+
 **Note:** Restart the pc after the installations.
+
 
 ## How to use it
 
@@ -90,7 +102,9 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
 - Video screen size slider is added. It can be changed for the selected drone. 
 
 ### AOS Waypoint Mission Planning
-A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning on a map and supports planning for single drones as well as swarms - including collision inspection over flight time. It runs in your default webbrowser.
+A waypoint mission planning module (contributed by Patrick Sack) has also been developed. In contrast to the autonomous AOS module, it allows interactive waypoint planning, grid waypoint planning(manual or automatic) on a map and supports planning for single drones as well as swarms - including collision inspection; over flight time or over mission data (waypoint data(speed of drones and holding time) and collision threshold). It runs in your default webbrowser. 
+
+Note: Before start using this module refer to [README](add link). 
 
 - Add waypoints to the map by left click in the map.
 - To move a waypoint to  new positions, you can drag and drop the marker by a left mouse click.
