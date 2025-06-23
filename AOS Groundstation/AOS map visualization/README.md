@@ -4,7 +4,7 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
 - The map is used in the same way as any other online map (scrolling, zooming, switching to satellite view, etc).
 - Clicking on the drone icons with **ctrl** button (which visualizes position and heading) turns on/off the live video/telemetry window.
 - New groups are added to AOS Map Visualization. 
-> - AOS group which change the parameters of the Integral and/or Anomaly image by changing the sliders (Focal Length, Compass Correction, RX Threshold, Focal Plane Pitch and Focal Plane Roll).  You can slide each slider to desired parameter settings. 
+> - AOS group; which changes the Integral and/or Anomaly image parameters by changing the sliders (Focal Length, Compass Correction, RX Threshold, Focal Plane Pitch and Focal Plane Roll).  You can slide each slider to the desired parameter settings. 
 > - Drone group; you can change the view of the drone by sliding the sliders (Heading, Gimbal Pitch and Gimbal Yaw) without defining a new waypoint mission. You only need to click (or ctrl + click) the drone you want to change its view and slide the sliders.
 > - Image Group, Image Size slider is added. It can be changed for the selected drone. 
 
