@@ -67,7 +67,7 @@
   * From the **_C:\FFmpeg-7.0.1\include_** folder copy this sub directories + contains **_libavcodec libavfilter libavformat libavutil libswresample libswscale_** to your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory
   * Then execute the file **_gen_win_library.bat_** from your ```D:\mytestProject\AOS\AOS Groundstation\AOS server\DroneSwarmServer``` directory by double click on it.
 - Open **_DroneSwarmServer.sln_** with Visual Studio 2022 by double click on it and build the server **_(build -> build DroneSwamServer)_**, this will give you the (DroneSwarmServer.exe) executeable.
-- The **_DroneSwarmServer_** executeable and **_ds_wrapper.cp37-win_amd64.pyd_** must be in the same folder.
+- The **_DroneSwarmServer_** executeable and **_ds_wrapper.cp37-win_amd64.pyd_** must be in the same folder (AOS server).
 
 Start the wrapper before running the app file.
 
