@@ -73,6 +73,7 @@ protected:
 	afx_msg void OnCbnSelchangeCombo1();
 	afx_msg void OnTRBNThumbPosChangingSlider1(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDeltaposSpin2(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBnClickedCheck2();
 
 public:
 	int AVThread(int droneNumber);
@@ -110,12 +111,14 @@ private:
 	CButton m_ButtonCtrl1;
 	double getSystemScaleFactor();
 	int count_colon(std::string s);
+	int Check2Val;
 	HANDLE fonthandle;
 	CFont* font;
 	CComboBox m_ComboBox1;
 	CComboBox m_ComboBox2;
 	CComboBox m_ComboBox3;
 	CButton m_CheckBox1;
+	CButton m_CheckBox2;
 	CSliderCtrl m_Slider1;
 	CIPAddressCtrl m_ipctrl;
 	CEdit m_EditCtrl1;
@@ -136,4 +139,6 @@ private:
 	CEdit m_EditCtrl16;
 	CStatic m_Static6;
 
+public:
+	afx_msg void OnCbnSelchangeCombo2();
 };

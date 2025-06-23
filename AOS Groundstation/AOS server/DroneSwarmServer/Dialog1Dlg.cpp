@@ -70,6 +70,7 @@ void CDialog1Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT16, m_EditCtrl16);
 	DDX_Control(pDX, IDC_STATIC6, m_Static6);
 	DDX_Control(pDX, IDC_SPIN2, m_Spin1);
+	DDX_Control(pDX, IDC_CHECK2, m_CheckBox2);
 }
 
 
@@ -90,6 +91,8 @@ BEGIN_MESSAGE_MAP(CDialog1Dlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CDialog1Dlg::OnCbnSelchangeCombo1)
 	ON_NOTIFY(TRBN_THUMBPOSCHANGING, IDC_SLIDER1, &CDialog1Dlg::OnTRBNThumbPosChangingSlider1)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN2, &CDialog1Dlg::OnDeltaposSpin2)
+	ON_BN_CLICKED(IDC_CHECK2, &CDialog1Dlg::OnBnClickedCheck2)
+	ON_CBN_SELCHANGE(IDC_COMBO2, &CDialog1Dlg::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 void InitWrapper(HWND dialog);
@@ -146,6 +149,12 @@ BOOL CDialog1Dlg::OnInitDialog()
 
 	m_EditCtrl1.SetFont(font, TRUE);
 	m_EditCtrl1.LimitText(0);
+
+	Check2Val = theApp.GetProfileIntA("Settings", "Check2", 0);
+
+	m_ComboBox2.SetCurSel(theApp.GetProfileIntA("Settings", "Combo2", 0));
+
+	m_CheckBox2.SetCheck(Check2Val);
 
 	InitWrapper(this->m_hWnd);
 	
@@ -219,11 +228,10 @@ UINT CDialog1Dlg::WorkThread(LPVOID pParam)
 
 LRESULT CDialog1Dlg::HandleThreadMsg(WPARAM iParam, LPARAM strParam)
 {
-	CString Out;
 	std::shared_ptr <std::string>* Msg = reinterpret_cast<std::shared_ptr<std::string>*>(iParam);
-	Out.Format("%s\r\n", Msg->get()->c_str());
 	m_EditCtrl1.SetSel(m_EditCtrl1.GetWindowTextLength(), m_EditCtrl1.GetWindowTextLength(), FALSE);
-	m_EditCtrl1.ReplaceSel(Out);
+	Msg->get()->append("\r\n");
+	m_EditCtrl1.ReplaceSel(Msg->get()->c_str());
 	Msg->reset();
 
 	return 0;
@@ -318,6 +326,9 @@ int CDialog1Dlg::AVThread(int droneNumber)
 	uint8_t* buffer = nullptr;
 	void* pAVStore[2] = { nullptr, nullptr };
 	void* pTelemetry[2] = { nullptr, nullptr };
+	static volatile bool bRestartDecoderLoop = false;
+	auto flipflop = std::make_unique<std::once_flag>();
+	auto flipflop2 = std::make_unique<std::once_flag>();
 
 	m_ipctrl.GetAddress(field1, field2, field3, field4);
 
@@ -326,6 +337,14 @@ int CDialog1Dlg::AVThread(int droneNumber)
 	CString url_final, port;
 	m_EditCtrl2.GetWindowTextA(port);
 	url_final.Format(url, field1, field2, field3, field4, atoi(port.GetBuffer()));
+
+	call_once(
+		*flipflop2, [this, droneNumber]() {
+			threadmsg[droneNumber - 1].Format("Drone: %d wait for keyframe", droneNumber);
+			std::shared_ptr <std::string>* Msg = new std::shared_ptr<std::string>(std::make_shared<std::string>(threadmsg[droneNumber - 1].GetString()));
+			PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(Msg), NULL);
+		});
+restart:
 
 	pCodecCtx = avcodec_alloc_context3(pCodec);
 	pFormatCtx = avformat_alloc_context();
@@ -465,7 +484,7 @@ int CDialog1Dlg::AVThread(int droneNumber)
 						void* sharedMem = data2Server(droneNumber);
 						uint64_t temp = nBytes;
 						memcpy((uint8_t*)sharedMem + 1025, &temp, sizeof(uint64_t));
-						if (m_ComboBox2.GetCurSel() == 0) { //NV12
+						if (m_ComboBox2.GetCurSel() == 0) { // NV12
 							memcpy((uint8_t*)sharedMem + 1034, pFrame->data[0], pFrame->linesize[0] * pFrame->height);
 							memcpy((uint8_t*)sharedMem + 1034 + (pFrame->linesize[0] * pFrame->height), pFrame->data[1], pFrame->linesize[1] * pFrame->height / 2);
 						}
@@ -488,6 +507,39 @@ int CDialog1Dlg::AVThread(int droneNumber)
 					break;
 				default:
 					DispatchMessage(&msg);
+			}
+		}
+
+		/* Packages with NAL_TRAIL_R (P Slice) are from our SW encoder,
+		   restart the decoder loop here to re-probe the stream */
+		if (m_CheckBox2.GetCheck()) {
+			if (packet->stream_index == videoStream && packet->data[0] == 0x00 && packet->data[1] == 0x00 && packet->data[2] == 0x01 && packet->data[3] == 0x02 && packet->data[4] == 0x01)
+			{
+				call_once(
+					*flipflop, [this, droneNumber]() {
+						threadmsg[droneNumber - 1].Format("Drone: %d AVcodec: info, screen changed 512x512", droneNumber);
+						std::shared_ptr <std::string>* Msg = new std::shared_ptr<std::string>(std::make_shared<std::string>(threadmsg[droneNumber - 1].GetString()));
+						PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(Msg), NULL);
+						bRestartDecoderLoop = true;
+					});
+				if (bRestartDecoderLoop) {
+					flipflop2 = std::make_unique<std::once_flag>();
+					goto end;
+				}
+			}
+			else if (packet->stream_index == videoStream && packet->data[0] == 0x00 && packet->data[1] == 0x00 && packet->data[2] == 0x01 && ((packet->data[3] >> 1) & 0x2f) == 35)
+			{
+				call_once(
+					*flipflop2, [this, droneNumber]() {
+						threadmsg[droneNumber - 1].Format("Drone: %d AVcodec: info, screen changed 1920x1080", droneNumber);
+						std::shared_ptr <std::string>* Msg = new std::shared_ptr<std::string>(std::make_shared<std::string>(threadmsg[droneNumber - 1].GetString()));
+						PostMessage(WM_THREAD_TEXT, reinterpret_cast<WPARAM>(Msg), NULL);
+						bRestartDecoderLoop = true;
+					});
+				if (bRestartDecoderLoop) {
+					flipflop = std::make_unique<std::once_flag>();
+					goto end;
+				}
 			}
 		}
 
@@ -548,7 +600,8 @@ end:
 	// Free the packet that was allocated by av_read_frame
 	if (pFormatCtx)
 		avformat_close_input(&pFormatCtx);
-	av_packet_unref(packet);
+	if (packet)
+		av_packet_unref(packet);
 	if (pFrame)
 		av_free(pFrame);
 	if (pFrameRGB)
@@ -560,6 +613,10 @@ end:
 	if (pFormatCtx)
 		avformat_free_context(pFormatCtx);
 
+	if (bRestartDecoderLoop) {
+		bRestartDecoderLoop = false;
+		goto restart;
+	}
 
 	SendMessage(WM_THREAD_END, NULL, droneNumber);
 	b_ThreadRuns[droneNumber - 1] = false;
@@ -672,6 +729,11 @@ void CDialog1Dlg::OnBnClickedCheck1()
 void CDialog1Dlg::OnCbnSelchangeCombo1()
 {
 	av_log_set_level(log_sel[m_ComboBox1.GetCurSel()]);
+}
+
+void CDialog1Dlg::OnCbnSelchangeCombo2()
+{
+	theApp.WriteProfileInt("Settings", "Combo2", m_ComboBox2.GetCurSel());
 }
 
 void CDialog1Dlg::OnTRBNThumbPosChangingSlider1(NMHDR* pNMHDR, LRESULT* pResult)
@@ -1115,4 +1177,9 @@ LRESULT CDialog1Dlg::SetIPArray(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 1;
+}
+
+void CDialog1Dlg::OnBnClickedCheck2()
+{
+	theApp.WriteProfileInt("Settings", "Check2", m_CheckBox2.GetCheck());
 }
