@@ -14,7 +14,7 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 - Download the AOS Groundstation repository using git or as a ZIP file and extract its contents.
 - Download **[Mosquitto](https://mosquitto.org/files/binary/win64/mosquitto-2.0.18-install-windows-x64.exe)**
 - Download the **[AOS for DJI app](https://drive.google.com/file/d/1IXteVwdWi8-W926vCZI2gXri00goVNCK/view?usp=sharing)** to your drone.
-- Download the  **[AOS Broker](https://github.com/JKU-ICG/AOS/releases/tag/v1.0)**. Then copy that file in to the AOS server folder.
+- Download the  **[AOS_Broker.exe](https://github.com/JKU-ICG/AOS/releases/tag/v1.0)** file. Then, copy that file in to the AOS server folder.
 - Download **[Node.js](https://nodejs.org)**. 
 
 ## Installation
