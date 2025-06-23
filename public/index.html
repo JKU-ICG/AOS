@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>AOS waypoint planning</title>
+    <link rel="icon" type="/image/x-icon" href="image/favicon-32x32.png" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Leaflet.draw (for rectangle drawing) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-editable@1.2.0/dist/Leaflet.Editable.min.js"></script>
+    <script src="https://unpkg.com/leaflet-path-drag@0.0.15/Leaflet.Path.Drag.js"></script>
+    <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+    <script src="leaflet.rotatedMarker.min.js"></script>
+    <link rel="stylesheet" href="bootstrap.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="w-100">
+    <script src="bootstrap.bundle.min.js"></script>
+    <div class="container-fluid h-100">
+      <div class="row h-100">
+        <div class="col-8" id="map"></div>
+
+        <div class="col-4 d-flex flex-column justify-content-between" id="sidebar">
+          <!-- START BROKER (full width) -->
+          <div class="row m-2">
+            <div class="col-12">
+              <button id="startPythonBtn" class="btn btn-success w-100 my-2">
+                Start Broker
+              </button>
+            </div>
+          </div>
+
+          <!-- ── WAYPOINT PROPERTIES GROUP ── -->
+          <details class="border rounded my-2 p-2">
+            <summary class="fw-bold fs-5">Plan Mission</summary>
+            <div class="m-2">
+              <!-- Selected marker display -->
+              <div class="row my-1 border border-primary rounded">
+                <h6 id="selectedMarkerDiv" class="text-primary p-2 m-0 text-center">
+                  No WP Selected
+                </h6>
+              </div>
+
+              <!-- Drone select -->
+              <div class="row my-1">
+                <div class="col-auto">
+                  <label class="col-form-label fs-6 fw-bold" for="droneSelect">Drone</label>
+                </div>
+                <div class="col">
+                  <select id="droneSelect" class="form-select">
+                    <option selected value="">Select Drone...</option>
+                    <option value="1">Drone 1</option>
+                    <option value="2">Drone 2</option>
+                    <option value="3">Drone 3</option>
+                    <option value="4">Drone 4</option>
+                    <option value="5">Drone 5</option>
+                    <option value="6">Drone 6</option>
+                    <option value="7">Drone 7</option>
+                    <option value="8">Drone 8</option>
+                    <option value="9">Drone 9</option>
+                    <option value="10">Drone 10</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Lat / Lon -->
+              <div class="row my-1">
+                <div class="col-auto">
+                  <label class="col-form-label fs-6 fw-bold" for="latitude">Latitude</label>
+                </div>
+                <div class="col">
+                  <input type="text" id="latitude" class="form-control" />
+                </div>
+                <div class="col-auto">
+                  <label class="col-form-label fs-6 fw-bold" for="longitude">Longitude</label>
+                </div>
+                <div class="col">
+                  <input type="text" id="longitude" class="form-control" />
+                </div>
+              </div>
+
+              <!-- Altitude / Speed -->
+              <div class="row my-1">
+                <div class="col-auto">
+                  <label class="col-form-label fs-6 fw-bold" for="altitudeInput">Altitude [m]</label>
+                </div>
+                <div class="col">
+                  <input
+                    type="number"
+                    id="altitudeInput"
+                    class="form-control"
+                    min="0"
+                    step="1"
+                  />
+                </div>
+                <div class="col-auto">
+                  <label class="col-form-label fs-6 fw-bold" for="speedInput">Speed [m/s]</label>
+                </div>
+                <div class="col">
+                  <input
+                    type="number"
+                    id="speedInput"
+                    class="form-control"
+                    min="0.0001"
+                    step="0.5"
+                  />
+                </div>
+              </div>
+
+              <!-- Camera / Hold -->
+              <div class="row my-1">
+                <div class="col">
+                  <label class="form-label fs-6 fw-bold" for="cameraSelect">Camera</label>
+                  <select id="cameraSelect" class="form-select">
+                    <option selected value="">Select Camera...</option>
+                    <option value="wide angle">Wide Angle</option>
+                    <option value="tele">Tele</option>
+                    <option value="thermal image">Thermal</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label class="form-label fs-6 fw-bold" for="holdInput">Hold on Position [s]</label>
+                  <input
+                    type="number"
+                    id="holdInput"
+                    class="form-control"
+                    min="0"
+                    step="1"
+                  />
+                </div>
+              </div>
+
+              <!-- Integration + Anomaly (half width each) -->
+              <div class="row my-1">
+                <div class="col-6">
+                  <button
+                    id="integrationButton"
+                    class="btn btn-secondary w-100"
+                    data-state="off"
+                  >
+                    Integration: Off
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button
+                    id="anomalyButton"
+                    class="btn btn-secondary w-100"
+                    data-state="off"
+                  >
+                    Anomaly: Off
+                  </button>
+                </div>
+              </div>
+
+              <!-- Gimbal Pitch / Yaw / Heading -->
+              <div class="row my-1">
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gimbalPitchInput"
+                    >Gimbal Pitch [°]</label
+                  >
+                  <input
+                    type="number"
+                    id="gimbalPitchInput"
+                    class="form-control"
+                    min="0"
+                    max="360"
+                    value="0"
+                  />
+                </div>
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gimbalYawInput"
+                    >Gimbal Yaw [°]</label
+                  >
+                  <input
+                    type="number"
+                    id="gimbalYawInput"
+                    class="form-control"
+                    min="0"
+                    max="360"
+                    value="0"
+                  />
+                </div>
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="headingInput"
+                    >Heading [°]</label
+                  >
+                  <input
+                    type="number"
+                    id="headingInput"
+                    class="form-control"
+                    min="0"
+                    max="360"
+                    value="0"
+                  />
+                </div>
+              </div>
+
+              <!-- Integration Window / Sampling Distance -->
+              <div class="row my-1">
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="integrationWindowInput"
+                    >Integration Window [Sampling]</label
+                  >
+                  <input
+                    type="number"
+                    id="integrationWindowInput"
+                    class="form-control"
+                    min="0"
+                    max="100"
+                    value="30"
+                  />
+                </div>
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="minposeDistanceInput"
+                    >Sampling Distance [m]</label
+                  >
+                  <input
+                    type="number"
+                    id="minposeDistanceInput"
+                    class="form-control"
+                    min="0.0"
+                    max="10.0"
+                    step="0.1"
+                    value="0.5"
+                  />
+                </div>
+              </div>
+
+              <!-- ── GRID WAYPOINT CONTROLS ── -->
+              <div class="row my-1">
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gridSpacingXInput"
+                    >Spacing X [m]</label
+                  >
+                  <input
+                    type="number"
+                    id="gridSpacingXInput"
+                    class="form-control"
+                    min="0.0"
+                    step="0.1"
+                    value="3.0"
+                  />
+                </div>
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gridSpacingYInput"
+                    >Spacing Y [m]</label
+                  >
+                  <input
+                    type="number"
+                    id="gridSpacingYInput"
+                    class="form-control"
+                    min="0.0"
+                    step="0.1"
+                    value="3.0"
+                  />
+                </div>
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gridRotationInput"
+                    >Rotate Angle [°]</label
+                  >
+                  <input
+                    type="number"
+                    id="gridRotationInput"
+                    class="form-control"
+                    step="1"
+                    value="0"
+                  />
+                </div>
+              </div>
+
+              <!-- ── AUTO‐GRID PARAMETERS ── -->
+              <div class="row my-1">
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gridLatInput"
+                    >Grid Center Lat [°]</label
+                  >
+                  <input
+                    type="number"
+                    id="gridLatInput"
+                    class="form-control"
+                    step="0.000001"
+                  />
+                </div>
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gridLngInput"
+                    >Grid Center Lng [°]</label
+                  >
+                  <input
+                    type="number"
+                    id="gridLngInput"
+                    class="form-control"
+                    step="0.000001"
+                  />
+                </div>
+              </div>
+              <div class="row my-1">
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gridWidthInput"
+                    >Grid Width [m]</label
+                  >
+                  <input
+                    type="number"
+                    id="gridWidthInput"
+                    class="form-control"
+                    step="0.1"
+                    value="10.0"
+                  />
+                </div>
+                <div class="col">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="gridHeightInput"
+                    >Grid Height [m]</label
+                  >
+                  <input
+                    type="number"
+                    id="gridHeightInput"
+                    class="form-control"
+                    step="0.1"
+                    value="10.0"
+                  />
+                </div>
+              </div>
+
+              <!-- Draw Grid (manual + auto) -->
+              <div class="row mb-1">
+                <div class="col-6">
+                  <button id="drawGridBtn" class="btn btn-secondary w-100">
+                    Draw Grid Manually
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button
+                    id="drawGridAutoBtn"
+                    class="btn btn-secondary w-100"
+                  >
+                    Draw Grid Automatically
+                  </button>
+                </div>
+              </div>
+
+              <div class="row m-2">
+                <div class="col-12">
+                  <button
+                    id="removeAllExceptLastBtn"
+                    class="btn btn-warning w-100 my-1"
+                  >
+                    Remove All Except Last WP
+                  </button>
+                </div>
+                <div class="col-12">
+                  <button
+                    id="removeMarkerBtn"
+                    class="btn btn-warning w-100 my-1"
+                  >
+                    Remove Selected WP
+                  </button>
+                </div>
+                <div class="col-12">
+                  <button
+                    id="removeAllMarkerOfDroneIdBtn"
+                    class="btn btn-warning w-100 my-1"
+                  >
+                    Remove All Waypoints of Selected Drone
+                  </button>
+                </div>
+                <div class="col-12">
+                  <button
+                    id="removeAllMarkerBtn"
+                    class="btn btn-warning w-100 my-1"
+                  >
+                    Remove All WPs
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- ── COLLISIONS GROUP ── -->
+          <details class="border rounded my-2 p-2">
+            <summary class="fw-bold fs-5">Collisions</summary>
+            <div class="m-2">
+              <!-- Threshold + Detect (half & half) -->
+              <div class="row align-items-end">
+                <div class="col-6">
+                  <label
+                    class="form-label fs-6 fw-bold"
+                    for="collisionThresholdInput"
+                  >
+                    Collision Threshold [m]
+                  </label>
+                  <input
+                    type="number"
+                    id="collisionThresholdInput"
+                    class="form-control"
+                    min="0"
+                    step="0.1"
+                    value="2.0"
+                  />
+                </div>
+                <div class="col-6">
+                  <button
+                    id="detectCollisionsBtn"
+                    class="btn btn-warning btn-lg w-100"
+                  >
+                    Detect Collisions
+                  </button>
+                </div>
+              </div>
+
+              <!-- Hide Segments (full width) -->
+              <div class="row mt-2">
+                <div class="col-12">
+                  <button
+                    id="showWaylines"
+                    value="show"
+                    class="btn btn-primary w-100"
+                  >
+                    Hide Segments
+                  </button>
+                </div>
+              </div>
+
+              <!-- Time Line slider -->
+              <div id="rangeSliderDiv" class="row mt-2">
+                <label
+                  for="droneAnimationSlider"
+                  class="col-form-label text-center m-0"
+                >
+                  Time Line
+                </label>
+                <input
+                  type="range"
+                  id="droneAnimationSlider"
+                  class="form-range m-0"
+                  min="0"
+                  max="1"
+                  step="1"
+                  value="0"
+                />
+              </div>
+            </div>
+          </details>
+
+          <!-- ── REST AS IS ── -->
+          <div class="row my-1 align-items-center">
+            <div class="col-auto">
+              <label
+                for="saveImagesSelect"
+                class="col-form-label fs-6 fw-bold"
+                >Save Images?</label
+              >
+            </div>
+            <div class="col">
+              <select id="saveImagesSelect" class="form-select">
+                <option value="off" selected>No</option>
+                <option value="on">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Send Mission (full width) -->
+          <div class="row m-2">
+            <div class="col-12">
+              <button id="sendWaypointsBtn" class="btn btn-primary w-100">
+                Send Mission
+              </button>
+            </div>
+          </div>
+
+          <!-- Takeoff / Landing (half & half) -->
+          <div class="row my-2">
+            <div class="col-6">
+              <button id="takeoffBtn" class="btn btn-secondary w-100">
+                Takeoff
+              </button>
+            </div>
+            <div class="col-6">
+              <button id="landingBtn" class="btn btn-secondary w-100">
+                Landing
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("startPythonBtn");
+        btn.replaceWith(btn.cloneNode(true));
+        const cleanBtn = document.getElementById("startPythonBtn");
+
+        cleanBtn.addEventListener("click", () => {
+          fetch("/start-broker", { method: "POST" })
+            .then((r) => r.json())
+            .then((data) => alert(data.message))
+            .catch((err) => {
+              console.error(err);
+              alert("Failed to start AOS Broker");
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
