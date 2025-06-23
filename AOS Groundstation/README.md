@@ -40,20 +40,23 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
 
 ###  Install Node.js
   
-- Install msi file that you have downloaded. Follow the installer prompts.  
-- Confirm installation:
+1. Go to [Node.js](https://nodejs.org) and download the latest LTS installer.  
+2. Follow the installer prompts.  
+3. Confirm installation:
    ```bash
    node --version   # e.g. v18.16.0
    npm --version    # e.g. 9.5.0
    ```
 ---
+Node.js is necessary for AOS waypoint planning. In order to complete the installation you need to follow the steps in [AOS Waypoint Mission Planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20waypoint%20planning).
 
-**Note:** Restart the pc after the installations.
+
+**Note:** Restart the pc after the all installations.
 
 
 ## How to use it
 
-After installing all modules on the PC and the DJI app on the remote controller(s), and after making sure that all devices are in the same network, you need to run AOS_Groundstation.bat file inside the AOS Groundstation folder as an administrator. It will automatically launch all modules on the PC: server, map visualization, and waypoint mission planning. Then you need to connect your drones to the server. After all drones are connected, you can go AOS waypoint planning. Start your broker by pressing the **Start Broker** button. That will start the broker. After running the broker, you need to plan your waypoint mission and transmit it to the server (see AOS Waypoint Mission Planning). You will see the mission parameters on the terminal where it appears after running the bat file. Then you need to press **Takeoff** for the drones to take off and execute the first mission on the AOS waypoint planning. After pressing **Takeoff** they will increase their altitude vertically from the position you took off. The altitude is the altitude of the mission’s first waypoint. If you want to continue with a new mission after all drones completed previous one, you need to set a new mission and send it to the server by pressing **Send Mission** button. After sending the new mission, all drones will execute it right away. Later when you decide to land, you need to press **Landing** button for the drones to return to their altitudes and positions above the initial take-off position and land them. Note, that for take-off and landing, the first and last meters have to be flown manually for safety reasons. So the drones will not directly take off from or land to the ground.
+After installing all modules on the PC and the DJI app on the remote controller(s), and after making sure that all devices are in the same network, you need to run AOS_Groundstation.bat file inside the AOS Groundstation folder as an administrator. It will automatically launch all modules on the PC: server, map visualization, and waypoint mission planning. Then you need to connect your drones to the server. After all drones are connected, you can go AOS waypoint planning. Start your broker by pressing the **Start Broker** button. That will start the broker. After running the broker, you need to plan your waypoint mission and transmit it to the server (see AOS Waypoint Mission Planning). You will see the mission parameters on the terminal where it appears after running the bat file. Then you need to press **Takeoff** for the drones to take off and execute the first mission on the AOS waypoint planning. After pressing **Takeoff** they will increase their altitude vertically from the position you took off. The altitude is the altitude of the mission’s first waypoint. If you want to continue with a new mission after all drones completed previous one, you need to set a new mission and send it to the server by pressing ** Send Mission** button. After sending the new mission, all drones will execute it right away. Later when you decide to land, you need to press **Landing** button for the drones to return to their altitudes and positions above the initial take-off position and land them. Note, that for take-off and landing, the first and last meters have to be flown manually for safety reasons. So the drones will not directly take off from or land to the ground.
 
 ### AOS for DJI app
 Basics on how to use and install our DJI compatible app on the remote controller of your drone can be found [here](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI). The latest version (v3.7) supports the communication with the AOS Server. The direct (manual) usage of AOS in the app is restricted to prevent dual use. To enable this feature in the app, an RC-individual keycode has to be requested (by email). This will only be given out to civil (blue-light) organizations. The transmission of videodata, telemetry, and waypoints as well as waypoint flights through the sverver, however, are unrestricted.
