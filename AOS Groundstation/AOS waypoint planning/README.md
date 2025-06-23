@@ -186,7 +186,7 @@ Launcher listening at http://localhost:3000
    ```
    http://localhost:3000/
    ```
-2. You should see the waypoint planning module.
+2. You should see the waypoint planning module on your browser.
 
 ---
 
