@@ -3,9 +3,9 @@
 For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms), we present a complete hard- and software framework that supports low-latency transmission (approx. 80 ms round-trip-time) of extensive (70-120 Mbits/s) video and telemetry data, and swarm control for swarms of up to ten drones. Our AOS groundstation (software architecture) allows to operate single or multiple DJI drones from a PC. The drones must be DJI SDK5 compatible. We tested DJI Mavic 3T and DJI Mavic 30T. Our software architecture consists of the following modules:
 
 - **[AOS for DJI App](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI)**: Our DJI app to be installed on the Android remote controller.
-- **[AOS Server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Server for video, telemetry, and waypoint streaming to be installed on a Windows PC.
-- **[AOS Map Visualization](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Visualization module for real-time drone mapping in a webbrowser.
-- **[AOS Waypoint Mission Planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20Drone%20Swarms)**: Module for waypoint mission planning in a webbrowser.
+- **[AOS Server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20server)**: Server for video, telemetry, and waypoint streaming to be installed on a Windows PC.
+- **[AOS Map Visualization](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20map%20visualization)**: Visualization module for real-time drone mapping in a webbrowser.
+- **[AOS Waypoint Mission Planning](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20waypoint%20planning)**: Module for waypoint mission planning in a webbrowser.
 
 ![image](https://github.com/JKU-ICG/AOS/blob/stable_release/img/ClientServer2.jpg)
 
@@ -32,7 +32,7 @@ For our [swarm implementation](https://github.com/JKU-ICG/AOS/tree/stable_releas
   - persistence_location C:\Program Files\mosquitto
 - Create a password.txt file in the mosquitto directory.
 - Open a terminal with administrator rights, navigate to the C:\Program Files\mosquitto directory, and execute the following command to create a user with a password:
-   - mosquitto_passwd -b "C:\Program Files\mosquitto\password.txt" user user
+   - .\mosquitto_passwd -b "C:\Program Files\mosquitto\password.txt" user user
 
 ### AOS Server
 - Build and install the DroneSwarmServer application according to the instructions provided in **[AOS Server](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation/AOS%20server)**
