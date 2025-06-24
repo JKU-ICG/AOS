@@ -162,7 +162,7 @@ After installing, your folder tree in `AOS waypoint` should look like:
      └─ /images
          └─ (image files)
 ```
-#### Note: The rest is done automatically by bat file (**.../AOS Groundstation/AOS_Groundstation.bat**). Incase if you want to try out separately, you can follow the following instructions. 
+#### Note: The rest is done automatically by bat file (**.../AOS Groundstation/AOS_Groundstation.bat**). If you want to try out separately, you can follow the following instructions. 
 
 ### 7. Start the Node Server
 
@@ -195,13 +195,12 @@ Launcher listening at http://localhost:3000
 ## Running the Waypoint Planner  
 From the **AOS Groundstation** folder, right-click **AOS_Groundstation.bat** and choose **Run as administrator**. This will automatically launch the waypoint-planning interface in your default web browser—just like the other ground-station components.
 
-
-![1750168143348](image/README/1750168143348.png)
+![bat_file](https://github.com/user-attachments/assets/b6912dc1-90f9-4798-91d1-811b66a165d6)
 
 ## Waypoint Planning Interface  
 The waypoint-planning screen is shown in the image below:
 
-![1750168484714](image/README/1750168484714.png)
+![AOS waypoint planning](https://github.com/user-attachments/assets/b2e9b499-b48d-4479-be71-0567fdf9544f)
 
 ## Map Controls  
 The map pane offers the following controls:
@@ -212,7 +211,7 @@ The map pane offers the following controls:
 
 > **Tip:** Before planning your mission, pan and zoom to the area where you intend to fly.  
 
-![1750169464535](image/README/1750169464535.png)
+![AOS waypoint planning_map](https://github.com/user-attachments/assets/1015fb36-e904-403c-83ec-adebf51bb0fd)
 
 ## Main Panel Controls
 
@@ -241,7 +240,8 @@ The right panel of the waypoint-planning interface contains the primary controls
 
 > **Note:** Click the arrow icon next to **Plan Mission** or **Collision Check** to expand or collapse those sections.
 
-![1750171870086](image/README/1750171870086.png)
+![AOS waypoint planning right side](https://github.com/user-attachments/assets/116ee5d7-eba5-42d9-80a6-f3f6de375cd2)
+
 
 ### 1. Start Broker
 
@@ -251,7 +251,7 @@ Click **Start Broker** to launch the broker service (`AOS_Broker.exe`).
 
 Once you’ve clicked **Start Broker**, a terminal window will open and display status messages indicating that the broker has started.
 
-![1750225488729](image/README/1750225488729.png)
+![AOS waypoint planning start broker](https://github.com/user-attachments/assets/49239b57-7836-4102-ac20-b9722ab0758d)
 
 ### 2. Plan Mission _(expandable)_
 
@@ -272,11 +272,11 @@ Once you’ve clicked **Start Broker**, a terminal window will open and display 
 
 > **Tip:** To streamline planning, adjust your mission’s default altitude, speed, and holding time before placing waypoints.
 
-![1750235110287](image/README/1750235110287.png)
+![waypoint_data](https://github.com/user-attachments/assets/f7492746-9af0-4736-93ed-8febed422117)
 
 > **Note:** To update an existing waypoint, click it on the map. Its parameters will then populate at the top of the **Plan Mission** section, where you can adjust all waypoint parameters.
 
-![1750233855515](image/README/1750233855515.png)
+![AOS waypoint planning right side plan mission](https://github.com/user-attachments/assets/0333a947-f74a-443d-aae1-2ec91ff495c1)
 
 #### Select Camera
 
@@ -302,8 +302,7 @@ Once you’ve clicked **Start Broker**, a terminal window will open and display 
   - Configure these only when **Integration** mode is enabled.  
   - Otherwise, these fields are ignored.
   
-
-![1750235442749](image/README/1750235442749.png)
+![waypoint_camera](https://github.com/user-attachments/assets/90019574-9395-4f35-8ec2-769d45ea553e)
 
 When you want to fly a grid pattern, use the following controls. Note that all waypoints generated will inherit the current parameters but can be updated individually at any time as explained before.
 
@@ -323,7 +322,7 @@ When you want to fly a grid pattern, use the following controls. Note that all w
 
 > **Tip:** After drawing, review and adjust individual waypoint settings under **Plan Mission** if needed.   
    
-![1750237989798](image/README/1750237989798.png) 
+![grid_planning](https://github.com/user-attachments/assets/5a1ebcd5-c9a8-40c7-bec2-7c2d51185576)
    
 #### Editing Multiple Grids
 
@@ -343,7 +342,7 @@ When managing more than one grid (e.g., for multiple drones):
 
 > **Tip:** The grid must be visible to resize or move it.    
 
-![1750247925106](image/README/1750247925106.png)
+![example grids](https://github.com/user-attachments/assets/b04e24dc-6ee3-4ffa-b210-47b1cebd204e)
 
 #### Waypoint Removal Controls
 
@@ -378,7 +377,7 @@ Use this section to detect potential collisions between multiple waypoint missio
 2. Click **Detect Collisions**.  
 3. The tool will compute any collision points based on each waypoint’s location, speed, and holding time, and highlight them on the map.  
 
-![1750658529438](image/README/1750658529438.png)
+![collisions](https://github.com/user-attachments/assets/ccaeec35-8ab2-4b3d-999f-5cd10233471b)
 
 #### Hide Segments
 
