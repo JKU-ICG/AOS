@@ -1,6 +1,6 @@
 # AOS waypoint planning
 
-AOS waypoint planning is the part of the AOS ground stations. It is used for designing the mission ant its waypoints, checking manually and autonomously collisions between multiple drones. 
+AOS waypoint planning is part of the AOS ground stations. It is used for designing the mission ant its waypoints, checking manually and autonomously collisions between multiple drones. 
 
 This README explains, step by step, how to get the `launcher.js` script running on a fresh machine. It assumes the following folder structure:
 
