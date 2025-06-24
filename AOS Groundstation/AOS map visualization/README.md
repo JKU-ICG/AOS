@@ -26,6 +26,8 @@ This is our confic file that consist of our mqtt confiqurations. Which is simila
 - persistence_file mosquitto.db
 - persistence_location % location mosquitto folder 
 
+**Note:** Do not forget the change the **% location of the file** and **% location mosquitto folder**. Otherwise, AOS_Broker can not transmit data and threw errors related to mqtt.
+
 Run config file: 
 > mosquitto -c mosquitto.conf 
 
