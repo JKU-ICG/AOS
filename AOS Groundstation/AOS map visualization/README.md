@@ -13,14 +13,6 @@ Before testing the AOS Map Visualization you need to install Mosquitto based on 
 # Install Mosquitto and Run .exe file
 https://mosquitto.org/files/binary/win64/mosquitto-2.0.18-install-windows-x64.exe 
 
-# Go to mosquitto installation folder 
-
-To start mosquitto: 
-> sudo net start mosquitto  
-
-To stop mosquitto: 
-> sudo net stop mosquitto  
-
 # Run Mosquitto Config   
 This is our confic file that consist of our mqtt confiqurations. Which is similar to below.
 
@@ -35,7 +27,21 @@ This is our confic file that consist of our mqtt confiqurations. Which is simila
 - persistence_location % location mosquitto folder 
 
 Run config file: 
-> sudo mosquitto -c mosquitto.conf 
+> mosquitto -c mosquitto.conf 
+
+Create a password.txt file in the mosquitto directory.
+Open a terminal with administrator rights, navigate to the C:\Program Files\mosquitto directory, and execute the following command to create a user with a password:
+
+> .\mosquitto_passwd -b "C:\Program Files\mosquitto\password.txt" user user
+
+# Go to mosquitto installation folder 
+Open a terminal with administrator rights, navigate to the C:\Program Files\mosquitto directory.
+
+To start mosquitto: 
+> net start mosquitto  
+
+To stop mosquitto: 
+> net stop mosquitto  
 
 # Listen  
 
@@ -43,4 +49,4 @@ In order to test your mqtt run below in terminal.
  
 > mosquitto_sub -h localhost -t drone -u user –P user 
 
-> Note: After initial test, you do not need to do start and stop every time you want to use AOS Map Visualization. It will be done automatically by running AOS_Groundstation.exe. 
+### Note: After initial test, you do not need to do start and stop every time you want to use AOS map visualization. It will be done automatically by running AOS_Groundstation.bat file. 
