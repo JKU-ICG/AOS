@@ -362,7 +362,8 @@ When managing more than one grid (e.g., for multiple drones):
 
 For a step-by-step demonstration, watch the video below:
 
-![1750244358814](image/README/1750244358814.mp4)
+
+https://github.com/user-attachments/assets/c7fd8e98-1420-40a5-a2e8-19a1dec2539b
 
 ### 3. Collision Check _(expandable)_
 
