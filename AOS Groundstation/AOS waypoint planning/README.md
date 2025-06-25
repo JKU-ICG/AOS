@@ -361,10 +361,9 @@ Note that this is not live collision checker, it checks if there ara any collisi
 
 Click **Hide Segments** to hide the lines connecting the waypoints on the map.
 
-### 4. Save Images
+### 4. Save Images?
 
-- **Save Images**  
-  Select **Yes** to save an image at each waypoint, or **No** to disable image capture.
+Select **Yes** to save an image at each waypoint, or **No** to disable image capture.
 
 ### 5. Send Mission
 
