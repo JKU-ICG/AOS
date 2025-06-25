@@ -2,35 +2,6 @@
 
 AOS waypoint planning is part of the AOS ground stations. It is used for designing the mission ant its waypoints, checking manually and autonomously collisions between multiple drones. 
 
-This README explains, step by step, how to get the `launcher.js` script running on a fresh machine. It assumes the following folder structure:
-
-```
-/AOS Groundstation
-│
-├─ /AOS waypoint planning
-│   ├─ launcher.js
-│   ├─ package.json          ← (we’ll create this below)
-│   └─ /public
-│       ├─ index.html
-|       ├─ script.js
-|       ├─ style.css
-|       ├─ leaflet.rotatedMarker.min.js
-|       ├─ bootstrap.bundle.min.js
-│       └─ /images
-│           └─ (image files)
-│
-├─/AOS server
-│    ├─ AOS_Broker.exe   
-│    └─ ...
-│
-├─ /AOS_Groundstation.bat
-│
-└─ ...
-    
-```
-
----
-
 ## Prerequisites
 
 1. **Node.js**  
@@ -96,7 +67,7 @@ If Node.js is not already installed:
 
 ---
 
-### 2. Initialize npm & Enable ES Modules
+### 2. Initialize
 
 1. Open a terminal (Command Prompt or PowerShell on Windows) and change into the folder containing `launcher.mjs` file, public and API folders:
    ```bash
@@ -106,7 +77,7 @@ If Node.js is not already installed:
    ```bash
    npm init -y
    ```
-   - This creates a barebones `package.json`.  
+   - This creates a `package.json`.  
 3. Open `package.json` in a text editor and add make sure `"main": "launcher.mjs"` is there, Example:
    ```jsonc
     {
@@ -242,12 +213,11 @@ The right panel of the waypoint-planning interface contains the primary controls
 
 ![AOS waypoint planning right side](https://github.com/user-attachments/assets/116ee5d7-eba5-42d9-80a6-f3f6de375cd2)
 
-
 ### 1. Start Broker
 
 Click **Start Broker** to launch the broker service (`AOS_Broker.exe`).  
 
-> **Prerequisite:** Before you click this button, make sure your drone(s) are connected and streaming both telemetry data and video. If they aren’t, close the application, resolve the connection issue, and then try again.
+> **Prerequisite:** Before you click this button, make sure your drone(s) are connected and streaming both telemetry data and video. If they aren’t, close the applications, resolve the connection issue, and then try again.
 
 Once you’ve clicked **Start Broker**, a terminal window will open and display status messages indicating that the broker has started.
 
@@ -284,6 +254,8 @@ Once you’ve clicked **Start Broker**, a terminal window will open and display 
   Choose the camera you want to use. Available options depend on your drone model (Wide Angle, Tele, Thermal).  
   > **Note:** You must select a camera before proceeding.
 
+  > **Tip:** To streamline planning, chose your preferred camera ,which is depend on your drone, before placing waypoints.
+
 #### Integration & Anomaly
 
 - **Integration** & **Anomaly** buttons  
@@ -317,6 +289,7 @@ When you want to fly a grid pattern, use the following controls. Note that all w
    - Enter **Center Latitude** & **Center Longitude** for the grid’s center.  
    - Enter **Grid Width** & **Grid Height**.   
    - Click **Draw Grid Automatically** to generate the grid.
+
 4. **Rotate Angle** (degrees)
    - Rotate the grid. 
 
@@ -344,6 +317,9 @@ When managing more than one grid (e.g., for multiple drones):
 
 ![example grids](https://github.com/user-attachments/assets/b04e24dc-6ee3-4ffa-b210-47b1cebd204e)
 
+#### Waypoint Threshold
+  The waypoint thresholds defines how precise drones reach the waypoint. It sets initially at 2 meters but you can change it.  GPS drift, wind, and other environmental factors can prevent exact waypoint hits. Raising the threshold helps ensure the mission continues even if the drone isn’t perfectly on target.
+
 #### Waypoint Removal Controls
 
 - **Remove All Except Last WP**  
@@ -358,10 +334,9 @@ When managing more than one grid (e.g., for multiple drones):
 - **Remove All WPs**  
   Deletes every waypoint from the map.
 
-> **Tip:** When planning a mission, an arrow icon shows your drone’s current position. If it overlaps a waypoint, you won’t be able to click that waypoint. Use the **Time Line** slider in the **Collisions** section to advance the drone’s position—this moves the arrow and lets you select the waypoint. (The Time Line slider is explained later.)
+> **Tip:** When planning a mission, an arrow icon shows your drone’s current position. If it overlaps a waypoint, you won’t be able to click that waypoint. Use the **Time Line** slider in the **Collisions** section to advance the drone’s position which moves the arrow and lets you select the waypoint. (The Time Line slider is explained later.)
 
 For a step-by-step demonstration, watch the video below:
-
 
 https://github.com/user-attachments/assets/c7fd8e98-1420-40a5-a2e8-19a1dec2539b
 
@@ -374,9 +349,11 @@ Use this section to detect potential collisions between multiple waypoint missio
 - As you move the slider, the drone arrows animate on the map, letting you visually inspect any overlaps or near-misses.
 
 #### Autonomous Check
-1. Set the **Collision Threshold** (minimum separation distance).  
+1. Set the **Collision Threshold**.  
 2. Click **Detect Collisions**.  
-3. The tool will compute any collision points based on each waypoint’s location, speed, and holding time, and highlight them on the map.  
+3. The tool will compute any collision points based on each waypoint’s location, speed, and holding time, and highlight them on the map. 
+
+Note that this is not live collision checker, it checks if there ara any collisions based on the parameters. GPS drift, wind, acceleration and other environmental factors may cause the collisions even if it is not detected using our check.
 
 ![collisions](https://github.com/user-attachments/assets/ccaeec35-8ab2-4b3d-999f-5cd10233471b)
 
@@ -389,21 +366,21 @@ Click **Hide Segments** to hide the lines connecting the waypoints on the map.
 - **Save Images**  
   Select **Yes** to save an image at each waypoint, or **No** to disable image capture.
 
-### 5. Send Mission?
+### 5. Send Mission
 
-Click **Send Mission** to transmit your planned waypoint mission to the broker.
+Click **Send Mission** to transmit your planned waypoint mission to the broker. Every time you send the mission, it will saved in a JSON file. If you want to bring it back you need to press send mission without defining one. You make updates on the the mission waypoints as described above. Note that if you have designed a grid mission, it will lose grid properties (resizing, moving, etc) after sending it. This is working progress.  
 
 > **Note:**  
-> - The first time you send a waypoint mission, you must click **Takeoff** to launch the drones.  
-> - After the initial takeoff, any subsequent mission uploads will be applied automatically when it is clicked **Send Mission**button without additional manual steps.  
+> - The first time you send a waypoint mission, you must click **Takeoff** to launch the drones. Do not forget to apply the **How to use it** section of the main [README](https://github.com/JKU-ICG/AOS/blob/stable_release/AOS%20Groundstation/README.md).   
+> - After the initial takeoff, any subsequent mission uploads will be applied automatically when it is clicked **Send Mission** button without additional manual steps.  
 
 ### 6. Takeoff
 
 Click **Takeoff** to launch the drone. It will ascend vertically to the altitude of the first waypoint.
 
 > **Note:** 
-> - Ensure the motors are started and took off a couple of meters manually. Unfortunately, it is not allowed to take off on the ground by Dji.
-> - After manual takeoff you need to enable **Virtual Stick**. It will be printed **Drone ID switched to auto flight mode.**
+> - Ensure the motors are started and took off a couple of meters manually. Unfortunately, it is not allowed to take off on the ground by safety reasons.
+> - After manual takeoff you need to enable **Virtual Stick**. It will be printed **Drone <ID> switched to auto flight mode.**
 
 ### 7. Landing
 
@@ -412,3 +389,4 @@ Click **Landing** to return the drone autonomously to 2 m above the original tak
 > **Note:** For the final descent, 
 > - Disable the **Virtual Stick**. 
 > - Then, manually guide the drone down to the ground. 
+> - Be careful when drones start landing. GPS drift, wind, acceleration and other environmental factors may change the calculation of the 2 meters above the ground. In the worst case scenario, disable the virtual stick, which will set the drone to manual mode, to take the controls. 
