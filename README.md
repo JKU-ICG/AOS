@@ -41,9 +41,57 @@ Node.js is necessary for AOS waypoint planning. In order to complete the install
 **Note:** Restart the pc after the all installations.
 
 
-## How to use it
+## AOS Ground Station Instructions
 
-After installing all modules on the PC and the DJI app on the remote controller(s), and after making sure that all devices are in the same network, you need to run AOS_Groundstation.bat file inside the AOS Groundstation folder as an administrator. It will automatically launch all modules on the PC: server, map visualization, and waypoint mission planning. Then you need to connect your drones to the server. After all drones are connected, you can go AOS waypoint planning. Start your broker by pressing the **Start Broker** button. That will start the broker. After running the broker, you need to plan your waypoint mission and transmit it to the server (see AOS Waypoint Mission Planning). You will see the mission parameters on the terminal where it appears after running the bat file. Then you need to press **Takeoff** for the drones to take off and execute the first mission on the AOS waypoint planning. After pressing **Takeoff** they will increase their altitude vertically from the position you took off. The altitude is the altitude of the mission’s first waypoint. If you want to continue with a new mission after all drones completed previous one, you need to set a new mission and send it to the server by pressing ** Send Mission** button. After sending the new mission, all drones will execute it right away. Later when you decide to land, you need to press **Landing** button for the drones to return to their altitudes and positions above the initial take-off position and land them. Note, that for take-off and landing, the first and last meters have to be flown manually for safety reasons. So the drones will not directly take off from or land to the ground.
+After installing all necessary modules on your PC and the DJI app on the remote controllers, ensure that all devices are connected to the same network.
+
+### 1. Launch the Ground Station
+
+Run the `AOS_Groundstation.bat` file located in the `AOS Groundstation` folder **as an administrator**. This will automatically launch all required modules on the PC:
+- Server
+- Map Visualization
+- Waypoint Planning
+
+### 2. Connect Drones
+
+After the modules are running, connect your drones to the server. Once all drones are connected, proceed to the **AOS Waypoint Planning** interface.
+
+### 3. Start the Broker
+
+Click the **Start Broker** button. This will:
+- Start the broker
+- Open a new terminal window to display broker logs and print statements
+
+### 4. Plan and Send a Mission
+
+- Plan your waypoint mission using the interface
+- Click the **Send Mission** button to transmit the mission to the server
+- Mission parameters will appear in the broker terminal
+
+### 5. Activate Virtual Sticks
+
+Enable virtual sticks for all drones. This will switch them to **auto mode**.
+
+### 6. Take Off
+
+Press the **Takeoff** button. The drones will ascend vertically to the altitude of the mission's first waypoint.
+
+> ⚠️ **Important:** The first and last meters of the flight must be flown manually for safety reasons. Drones will not take off directly from or land directly on the ground.
+
+### 7. Executing Multiple Missions
+
+To run a new mission after completing a previous one:
+- Define the new mission
+- Click **Send Mission**
+- Drones will immediately begin executing the new mission
+
+### 8. Landing
+
+When ready to land:
+- Press the **Landing** button
+- Drones will return to the altitude and position above their original takeoff point
+- Perform the final descent manually for safety
+
 
 ### AOS for DJI app
 Basics on how to use and install our DJI compatible app on the remote controller of your drone can be found [here](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20for%20DJI). The latest version (v3.7) supports the communication with the AOS Server. The direct (manual) usage of AOS in the app is restricted to prevent dual use. To enable this feature in the app, an RC-individual keycode has to be requested (by email). This will only be given out to civil (blue-light) organizations. The transmission of videodata, telemetry, and waypoints as well as waypoint flights through the sverver, however, are unrestricted.
