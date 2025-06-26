@@ -46,12 +46,12 @@ body {
 /* ── Font sizing overrides ── */
 /* Force everything in the sidebar to 14px */
 #sidebar * {
-    font-size: 14px !important;
+    font-size: 12px !important;
 }
 
 /* Except group summaries, which should be 16px */
 #sidebar summary {
-    font-size: 16px !important;
+    font-size: 14px !important;
 }
 
 /* ── <details> spacing & dynamic collapse ── */
