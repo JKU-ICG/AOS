@@ -321,6 +321,8 @@ When managing more than one grid (e.g., for multiple drones):
 #### Waypoint Threshold
   The waypoint thresholds defines how precise drones reach the waypoint. It sets initially at 2 meters but you can change it.  GPS drift, wind, and other environmental factors can prevent exact waypoint hits. Raising the threshold helps ensure the mission continues even if the drone isn’t perfectly on target.
 
+![waypoint_threshold](https://github.com/user-attachments/assets/e004f4ae-7635-4d01-8c57-7d817714c946)
+
 #### Waypoint Removal Controls
 
 - **Remove All Except Last WP**  
@@ -336,6 +338,8 @@ When managing more than one grid (e.g., for multiple drones):
   Deletes every waypoint from the map.
 
 > **Tip:** When planning a mission, an arrow icon shows your drone’s current position. If it overlaps a waypoint, you won’t be able to click that waypoint. Use the **Time Line** slider in the **Collisions** section to advance the drone’s position which moves the arrow and lets you select the waypoint. (The Time Line slider is explained later.)
+
+![removing buttons](https://github.com/user-attachments/assets/cadafbd2-9f0f-4854-82f2-eeb803da3081)
 
 For a step-by-step demonstration, watch the video below:
 
