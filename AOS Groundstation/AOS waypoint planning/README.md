@@ -341,10 +341,6 @@ When managing more than one grid (e.g., for multiple drones):
 
 ![removing buttons](https://github.com/user-attachments/assets/cadafbd2-9f0f-4854-82f2-eeb803da3081)
 
-For a step-by-step demonstration, watch the video below:
-
-https://github.com/user-attachments/assets/c7fd8e98-1420-40a5-a2e8-19a1dec2539b
-
 ### 3. Collision Check _(expandable)_
 
 Use this section to detect potential collisions between multiple waypoint missions. You can run a check manually or automatically:
