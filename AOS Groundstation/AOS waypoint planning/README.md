@@ -246,7 +246,8 @@ Once you’ve clicked **Start Broker**, a terminal window will open and display 
 
 > **Note:** To update an existing waypoint, click it on the map. Its parameters will then populate at the top of the **Plan Mission** section, where you can adjust all waypoint parameters.
 
-![AOS waypoint planning right side plan mission](https://github.com/user-attachments/assets/0333a947-f74a-443d-aae1-2ec91ff495c1)
+![AOS waypoint planning right side plan mission](https://github.com/user-attachments/assets/f76b2cff-fcdb-41a6-83bb-d76a444d4ef6)
+
 
 #### Select Camera
 
