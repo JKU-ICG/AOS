@@ -21,7 +21,7 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
 
 > - Drone group; you can change the view of the drone by sliding the sliders (Heading, Gimbal Pitch and Gimbal Yaw) without defining a new waypoint mission. You only need to click (or ctrl + click) the drone you want to change its view and slide the sliders.
 
-![Image](https://github.com/user-attachments/assets/08c1edfe-ae51-4dcf-b330-002205979a82)
+![drone](https://github.com/user-attachments/assets/0d4a5ab3-d51c-44ff-82e6-02ac22fef8b0)
 
 > - Image Group, Image Size slider is added. It can be changed for the selected drone. 
 
