@@ -238,7 +238,7 @@ Once you’ve clicked **Start Broker**, a terminal window will open and display 
    - **Speed** (defaults to the mission’s default speed)  
    - **Holding Time** (defaults to the mission’s default holding time)
 
-   – If you don’t change these values, the default settings apply to every new waypoint. These parameters are set by the user as well or can be updated based on the user requirements.
+   – If you don’t change these values, the default settings apply to every new waypoint. 
 
 > **Tip:** To streamline planning, adjust your mission’s default altitude, speed, and holding time before placing waypoints.
 
@@ -283,7 +283,7 @@ When you want to fly a grid pattern, use the following controls. Note that all w
    - To fly a straight line, set one spacing to **0 m**.
 
 2. **Draw Grid Manually**  
-   Click **Draw Grid Manually**. Your cursor becomes a **+**—then click and drag to sketch your grid on the map, creating all waypoints automatically.
+   Click **Draw Grid Manually**. Your cursor becomes a **+** then click and drag to sketch your grid on the map, creating all waypoints automatically.
 
 3. **Draw Grid Automatically**  
    - Enter **Center Latitude** & **Center Longitude** for the grid’s center.  
