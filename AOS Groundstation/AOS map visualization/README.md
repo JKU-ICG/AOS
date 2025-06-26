@@ -1,12 +1,31 @@
 ### AOS Map Visualization
-A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. It runs in your default webbrowser.  
+A map visualization module (contributed by Patrick Sack) can be connected to the server for real-time mapping of swarms (drones' positions, heading, full telemetry, and live video data). A digital zoom extends the limited zoom capabilities of conventional map services. It runs in your default webbrowser. 
 
 - The map is used in the same way as any other online map (scrolling, zooming, switching to satellite view, etc).
+  
+  ![main screen](https://github.com/user-attachments/assets/9ad00894-6947-4863-85f3-e7b958b81e1a)
+  
 - Clicking on the drone icons with **ctrl** button (which visualizes position and heading) turns on/off the live video/telemetry window.
-- New groups are added to AOS Map Visualization. 
-> - AOS group; which changes the Integral and/or Anomaly image parameters by changing the sliders (Focal Length, Compass Correction, RX Threshold, Focal Plane Pitch and Focal Plane Roll).  You can slide each slider to the desired parameter settings. 
+  
+  ![icon](https://github.com/user-attachments/assets/07bf3f80-0984-43ea-9b8d-259e9d1011b4)
+
+  ![icon with image](https://github.com/user-attachments/assets/739cf259-43ed-40e4-b1ac-f4657f26891d)
+
+- New groups are added to AOS Map Visualization.
+
+  ![groups](https://github.com/user-attachments/assets/6d306988-8a78-45a6-b756-204c361fdf9f)
+
+> - AOS group; which changes the Integral and/or Anomaly image parameters by changing the sliders (Focal Length, Compass Correction, RX Threshold, Focal Plane Pitch and Focal Plane Roll).  You can slide each slider to the desired parameter settings.
+
+![AOS](https://github.com/user-attachments/assets/c5199c63-08eb-4f41-b14f-52f22f92652b)
+
 > - Drone group; you can change the view of the drone by sliding the sliders (Heading, Gimbal Pitch and Gimbal Yaw) without defining a new waypoint mission. You only need to click (or ctrl + click) the drone you want to change its view and slide the sliders.
+
+![Image](https://github.com/user-attachments/assets/08c1edfe-ae51-4dcf-b330-002205979a82)
+
 > - Image Group, Image Size slider is added. It can be changed for the selected drone. 
+
+![Image](https://github.com/user-attachments/assets/86ad1714-3415-4cef-ae03-f5995c2a4a98)
 
 Before testing the AOS Map Visualization you need to install Mosquitto based on the steps blow.
 
