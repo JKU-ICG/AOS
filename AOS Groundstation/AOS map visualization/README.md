@@ -9,6 +9,8 @@ A map visualization module (contributed by Patrick Sack) can be connected to the
   
   ![icon](https://github.com/user-attachments/assets/07bf3f80-0984-43ea-9b8d-259e9d1011b4)
 
+- Clicking **space** button will centre the map based on drone positions.
+  
   ![icon with image](https://github.com/user-attachments/assets/739cf259-43ed-40e4-b1ac-f4657f26891d)
 
 - New groups are added to AOS Map Visualization.
