@@ -90,12 +90,16 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
+- Rakesh John Amala Arokia Nathan, Matthias Gessner, Nurullah Özkan, Marius Bock, Mohamed Youssef, Maximilian Mews, Björn Piltz, Ralf Berger, Oliver Bimber, An aerial color image anomaly dataset for search missions in complex forested terrain
+With Aerial Imaging, under review (2025)
+  - [arXiv (pre-print)](https://arxiv.org/abs/2507.15492)
+  - [Data: ](https://doi.org/10.5281/zenodo.15848419)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15848419.svg)](https://doi.org/10.5281/zenodo.15848419)
 - Mohamed Youssef, Jian Peng, and Oliver Bimber, DeepForest: Sensing Into Self-Occluding Volumes of Vegetation 
 With Aerial Imaging, under review (2025)
   - [arXiv (pre-print)](https://arxiv.org/abs/2502.02171v1)
   - [Supplementary Videos](https://www.youtube.com/playlist?list=PLgGsWgs4hgaOlbi7J5Zn9YpqDLSeXmqBZ)
   - [Data: ](https://doi.org/10.5281/zenodo.14748447)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14748447.svg)](https://doi.org/10.5281/zenodo.14748447)
-- Rakesh John Amala Arokia Nathan, Sigrid Strand, Daniel, Mehrwald, Dmitriy Shutin, Oliver Bimber, An Autonomous Drone Swarm for Detecting and Tracking Anomalies among Dense Vegetation, under review (2024)
+- Rakesh John Amala Arokia Nathan, Sigrid Strand, Daniel, Mehrwald, Dmitriy Shutin, Oliver Bimber, An Autonomous Drone Swarm for Detecting and Tracking Anomalies among Dense Vegetation, under revision (2025)
   - [arXiv (pre-print)](https://arxiv.org/abs/2407.10754)
   - [Video Abstract](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)
   - [Data: ](https://doi.org/10.5281/zenodo.12720784)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12720784.svg)](https://doi.org/10.5281/zenodo.12720784)
