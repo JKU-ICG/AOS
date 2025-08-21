@@ -309,7 +309,7 @@ When managing more than one grid (e.g., for multiple drones):
   Drag any of its corner handles to adjust the grid’s size.
 
 - **Move Grid**  
-  Hold **Alt** + left-click anywhere on the grid rectangle, then drag to reposition it.  
+  Hold **Alt** + left-click any waypoint of the grid rectangle, then drag to reposition it.  
 
 ![example grids](https://github.com/user-attachments/assets/b04e24dc-6ee3-4ffa-b210-47b1cebd204e)
 
@@ -340,7 +340,7 @@ When managing more than one circle (e.g., for multiple drones):
   Change the radius to resize the circle.
 
 - **Move Circle**  
-  Hold **Alt** + left-click anywhere on the circle, then drag to reposition it.
+  Hold **Alt** + left-click any waypoint of the circle, then drag to reposition it.
   
 ![example circles](https://github.com/user-attachments/assets/82666c4d-953c-4910-8e0c-b8f43a8a42b9)
 
