@@ -292,7 +292,7 @@ When you want to fly a grid pattern, use the following controls. Note that all w
    - Click **Draw Grid Automatically** to generate the grid.
 
 4. **Rotate Angle** (degrees)
-   - Rotate the grid. 
+   - Rotate the selected grid. (Click a waypoint of a grid to rotate it)
 
 > **Tip:** After drawing, review and adjust individual waypoint settings under **Plan Mission** if needed.   
    
@@ -303,20 +303,51 @@ When you want to fly a grid pattern, use the following controls. Note that all w
 When managing more than one grid (e.g., for multiple drones):
 
 - **Select Grid**  
-  Click a waypoint from the grid you want to edit. The grid’s controls will appear below, including a **Hide Grid** button.
-
-- **Toggle Visibility**  
-  Use **Hide Grid** to show or hide the grid rectangle beneath the waypoints.
+  Click a waypoint from the grid you want to edit. 
 
 - **Resize Grid**  
-  With the grid rectangle visible, drag any of its corner handles to adjust the grid’s dimensions.
+  Drag any of its corner handles to adjust the grid’s size.
 
 - **Move Grid**  
-  Hold **Alt** + left-click anywhere on the grid rectangle, then drag to reposition it.
-
-> **Tip:** The grid must be visible to resize or move it.    
+  Hold **Alt** + left-click anywhere on the grid rectangle, then drag to reposition it.  
 
 ![example grids](https://github.com/user-attachments/assets/b04e24dc-6ee3-4ffa-b210-47b1cebd204e)
+
+#### Waypoint Threshold
+  The waypoint thresholds defines how precise drones reach the waypoint. It sets initially at 2 meters but you can change it.  GPS drift, wind, and other environmental factors can prevent exact waypoint hits. Raising the threshold helps ensure the mission continues even if the drone isn’t perfectly on target.
+
+When you want to fly a circle pattern, use the following controls. Note that all waypoints generated will inherit the current parameters but can be updated individually at any time as explained before.
+
+1. **Draw Circle Manually**  
+    - Enter **Number of Waypoints**. This is how many waypoints will be generated along the circle's path.
+    - Enter **Looking Height**.  This is the height at which the camera will be looking. It is used to calculate the gimbal pitch.
+    - Click **Draw Circle Manually**. Your cursor becomes a **+** then click and drag to sketch your circle on the map, creating all waypoints automatically.
+
+2. **Draw Circle Automatically**  
+   - Enter **Center Latitude** & **Center Longitude** for the circle’s center.  
+   - Enter **Radius**.   
+   - Enter **Number of Waypoints**. This is how many waypoints will be generated along the circle's path.
+   - Enter **Looking Height**.  This is the height at which the camera will be looking. It is used to calculate the gimbal pitch. 
+   - Click **Draw Circle Automatically** to generate the circle.
+
+> **Tip:** After drawing, review and adjust individual waypoint settings under **Plan Mission** if needed.   
+   
+![circle_planning](https://github.com/user-attachments/assets/d49a5c81-edcf-4282-bd8e-a9e34efc4b4c)
+   
+#### Editing Multiple Circles
+
+When managing more than one circle (e.g., for multiple drones):
+
+- **Select Circle**  
+  Click a waypoint from the circle you want to edit. 
+
+- **Resize Circle**  
+  Change the radius to resize the circle.
+
+- **Move Circle**  
+  Hold **Alt** + left-click anywhere on the circle, then drag to reposition it.
+  
+![example circles](https://github.com/user-attachments/assets/82666c4d-953c-4910-8e0c-b8f43a8a42b9)
 
 #### Waypoint Threshold
   The waypoint thresholds defines how precise drones reach the waypoint. It sets initially at 2 meters but you can change it.  GPS drift, wind, and other environmental factors can prevent exact waypoint hits. Raising the threshold helps ensure the mission continues even if the drone isn’t perfectly on target.
