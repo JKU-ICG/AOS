@@ -394,7 +394,7 @@ Select **Yes** to save an image at each waypoint, or **No** to disable image cap
 
 ### 5. Send Mission
 
-Click **Send Mission** to transmit your planned waypoint mission to the broker. Every time you send the mission, it will saved in a JSON file. If you want to bring it back you need to press send mission without defining one. You make updates on the the mission waypoints as described above. Note that if you have designed a grid mission, it will lose grid properties (resizing, moving, etc) after sending it. This is working progress.  
+Click **Send Mission** to transmit your planned waypoint mission to the broker. Every time you send the mission, it will saved in a JSON file. If you want to bring it back the saved mission you need to press send mission without defining one. You can make updates on the mission waypoints as described above but don't forget that the mission brought it back witll not have the grid and circle properties.   
 
 > **Note:**  
 > - The first time you send a waypoint mission, you must click **Takeoff** to launch the drones. Do not forget to apply the **How to use it** section of the main [README](https://github.com/JKU-ICG/AOS/blob/stable_release/AOS%20Groundstation/README.md).   
