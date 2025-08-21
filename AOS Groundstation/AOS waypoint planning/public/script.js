@@ -39,6 +39,9 @@ var ps3 = {
     // This variable is used to persist the selected waypoint key across updates.
     ns.d.persistedSelectedKey = null;
 
+    // Drawing state to prevent waypoint creation during drawing operations
+    ns.d.isDrawingActive = false;
+
     ns.d.wayPointsDrones = [];
     // let wayPointsDrones = [
     //     {id : 1, marker: MARKEROBJECT, waypointdata : {}, wayline: null, timestamp: TIMESTAMP},
@@ -210,7 +213,7 @@ var ps3 = {
         }
         ns.d.collisionMarkers = [];
 
-        // 2) read the user’s threshold (in meters) from the input
+        // 2) read the user's threshold (in meters) from the input
         let raw = document.getElementById('collisionThresholdInput').value;
         let thr = parseFloat(raw);
         // fallback to your constant if invalid
@@ -366,6 +369,11 @@ var ps3 = {
 
         if (e.originalEvent.altKey) return;
 
+        // Prevent waypoint creation during drawing operations
+        if (ns.d.isDrawingActive) {
+            return;
+        }
+
         var droneId = document.getElementById('droneSelect').value;
         if (!droneId) {
             alert('No drone selected. Select a drone to add waypoints.');
@@ -389,8 +397,8 @@ var ps3 = {
             var minposeDistanceInput = document.getElementById('minposeDistanceInput').value || ns.c.defaultMinposeDistance;
 
             waypoint.data = {
-                lat: marker.lat,
-                lng: marker.lng,
+                lat: e.latlng.lat,
+                lng: e.latlng.lng,
                 altitude: altitudeInput,
                 speed: speedInput,
                 camera: document.getElementById('cameraSelect').value,
@@ -441,6 +449,18 @@ var ps3 = {
             // waypoint.marker.bindPopup(ns.m.getPopupContentString(waypoint)); // popup for marker
             ns.m.updateSelectedMarkerDiv();
             ns.m.updateWaypointInformation(ns.d.selectedMarker);
+
+            // If this waypoint belongs to a grid, select that grid so inputs & drag act on it
+            if (waypoint._isGrid && typeof waypoint.gridIndex === 'number') {
+                ns.v.activeGrid = { droneId: waypoint.id, gridIndex: waypoint.gridIndex };
+                document.getElementById('droneSelect').value = waypoint.id;
+                ns.m._updateGridInputs(waypoint.id, waypoint.gridIndex);
+                ns.m._bindGridDrag(waypoint.id, waypoint.gridIndex);
+                ns.m.addGridResizeHandles(waypoint.id, waypoint.gridIndex);
+            } else {
+                // Deselect grid if a non-grid waypoint is clicked
+                ns.v.activeGrid = null;
+            }
         });
 
         waypoint.marker.on('contextmenu', function () {
@@ -706,6 +726,7 @@ var ps3 = {
             ns.d.selectedMarker = null; // Reset selected marker variable
             ns.m.updateSelectedMarkerDiv();
             ns.m._clearGridForDrone(droneId);
+            ns.m._clearCirclesForDrone(droneId);
 
             ns.d.droneAnimation.forEach(element => {
                 if (element.flowpoints.length == 0) {
@@ -734,6 +755,7 @@ var ps3 = {
         ns.d.droneAnimation = [];
 
         Object.keys(ns.d.grids).forEach(id => ns.m._clearGridForDrone(id));
+        Object.keys(ns.d.circles).forEach(id => ns.m._clearCirclesForDrone(id));
 
         ns.m.initDroneAnimation();
         ns.m.initWayLinesDrones();
@@ -751,9 +773,8 @@ var ps3 = {
 
         uniqueIds.forEach(id => {
             var waypointsOfDrone = ns.d.wayPointsDrones.filter(w => w.id === id);
-            waypointsOfDrone.forEach(elem => {
-                var pointIndex = waypointsOfDrone.indexOf(elem);
-                elem.marker.setIcon(ns.m.createWaypointIcon(`${elem.id}.${pointIndex}`, ns.m.getDroneColourCode(elem.id)));
+            waypointsOfDrone.forEach((elem, index) => {
+                elem.marker.setIcon(ns.m.createWaypointIcon(`${elem.id}.${index}`, ns.m.getDroneColourCode(elem.id)));
             });
         });
     }
@@ -1196,15 +1217,24 @@ var ps3 = {
                 return response.json();
             })
             .then((data) => {
-                ns.m.deleteWaylines();
-                ns.m.deleteAllMarker();
+                // Check if current mission is empty before loading saved mission
+                const hasWaypoints = ns.d.wayPointsDrones && ns.d.wayPointsDrones.length > 0;
+                const hasGrids = ns.d.grids && Object.keys(ns.d.grids).some(id => ns.d.grids[id] && ns.d.grids[id].length > 0);
+                const hasCircles = ns.d.circles && Object.keys(ns.d.circles).some(id => ns.d.circles[id] && ns.d.circles[id].length > 0);
+                
+                // Only load saved mission if current mission is completely empty
+                if (!hasWaypoints && !hasGrids && !hasCircles) {
+                    ns.m.deleteWaylines();
+                    ns.m.deleteAllMarker();
 
-                data = JSON.parse(data);
-                ns.m.retrieveFlightPlanningObject(data);
+                    data = JSON.parse(data);
+                    ns.m.retrieveFlightPlanningObject(data);
 
-                if (ns.m.isShowWaylines()) {
-                    ns.m.calculateWaylines();
-                };
+                    if (ns.m.isShowWaylines()) {
+                        ns.m.calculateWaylines();
+                    };
+                }
+                // If mission has content, keep the current design and don't load saved mission
 
                 // update DroneAnimation
                 // if (ns.m.isShowAnimation()) {
@@ -1381,10 +1411,15 @@ var ps3 = {
     // ------------------------------
 
     // per-drone grid state
-    ns.d.grids = {};
+    ns.d.grids = {};          // eg. { "1":[{grid,…}, {grid,…}], "2":[{…}] }
+    ns.v.activeGrid   = null; 
+    ns.m._ensureGridArray = id => {
+        if (!ns.d.grids[id]) ns.d.grids[id] = [];
+        return ns.d.grids[id];
+    };
 
-    ns.m._updateGridInputs = function (droneId) {
-        const G = ns.d.grids[droneId];
+    ns.m._updateGridInputs = function (droneId, idx) {
+        const G = ns.d.grids[droneId]?.[idx];
         if (!G || !G.rectangle) return;
 
         // reuse stored metre dimensions (unchanged by rotate/move)
@@ -1398,6 +1433,10 @@ var ps3 = {
         document.getElementById('gridLatInput').value = centerLL.lat.toFixed(10);
         document.getElementById('gridLngInput').value = centerLL.lng.toFixed(10);
 
+        // Update spacing and rotation inputs for this specific grid
+        document.getElementById('gridSpacingXInput').value = G.spacingX || '3.0';
+        document.getElementById('gridSpacingYInput').value = G.spacingY || '3.0';
+        document.getElementById('gridRotationInput').value = G.currentAngle || 0;
 
         // refresh sidebar if selected WP moved
         if (ns.d.selectedMarker) {
@@ -1412,6 +1451,33 @@ var ps3 = {
         document.getElementById('drawGridBtn').addEventListener('click', () => {
             const id = document.getElementById('droneSelect').value;
             if (!id) return alert('Select a drone first.');
+            
+            // Disable any active drawing controls first
+            if (ns.map.gridDrawControl) {
+                ns.map.gridDrawControl.disable();
+            }
+            if (ns.map.circleDrawControl) {
+                ns.map.circleDrawControl.disable();
+            }
+            
+            // Clean up any existing grid drawing event handlers
+            ns.map.map.off(L.Draw.Event.CREATED, ns.m.onGridRectangleCreated);
+            
+            // Set drawing state to prevent waypoint creation
+            ns.d.isDrawingActive = true;
+            
+            // Set up grid-specific event handler
+            ns.map.map.on(L.Draw.Event.CREATED, ns.m.onGridRectangleCreated);
+              
+            // Add handler for when drawing is stopped/canceled
+            const resetDrawingState = () => {
+                ns.d.isDrawingActive = false;
+                ns.map.map.off('draw:drawstop', resetDrawingState);
+                ns.map.map.off('draw:canceled', resetDrawingState);
+            };
+            ns.map.map.on('draw:drawstop', resetDrawingState);
+            ns.map.map.on('draw:canceled', resetDrawingState);
+            
             if (!ns.map.gridDrawControl) {
                 ns.map.gridDrawControl = new L.Draw.Rectangle(ns.map.map, {
                     shapeOptions: {
@@ -1460,10 +1526,13 @@ var ps3 = {
         const onGridParamsChange = () => {
             const id = document.getElementById('droneSelect').value;
             if (!id) return;
-            const G = ns.d.grids[id];
-            if (!G || !G.rectangle) return;   // only if a grid is already drawn
+            const grids = ns.d.grids[id];
+            if (!grids || grids.length === 0) return;   // only if a grid is already drawn
 
-            ns.m.updateGridFromInputs(id);
+            // Use the active grid if available, otherwise use the latest
+            const gridIndex = ns.v.activeGrid && ns.v.activeGrid.droneId === id ? 
+                ns.v.activeGrid.gridIndex : null;
+            ns.m.updateGridFromInputs(id, gridIndex);
         };
 
         ['gridLatInput', 'gridLngInput', 'gridWidthInput', 'gridHeightInput']
@@ -1486,9 +1555,13 @@ var ps3 = {
             // put the wrapped value back into the field
             document.getElementById('gridRotationInput').value = angle;
 
-            // apply rotation & update the UI
-            ns.m.rotateLastGrid(id, angle);
-            ns.m._updateGridInputs(id);
+            // Use the active grid if available, otherwise use the latest
+            const gridIndex = ns.v.activeGrid && ns.v.activeGrid.droneId === id ? 
+                ns.v.activeGrid.gridIndex : null;
+
+            // apply rotation to the specific grid & update the UI
+            ns.m.rotateLastGrid(id, angle, gridIndex);
+            ns.m._updateGridInputs(id, gridIndex);
         });
 
 
@@ -1496,11 +1569,19 @@ var ps3 = {
         const onSpacingChange = () => {
             const id = document.getElementById('droneSelect').value;
             if (!id) return;
-            const G = ns.d.grids[id];
+            const grids = ns.d.grids[id];
+            if (!grids || grids.length === 0) return;
+            
+            // Use the active grid if available, otherwise use the latest
+            const gridIndex = ns.v.activeGrid && ns.v.activeGrid.droneId === id ? 
+                ns.v.activeGrid.gridIndex : null;
+            const index = gridIndex !== null ? gridIndex : grids.length - 1;
+            const G = grids[index];
             if (!G || !G.origCorners) return;
+            
             G.spacingX = parseFloat(document.getElementById('gridSpacingXInput').value);
             G.spacingY = parseFloat(document.getElementById('gridSpacingYInput').value);
-            ns.m.generateGridWaypoints(id);
+            ns.m.regenerateGrid(id, index);
         };
         document.getElementById('gridSpacingXInput').addEventListener('input', onSpacingChange);
         document.getElementById('gridSpacingYInput').addEventListener('input', onSpacingChange);
@@ -1508,74 +1589,27 @@ var ps3 = {
         // When drone changes, update spacing & angle inputs and toggle button
         document.getElementById('droneSelect').addEventListener('change', () => {
             const id = document.getElementById('droneSelect').value;
-            const G = ns.d.grids[id] || {};
+            const grids = ns.d.grids[id];
+            if (grids && grids.length > 0) {
+                // Use the active grid if available, otherwise use the latest
+                const gridIndex = ns.v.activeGrid && ns.v.activeGrid.droneId === id ? 
+                    ns.v.activeGrid.gridIndex : null;
+                const index = gridIndex !== null ? gridIndex : grids.length - 1;
+                const G = grids[index];
             document.getElementById('gridSpacingXInput').value = G.spacingX || '3.0';
             document.getElementById('gridSpacingYInput').value = G.spacingY || '3.0';
             document.getElementById('gridRotationInput').value = G.currentAngle || 0;
-            ns.m.updateToggleButtonState();
+            } else {
+                document.getElementById('gridSpacingXInput').value = '3.0';
+                document.getElementById('gridSpacingYInput').value = '3.0';
+                document.getElementById('gridRotationInput').value = 0;
+            }
         });
 
-        // Toggle Grid Visibility Button
-        if (!ns.map.toggleGridControl) {
-            ns.map.toggleGridControl = L.control({ position: 'bottomright' });
-            ns.map.toggleGridControl.onAdd = map => {
-                const btn = L.DomUtil.create('button', 'btn-toggle-grid');
-                btn.id = 'toggleGridBtn';
-                Object.assign(btn.style, {
-                    background: 'white',
-                    padding: '4px 8px',
-                    cursor: 'pointer',
-                    font: '14px sans-serif'
-                });
-                L.DomEvent.disableClickPropagation(btn);
-                btn.addEventListener('click', ns.m.toggleGridVisibility);
-                return btn;
-            };
-            ns.map.toggleGridControl.addTo(ns.map.map);
-        }
-
-        // Initialize button state
-        ns.m.updateToggleButtonState();
+        // Initialize (removed toggle grid button)
     };
 
-    // Helper: refresh toggle-button
-    ns.m.updateToggleButtonState = function () {
-        const btn = document.getElementById('toggleGridBtn');
-        const id = document.getElementById('droneSelect').value;
-        const G = ns.d.grids[id];
-        if (!btn) return;
-        if (!id || !G || !G.rectangle) {
-            btn.style.display = 'none';
-        } else {
-            btn.style.display = '';
-            btn.innerHTML = G.visible
-                ? `Hide Grid (${id})`
-                : `Show Grid (${id})`;
-        }
-    };
-
-    // 2) Show/hide handler
-    ns.m.toggleGridVisibility = function () {
-        const id = document.getElementById('droneSelect').value;
-        if (!id) return alert('Select a drone first.');
-        const G = ns.d.grids[id];
-        if (!G || !G.rectangle) return alert('No grid drawn for that drone.');
-
-        if (G.visible) {
-            ns.map.map.removeLayer(G.rectangle);
-            ns.map.map.removeLayer(G.centerMarker);
-            ns.map.map.removeLayer(G.labelMarker);
-            (G.handles || []).forEach(h => ns.map.map.removeLayer(h));
-            G.visible = false;
-        } else {
-            G.rectangle.addTo(ns.map.map);
-            G.centerMarker.addTo(ns.map.map);
-            G.labelMarker.addTo(ns.map.map);
-            (G.handles || []).forEach(h => h.addTo(ns.map.map));
-            G.visible = true;
-        }
-        ns.m.updateToggleButtonState();
-    };
+    // (Removed toggle grid visibility functions)
 
     // 3) Rectangle creation
     ns.m.onGridRectangleCreated = function (e) {
@@ -1584,22 +1618,25 @@ var ps3 = {
             id = document.getElementById('droneSelect').value,
             bounds = e.layer.getBounds();
 
-        if (!ns.d.grids[id]) ns.d.grids[id] = {};
-        const G = ns.d.grids[id];
+        map.off(L.Draw.Event.CREATED, ns.m.onGridRectangleCreated);
 
-        // remove old
-        [G.rectangle, G.centerMarker, G.labelMarker].forEach(l => l && map.removeLayer(l));
+        const G = {
+            rectangle    : L.rectangle(bounds, {
+                color: ns.m.getDroneColourCode(id),
+                weight: 2,
+                fillOpacity: 0.1
+            }).addTo(map),
+            spacingX     : +document.getElementById('gridSpacingXInput').value || 3,
+            spacingY     : +document.getElementById('gridSpacingYInput').value || 3,
+        };
+        ns.m._ensureGridArray(id).push(G);
+        
         (G.handles || []).forEach(h => map.removeLayer(h));
         (G.lastWaypoints || []).forEach(wp => map.removeLayer(wp.marker));
 
-        // draw new rectangle
-        G.rectangle = L.rectangle(bounds, {
-            color: ns.m.getDroneColourCode(id),
-            weight: 2,
-            fillOpacity: 0.1
-        }).addTo(map);
+        // rectangle already created above; do not recreate
 
-        L.DomEvent.disableClickPropagation(G.rectangle.getElement());
+        // L.DomEvent.disableClickPropagation(G.rectangle.getElement());
 
         // compute dims
         const sw = bounds.getSouthWest(),
@@ -1618,8 +1655,7 @@ var ps3 = {
         G.spacingX = parseFloat(document.getElementById('gridSpacingXInput').value) || G.spacingX;
         G.spacingY = parseFloat(document.getElementById('gridSpacingYInput').value) || G.spacingY;
 
-        // center pin and label
-        G.centerMarker = L.marker(centerLL, { title: 'Grid Center' }).addTo(map);
+        // center pin and label (removed - no longer needed)
         const NW = ring[1], NEpt = ring[2];
         const mid = L.latLng((NW.lat + NEpt.lat) / 2, (NW.lng + NEpt.lng) / 2);
         const labelPt = map.latLngToLayerPoint(mid);
@@ -1638,32 +1674,42 @@ var ps3 = {
         const manual = ns.d.wayPointsDrones.filter(
             wp => wp.id === id && !wp._isGrid
         );
-        ns.d.grids[id].anchorWp = manual.length
+        // Get the latest grid (most recently added)
+        const grids = ns.d.grids[id];
+        const latestGrid = grids[grids.length - 1];
+        latestGrid.anchorWp = manual.length
             ? manual[manual.length - 1]
             : null;
 
         // build & stash grid waypoints
-        G.lastWaypoints = ns.m.generateGridWaypoints(id);
+        G.lastWaypoints = ns.m.generateGridWaypoints(id, grids.length - 1);
 
         // allow Alt-drag & corner handles
-        ns.m._bindGridDrag(id);
-        ns.m.addGridResizeHandles(id);
-
-        // mark visible
-        G.visible = true;
-        ns.m.updateToggleButtonState();
+        ns.m._bindGridDrag(id, grids.length - 1);
+        ns.m.addGridResizeHandles(id, grids.length - 1);
 
         // disable draw tool
         ns.map.gridDrawControl.disable();
+        
+        // Reset drawing state to allow waypoint creation again
+        ns.d.isDrawingActive = false;
+        
         // update grid inputs
-        ns.m._updateGridInputs(id);
+        ns.m._updateGridInputs(id, grids.length - 1);
     };
 
     // 4) Generate grid waypoints (using Turf for true-metre spacing)
-    ns.m.generateGridWaypoints = function (droneId) {
+    ns.m.generateGridWaypoints = function (droneId, gridIndex = null, desiredInsertAt = null) {
         const map = ns.map.map,
             crs = map.options.crs,
-            G = ns.d.grids[droneId];
+            grids = ns.d.grids[droneId];
+        
+        if (!grids || grids.length === 0) return [];
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
+        if (!G) return [];
 
         // 1) Validate spacings
         const sx = G.spacingX, sy = G.spacingY;
@@ -1695,7 +1741,25 @@ var ps3 = {
         const spacingProjU = sx > 0 ? sx * (wProj / wGeo) : 0,
             spacingProjV = sy > 0 ? sy * (hProj / hGeo) : 0;
 
-        // 3) Generate “snake” pattern of LatLngs
+        // 3) Determine insertion position to preserve relative ordering
+        let insertAt = (typeof desiredInsertAt === 'number' && desiredInsertAt >= 0)
+            ? desiredInsertAt
+            : null;
+        
+        // Only try to find position from existing waypoints if no explicit position was provided
+        if (insertAt === null && Array.isArray(G.lastWaypoints) && G.lastWaypoints.length > 0) {
+            const positions = G.lastWaypoints
+                .map(wp => ns.d.wayPointsDrones.indexOf(wp))
+                .filter(i => i >= 0);
+            if (positions.length > 0) insertAt = Math.min(...positions);
+        }
+        
+        // If no prior waypoints for this grid and no explicit position, append to the end to preserve creation order
+        if (insertAt === null) {
+            insertAt = ns.d.wayPointsDrones.length;
+        }
+
+        // 4) Generate "snake" pattern of LatLngs
         const latlngs = [];
         for (let i = 0; i < rows; i++) {
             const row = [];
@@ -1708,10 +1772,10 @@ var ps3 = {
             latlngs.push(...row);
         }
 
-        // === A) Remove only the old grid waypoints ===
+        // === A) Remove only the old grid waypoints for this specific grid ===
         (G.lastWaypoints || []).forEach(wp => map.removeLayer(wp.marker));
         ns.d.wayPointsDrones = ns.d.wayPointsDrones.filter(
-            wp => !(wp.id === droneId && wp._isGrid)
+            wp => !(wp.id === droneId && wp._isGrid && wp.gridIndex === index)
         );
 
         // === B) Create & tag new grid waypoints ===
@@ -1728,6 +1792,7 @@ var ps3 = {
                 timestamp: Date.now(),
                 _origProj: crs.project(ll),
                 _isGrid: true,
+                gridIndex: index,
                 data: {
                     lat: ll.lat,
                     lng: ll.lng,
@@ -1749,26 +1814,18 @@ var ps3 = {
             ns.m.waypointMarkerMethods(wp);
             newGrid.push(wp);
             mk.on('click', () => {
+                ns.v.activeGrid = { droneId, gridIndex: index }; // <- capture which grid
                 document.getElementById('droneSelect').value = droneId;
-                ns.m.updateToggleButtonState();
+                ns.m._updateGridInputs(droneId, index);
+                ns.m._bindGridDrag(droneId, index); // Enable dragging for the selected grid
             });
         });
 
-        // === C) Temporarily pull them off the tail ===
+        // === C) Temporarily pull them off the tail and insert back at original position ===
         ns.d.wayPointsDrones.splice(-newGrid.length, newGrid.length);
-
-        // === D) Insert new grid right after the fixed anchor ===
-        let insertAt;
-        if (G.anchorWp) {
-            insertAt = ns.d.wayPointsDrones.indexOf(G.anchorWp) + 1;
-        } else {
-            // if no anchor, front of this drone’s block
-            const firstManual = ns.d.wayPointsDrones.findIndex(wp => wp.id === droneId);
-            insertAt = firstManual >= 0 ? firstManual : ns.d.wayPointsDrones.length;
-        }
         ns.d.wayPointsDrones.splice(insertAt, 0, ...newGrid);
 
-        // === E) Renumber all waypoints & refresh ===
+        // === D) Renumber visuals & refresh ===
         ns.m.reorderAllWaypoints();
         ns.m.deleteWaylines();
         ns.m.calculateWaylines();
@@ -1776,35 +1833,63 @@ var ps3 = {
 
         // === F) Store & return ===
         G.lastWaypoints = newGrid;
+        ns.m._bindGridDrag(droneId, index); // rebind drag
         return newGrid;
     };
 
     // Regenerate existing grid for a given drone
-    ns.m.regenerateGrid = function (droneId) {
+    ns.m.regenerateGrid = function (droneId, gridIndex = null) {
         const map = ns.map.map;
-        const G = ns.d.grids[droneId];
+        const grids = ns.d.grids[droneId];
+        
+        if (!grids || grids.length === 0) return;
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
         if (!G || !G.origCorners) return;
 
-        // 1) remove old markers from map & from global array
-        (G.lastWaypoints || []).forEach(wp => {
-            map.removeLayer(wp.marker);
-            const i = ns.d.wayPointsDrones.indexOf(wp);
-            if (i > -1) ns.d.wayPointsDrones.splice(i, 1);
-        });
+        // 1) Find the original insertion position BEFORE removing waypoints
+        let originalInsertAt = null;
+        if (Array.isArray(G.lastWaypoints) && G.lastWaypoints.length > 0) {
+            const positions = G.lastWaypoints
+                .map(wp => ns.d.wayPointsDrones.indexOf(wp))
+                .filter(i => i >= 0);
+            if (positions.length > 0) {
+                originalInsertAt = Math.min(...positions);
+            }
+        }
 
-        // 2) rebuild bounds from *rotated* corners
+        // 2) Remove old markers from map and from global array (in reverse order to maintain indices)
+        const waypointsToRemove = (G.lastWaypoints || []).slice();
+        waypointsToRemove.forEach(wp => {
+            map.removeLayer(wp.marker);
+        });
+        
+        // Remove from wayPointsDrones array (filter out all waypoints for this specific grid)
+        ns.d.wayPointsDrones = ns.d.wayPointsDrones.filter(
+            wp => !(wp.id === droneId && wp._isGrid && wp.gridIndex === index)
+        );
+
+        // 3) rebuild bounds from *rotated* corners
         const llCorners = G.origCorners.map(pt => map.options.crs.unproject(pt));
         const bounds = L.latLngBounds(llCorners);
 
-        // 3) generate new waypoints (same count, same orientation)
-        G.lastWaypoints = ns.m.generateGridWaypoints(bounds, droneId);
+        // 4) generate new waypoints (same count, same orientation) at original position
+        G.lastWaypoints = ns.m.generateGridWaypoints(droneId, index, originalInsertAt);
     };
 
     // 5) Absolute rotation (angleDeg)
-    ns.m.rotateLastGrid = function (droneId, angleDeg) {
+    ns.m.rotateLastGrid = function (droneId, angleDeg, gridIndex = null) {
         const map = ns.map.map,
             crs = map.options.crs,
-            G = ns.d.grids[droneId];
+            grids = ns.d.grids[droneId];
+        
+        if (!grids || grids.length === 0) return alert('Draw a grid first.');
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
         if (!G || !G.rectangle) return alert('Draw a grid first.');
 
         const delta = angleDeg - (G.currentAngle || 0);
@@ -1824,13 +1909,10 @@ var ps3 = {
         map.removeLayer(G.rectangle);
         const newLL = G.origCorners.map(pt => crs.unproject(pt));
         G.rectangle = L.polygon(newLL, { color: ns.m.getDroneColourCode(droneId), weight: 2, fillOpacity: 0.1 });
-        if (G.visible) G.rectangle.addTo(map);
+        G.rectangle.addTo(map);
 
-        // rebuild center
-        map.removeLayer(G.centerMarker);
+        // rebuild center (center marker removed - no longer needed)
         const centerLL = L.latLngBounds(newLL).getCenter();
-        G.centerMarker = L.marker(centerLL, { title: 'Grid Center' });
-        if (G.visible) G.centerMarker.addTo(map);
         G.centerProj = crs.project(centerLL);
 
         // rebuild label
@@ -1849,7 +1931,7 @@ var ps3 = {
                     </div>`
             })
         });
-        if (G.visible) G.labelMarker.addTo(map);
+        G.labelMarker.addTo(map);
 
         // rotate waypoints
         G.lastWaypoints.forEach(wp => {
@@ -1866,8 +1948,8 @@ var ps3 = {
         });
 
         // rebind drag & handles
-        ns.m._bindGridDrag(droneId);
-        ns.m.addGridResizeHandles(droneId);
+        ns.m._bindGridDrag(droneId, index);
+        ns.m.addGridResizeHandles(droneId, index);
 
         G.currentAngle = angleDeg;
 
@@ -1875,21 +1957,26 @@ var ps3 = {
         // if (ns.m.isShowAnimation()) ns.m.updateDroneAnimation();
         ns.m.updateDroneAnimation();
 
-        ns.m.updateToggleButtonState();
-
         // refresh sidebar if needed
         if (ns.d.selectedMarker) {
             ns.m.updateWaypointInformation(ns.d.selectedMarker);
             ns.m.updateSelectedMarkerDiv();
         }
 
-        ns.m._updateGridInputs(droneId);
+        ns.m._updateGridInputs(droneId, index);
     };
 
     // 6) Alt-drag binding
-    ns.m._bindGridDrag = function (droneId) {
+    ns.m._bindGridDrag = function (droneId, gridIndex = null) {
         const map = ns.map.map,
-            G = ns.d.grids[droneId];
+            grids = ns.d.grids[droneId];
+        
+        if (!grids || grids.length === 0) return;
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
+        if (!G) return;
         const grab = evt => {
             if (!evt.originalEvent.altKey) return;
             map.dragging.disable();
@@ -1898,7 +1985,8 @@ var ps3 = {
             const onMove = mv => {
                 ns.m.moveGrid(droneId,
                     mv.latlng.lat - lastLL.lat,
-                    mv.latlng.lng - lastLL.lng
+                    mv.latlng.lng - lastLL.lng,
+                    index
                 );
                 lastLL = mv.latlng;
             };
@@ -1908,7 +1996,7 @@ var ps3 = {
                 map.dragging.enable();
                 G.lastWaypoints.forEach(wp => wp.marker.dragging.enable());
                 // after move, reset handles
-                ns.m.addGridResizeHandles(droneId);
+                ns.m.addGridResizeHandles(droneId, index);
             };
             map.on('mousemove', onMove);
             map.on('mouseup', onUp);
@@ -1920,10 +2008,16 @@ var ps3 = {
     };
 
     // 7) Move grid + waypoints
-    ns.m.moveGrid = function (droneId, dLat, dLng) {
+    ns.m.moveGrid = function (droneId, dLat, dLng, gridIndex = null) {
         const map = ns.map.map,
             crs = map.options.crs,
-            G = ns.d.grids[droneId];
+            grids = ns.d.grids[droneId];
+        
+        if (!grids || grids.length === 0) return;
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
         if (!G) return;
 
         // shift polygon
@@ -1932,10 +2026,9 @@ var ps3 = {
         G.rectangle.setLatLngs([pts]);
 
         // shift center & label
-        [G.centerMarker, G.labelMarker].forEach(mk => {
-            const ll = mk.getLatLng();
-            mk.setLatLng([ll.lat + dLat, ll.lng + dLng]);
-        });
+        // Update label marker position (center marker removed)
+        const ll = G.labelMarker.getLatLng();
+        G.labelMarker.setLatLng([ll.lat + dLat, ll.lng + dLng]);
 
         // shift waypoints
         G.lastWaypoints.forEach(wp => {
@@ -1961,7 +2054,7 @@ var ps3 = {
         ns.m.updateDroneAnimation();
 
         // refresh handles
-        ns.m.addGridResizeHandles(droneId);
+        ns.m.addGridResizeHandles(droneId, index);
 
         // refresh sidebar if needed
         if (ns.d.selectedMarker) {
@@ -1972,12 +2065,18 @@ var ps3 = {
             }
         }
 
-        ns.m._updateGridInputs(droneId);
+        ns.m._updateGridInputs(droneId, index);
     };
 
     // 8) Add corner handles for resizing
-    ns.m.addGridResizeHandles = function (droneId) {
-        const G = ns.d.grids[droneId], map = ns.map.map;
+    ns.m.addGridResizeHandles = function (droneId, gridIndex = null) {
+        const grids = ns.d.grids[droneId], map = ns.map.map;
+        
+        if (!grids || grids.length === 0) return;
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
         if (!G || !G.rectangle) return;
         // remove old
         (G.handles || []).forEach(h => map.removeLayer(h));
@@ -2000,16 +2099,22 @@ var ps3 = {
                 L.DomEvent.disableClickPropagation(el);
                 L.DomEvent.disableScrollPropagation(el);
             }
-            handle.on('drag', e => ns.m.resizeGridCorner(droneId, idx, e.target.getLatLng()));
+            handle.on('drag', e => ns.m.resizeGridCorner(droneId, idx, e.target.getLatLng(), index));
             G.handles.push(handle);
         });
     };
 
     // 9) Corner-drag resizing
-    ns.m.resizeGridCorner = function (droneId, cornerIdx, newLL) {
+    ns.m.resizeGridCorner = function (droneId, cornerIdx, newLL, gridIndex = null) {
         const map = ns.map.map,
             crs = map.options.crs,
-            G = ns.d.grids[droneId];
+            grids = ns.d.grids[droneId];
+        
+        if (!grids || grids.length === 0) return;
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
         if (!G || !G.origCorners) return;
 
         // Center in projected coords
@@ -2051,7 +2156,7 @@ var ps3 = {
         // 3) Update rectangle, center marker & label
         G.rectangle.setLatLngs([newLLs]);
         const centerLL = crs.unproject(C);
-        G.centerMarker.setLatLng(centerLL);
+        // Center marker removed - no longer needed
 
         const NW = newLLs[1], NE = newLLs[2];
         const mid = L.latLng((NW.lat + NE.lat) / 2, (NW.lng + NE.lng) / 2);
@@ -2069,15 +2174,28 @@ var ps3 = {
         // 4) Move corner handles
         (G.handles || []).forEach((h, i) => h.setLatLng(newLLs[i]));
 
-        // 5) Remove old waypoints (map + array)
+        // 5) Calculate desired position BEFORE removing waypoints
+        const desiredIndex = (() => {
+            const positions = (G.lastWaypoints || [])
+                .map(wp => ns.d.wayPointsDrones.indexOf(wp))
+                .filter(i => i >= 0);
+            if (positions.length > 0) return Math.min(...positions);
+            return null;
+        })();
+
+        // 6) Remove old waypoints from map and filter from array
         (G.lastWaypoints || []).forEach(wp => {
             map.removeLayer(wp.marker);
-            const idx = ns.d.wayPointsDrones.indexOf(wp);
-            if (idx > -1) ns.d.wayPointsDrones.splice(idx, 1);
         });
+        
+        // Remove from wayPointsDrones array (filter out all waypoints for this specific grid)
+        ns.d.wayPointsDrones = ns.d.wayPointsDrones.filter(
+            wp => !(wp.id === droneId && wp._isGrid && wp.gridIndex === index)
+        );
 
-        // 6) Regenerate grid waypoints inside the rotated/resized rectangle
-        G.lastWaypoints = ns.m.generateGridWaypoints(droneId);
+        // 7) Regenerate grid waypoints inside the rotated/resized rectangle
+        // preserve existing ordering position for this grid block
+        G.lastWaypoints = ns.m.generateGridWaypoints(droneId, index, desiredIndex);
 
         // 7) Refresh waylines & animation
         if (ns.m.isShowWaylines()) { ns.m.deleteWaylines(); ns.m.calculateWaylines(); }
@@ -2091,22 +2209,24 @@ var ps3 = {
         const map = ns.map.map,
             crs = map.options.crs;
 
-        // Ensure we have a grid state object
-        if (!ns.d.grids[droneId]) ns.d.grids[droneId] = {};
-        const G = ns.d.grids[droneId];
+        map.off(L.Draw.Event.CREATED, ns.m.onGridRectangleCreated);
 
         // --- remove old layers ---
-        [G.rectangle, G.centerMarker, G.labelMarker].forEach(l => l && map.removeLayer(l));
+        const G = {
+            rectangle    : L.rectangle(bounds, {
+                color: ns.m.getDroneColourCode(droneId),
+                weight: 2,
+                fillOpacity: 0.1
+            }).addTo(map),
+            spacingX     : +document.getElementById('gridSpacingXInput').value || 3,
+            spacingY     : +document.getElementById('gridSpacingYInput').value || 3,
+        };
+        ns.m._ensureGridArray(droneId).push(G);
         (G.handles || []).forEach(h => map.removeLayer(h));
         (G.lastWaypoints || []).forEach(wp => map.removeLayer(wp.marker));
 
-        // --- draw new rectangle ---
-        G.rectangle = L.rectangle(bounds, {
-            color: ns.m.getDroneColourCode(droneId),
-            weight: 2,
-            fillOpacity: 0.1
-        }).addTo(map);
-        L.DomEvent.disableClickPropagation(G.rectangle.getElement());
+        // rectangle already created above; do not recreate
+        // L.DomEvent.disableClickPropagation(G.rectangle.getElement());
 
         // --- compute dimensions ---
         const sw = bounds.getSouthWest(),
@@ -2128,8 +2248,7 @@ var ps3 = {
         G.spacingX = parseFloat(document.getElementById('gridSpacingXInput').value) || 0;
         G.spacingY = parseFloat(document.getElementById('gridSpacingYInput').value) || 0;
 
-        // --- draw center marker & label ---
-        G.centerMarker = L.marker(centerLL, { title: 'Grid Center' }).addTo(map);
+        // --- draw center marker & label --- (center marker removed)
         const NW = ring[1], NEpt = ring[2],
             mid = L.latLng((NW.lat + NEpt.lat) / 2, (NW.lng + NEpt.lng) / 2),
             lblPt = map.latLngToLayerPoint(mid),
@@ -2148,24 +2267,31 @@ var ps3 = {
         const manual = ns.d.wayPointsDrones.filter(
             wp => wp.id === droneId && !wp._isGrid
         );
-        ns.d.grids[droneId].anchorWp = manual.length
+        // Get the latest grid (most recently added)
+        const grids = ns.d.grids[droneId];
+        const latestGrid = grids[grids.length - 1];
+        latestGrid.anchorWp = manual.length
             ? manual[manual.length - 1]
             : null;
         // --- generate & insert new grid waypoints (uses your patched function) ---
-        G.lastWaypoints = ns.m.generateGridWaypoints(droneId);
+        G.lastWaypoints = ns.m.generateGridWaypoints(droneId, grids.length - 1);
 
         // --- bind controls & update UI ---
-        G.visible = true;
-        ns.m._bindGridDrag(droneId);
-        ns.m.addGridResizeHandles(droneId);
-        ns.m.updateToggleButtonState();
-        ns.m._updateGridInputs(droneId);
+        ns.m._bindGridDrag(droneId, grids.length - 1);
+        ns.m.addGridResizeHandles(droneId, grids.length - 1);
+        ns.m._updateGridInputs(droneId, grids.length - 1);
     };
 
-    ns.m.updateGridFromInputs = function (droneId) {
+    ns.m.updateGridFromInputs = function (droneId, gridIndex = null) {
         const map = ns.map.map,
             crs = map.options.crs,
-            G = ns.d.grids[droneId];
+            grids = ns.d.grids[droneId];
+        
+        if (!grids || grids.length === 0) return;
+        
+        // Get the specified grid or the latest one if no index provided
+        const index = gridIndex !== null ? gridIndex : grids.length - 1;
+        const G = grids[index];
         if (!G || !G.rectangle) return;
 
         // — 1) preserve the index of any selected grid‐waypoint —
@@ -2196,7 +2322,7 @@ var ps3 = {
             neLL = L.latLng(neGeo.geometry.coordinates[1], neGeo.geometry.coordinates[0]),
             bounds = L.latLngBounds(swLL, neLL);
 
-        // — 4) update the polygon’s corner array (preserving rotation) —
+        // — 4) update the polygon's corner array (preserving rotation) —
         const sw = bounds.getSouthWest(),
             ne = bounds.getNorthEast(),
             nw = L.latLng(ne.lat, sw.lng),
@@ -2231,7 +2357,7 @@ var ps3 = {
             parseFloat(document.getElementById('gridLngInput').value)
         );
         G.centerProj = map.options.crs.project(centreLL);
-        G.centerMarker.setLatLng(centreLL);
+        // Center marker removed - no longer needed
 
         // — 6) update the dimension label —
         const [c1, c2] = [rotated[1], rotated[2]],
@@ -2248,8 +2374,15 @@ var ps3 = {
         }));
 
         // — 7) **Regenerate** the grid waypoints (reads the fixed G.anchorWp) —
-        //     and capture the fresh array for indexing:
-        const newGrid = ns.m.generateGridWaypoints(droneId);
+        //     and capture the fresh array for indexing at current position:
+        const desiredIndex = (() => {
+            const positions = (G.lastWaypoints || [])
+                .map(wp => ns.d.wayPointsDrones.indexOf(wp))
+                .filter(i => i >= 0);
+            if (positions.length > 0) return Math.min(...positions);
+            return null;
+        })();
+        const newGrid = ns.m.generateGridWaypoints(droneId, index, desiredIndex);
 
         // — 8) restore the selectedMarker if it was one of the grid points —
         if (selIndex !== null && newGrid[selIndex]) {
@@ -2263,29 +2396,624 @@ var ps3 = {
         }
 
         // — 10) re‐draw resize handles & update html inputs —
-        G.lastWaypoints = ns.m.generateGridWaypoints(droneId);
-        ns.m.addGridResizeHandles(droneId);
+        G.lastWaypoints = newGrid;
+        ns.m.addGridResizeHandles(droneId, index);
+        ns.m._bindGridDrag(droneId, index);
     };
 
     ns.m._clearGridForDrone = function (droneId) {
-        const G = ns.d.grids[droneId];
-        if (!G) return;
-        // remove rectangle, center & label
+        const grids = ns.d.grids[droneId];
+        if (!grids || grids.length === 0) return;
+        
+        // Remove all grids for this drone
+        grids.forEach(G => {
+        // remove rectangle, center & label (center marker removed)
         if (G.rectangle) ns.map.map.removeLayer(G.rectangle);
-        if (G.centerMarker) ns.map.map.removeLayer(G.centerMarker);
         if (G.labelMarker) ns.map.map.removeLayer(G.labelMarker);
         // remove any resize‐handles
         (G.handles || []).forEach(h => ns.map.map.removeLayer(h));
         // remove any stored grid‐waypoints
         (G.lastWaypoints || []).forEach(wp => ns.map.map.removeLayer(wp.marker));
+        });
+        
         // finally delete the state
         delete ns.d.grids[droneId];
-        ns.m.updateToggleButtonState();
+    };
+
+    ns.m._clearCirclesForDrone = function (droneId) {
+        const circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return;
+        
+        // Remove all circles for this drone
+        circles.forEach(circleData => {
+            if (circleData && circleData.circle) {
+                ns.map.map.removeLayer(circleData.circle);
+                // Remove circle waypoint markers (visual elements only)
+                (circleData.lastWaypoints || []).forEach(wp => ns.map.map.removeLayer(wp.marker));
+            }
+        });
+        
+        // Clear the circles array
+        delete ns.d.circles[droneId];
     };
 
 
     // 11) Kick-off
+
     document.addEventListener('DOMContentLoaded', ns.m.initGridControls);
+
+    /* per‑drone state */
+    ns.d.circles = {};          // eg. { "1":[{circle,…}, {circle,…}], "2":[{…}] }
+    ns.v.activeCircle = null; 
+    ns.m._ensureCircleArray = id => {
+        if (!ns.d.circles[id]) ns.d.circles[id] = [];
+        return ns.d.circles[id];
+    };
+    /* ────────────────────────────────────────────────────────────── *
+    * 1 ▸ INIT UI  (manual + auto)                                  *
+    * ────────────────────────────────────────────────────────────── */
+    ns.m.initCircleControls = function () {
+
+        /* a) MANUAL DRAW (new control each click, so colour & ID stay fresh) */
+        document.getElementById('drawCircleBtn').addEventListener('click', () => {
+
+            const id = document.getElementById('droneSelect').value;
+            if (!id) return alert('Select a drone first.');
+
+            // Disable any active drawing controls first
+            if (ns.map.gridDrawControl) {
+                ns.map.gridDrawControl.disable();
+            }
+            if (ns.map.circleDrawControl) {
+                ns.map.circleDrawControl.disable();
+            }
+
+            // Clean up any existing drawing event handlers
+            ns.map.map.off(L.Draw.Event.CREATED, ns.m.onGridRectangleCreated);
+            ns.map.map.off(L.Draw.Event.CREATED); // Remove any other CREATED handlers
+
+            // Set drawing state to prevent waypoint creation
+            ns.d.isDrawingActive = true;
+
+            /* create a throw‑away Draw.Circle so it inherits the right colour */
+            const draw = new L.Draw.Circle(ns.map.map, {
+                shapeOptions: {
+                    color: ns.m.getDroneColourCode(id),
+                    weight: 2,
+                    fillOpacity: .1
+                }
+            });
+
+            // Store reference to the circle drawing control
+            ns.map.circleDrawControl = draw;
+
+            /* when user finishes, grab CURRENT dropdown value → correct drone */
+            const handleCircleCreated = (e) => {
+                const liveId = document.getElementById('droneSelect').value;
+                
+                // Convert the drawn shape to a proper L.circle object
+                const drawnLayer = e.layer;
+                const center = drawnLayer.getLatLng();
+                const radius = drawnLayer.getRadius();
+                
+                // Create a proper Leaflet circle with the same properties
+                const circle = L.circle(center, {
+                    radius: radius,
+                    color: ns.m.getDroneColourCode(liveId),
+                    weight: 2,
+                    fillOpacity: .1
+                });
+                
+                // Remove the drawn layer since we're replacing it with our circle
+                ns.map.map.removeLayer(drawnLayer);
+                
+                ns.m._createCircle(liveId, circle);
+                // Reset drawing state after circle is created
+                ns.d.isDrawingActive = false;
+                // Clear the circle drawing control reference
+                ns.map.circleDrawControl = null;
+                
+                // Clean up this specific event handler
+                ns.map.map.off(L.Draw.Event.CREATED, handleCircleCreated);
+            };
+            
+            ns.map.map.on(L.Draw.Event.CREATED, handleCircleCreated);
+
+            // Add handler for when drawing is stopped/canceled
+            const resetDrawingState = () => {
+                ns.d.isDrawingActive = false;
+                ns.map.map.off('draw:drawstop', resetDrawingState);
+                ns.map.map.off('draw:canceled', resetDrawingState);
+                // Clear the circle drawing control reference
+                ns.map.circleDrawControl = null;
+                // Clean up the circle creation event handler
+                ns.map.map.off(L.Draw.Event.CREATED, handleCircleCreated);
+            };
+            ns.map.map.on('draw:drawstop', resetDrawingState);
+            ns.map.map.on('draw:canceled', resetDrawingState);
+
+            draw.enable();
+        });
+
+        /* b) AUTO DRAW (reads centre + radius boxes) */
+        document.getElementById('drawCircleAutoBtn').addEventListener('click', () => {
+            const id = document.getElementById('droneSelect').value;
+            if (!id) return alert('Select a drone first.');
+
+            const lat = +document.getElementById('circleLatInput').value,
+                lng = +document.getElementById('circleLngInput').value,
+                rad = +document.getElementById('circleRadiusInput').value;
+
+            if ([lat, lng, rad].some(v => isNaN(v) || v <= 0))
+                return alert('Enter valid centre and radius.');
+
+            const circle = L.circle([lat, lng], {
+                radius: rad,
+                color: ns.m.getDroneColourCode(id),
+                weight: 2,
+                fillOpacity: .1
+            });
+
+            ns.m._createCircle(id, circle);
+        });
+
+
+    };
+
+
+    /* ────────────────────────────────────────────────────────────── *
+    * 2 ▸ CREATE / ADD CIRCLE FOR ONE DRONE                          *
+    * ────────────────────────────────────────────────────────────── */
+    ns.m._createCircle = function (droneId, circle) {
+
+        /* stash new state */
+        const C = { 
+            circle, 
+            lookHeight: +document.getElementById('circleLookHtInput').value || 0, 
+            wpCount: +document.getElementById('circleWpCountInput').value || 12, 
+            lastWaypoints: [] 
+        };
+        ns.m._ensureCircleArray(droneId).push(C);
+        circle.addTo(ns.map.map);
+
+        ns.m.generateCircleWaypoints(droneId, false);   // build from scratch
+        ns.m._bindCircleDrag(droneId);                  // Alt‑drag ready
+        ns.m._updateCircleInputs(droneId);              // fill sidebar
+    };
+
+
+    /* ────────────────────────────────────────────────────────────── *
+    * 3 ▸ GENERATE / UPDATE WAY‑POINTS                              *
+    * ────────────────────────────────────────────────────────────── */
+    ns.m.generateCircleWaypoints = function (droneId, reuse = true, circleIndex = null) {
+
+        const circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return [];
+        
+        // Get the specified circle or the latest one if no index provided
+        const index = circleIndex !== null ? circleIndex : circles.length - 1;
+        const C = circles[index];
+        if (!C || !C.circle) return [];
+
+        // Check if the circle object has the required methods
+        if (typeof C.circle.getLatLng !== 'function' || typeof C.circle.getRadius !== 'function') {
+            console.error('Circle object is missing required methods:', C.circle);
+            return [];
+        }
+
+        const map      = ns.map.map,
+            centreLL = C.circle.getLatLng(),
+            radiusM  = C.circle.getRadius(),
+            N        = Math.max(3, C.wpCount),
+
+            altDef   = +document.getElementById('altitudeInput').value
+                        || ns.c.defaultAltitude,
+            spdDef   = +document.getElementById('speedInput').value
+                        || ns.c.defaultSpeed;
+
+        /* helper */
+        const ang = ll => {
+            const hd = ns.m.atan2Degree(
+                        ns.m.calculateAngleFromCoordinates(ll, centreLL));
+            const pitch = -Math.atan2(altDef - C.lookHeight, radiusM) * 180 / Math.PI;
+            return { hd, pitch };
+        };
+
+        /* ── A  update existing markers if count unchanged ───────── */
+        if (reuse && C.lastWaypoints.length === N) {
+
+            C.lastWaypoints.forEach((wp, i) => {
+                const bearing = 360 * i / N;
+                const c = turf.destination(
+                            turf.point([centreLL.lng, centreLL.lat]),
+                            radiusM, bearing, { units: 'meters' }
+                        ).geometry.coordinates;
+                const ll = L.latLng(c[1], c[0]);
+
+                wp.marker.setLatLng(ll);
+                wp.data.lat = ll.lat; wp.data.lng = ll.lng;
+
+                const pitch = -Math.atan2(altDef - C.lookHeight, radiusM) * 180 / Math.PI;
+                const heading = (bearing + 180) % 360; // Look toward center
+                wp.data.heading     = heading.toFixed(2);
+                wp.data.gimbalPitch = pitch.toFixed(2);
+            });
+
+                    // Consolidate all waypoints to ensure global sequential numbering
+        ns.m.consolidateAndOrderWaypoints(droneId);
+            return C.lastWaypoints;
+        }
+
+        /* ── B  wipe & rebuild (count changed, etc.) ─────────────── */
+        
+        // 1) Find the exact positions of existing circle waypoints
+        const circleWaypoints = ns.d.wayPointsDrones.filter(wp => 
+            wp.id === droneId && wp._isCircle && wp.circleIndex === index
+        );
+        const startPosition = circleWaypoints.length > 0 ? 
+            ns.d.wayPointsDrones.indexOf(circleWaypoints[0]) : 
+            ns.d.wayPointsDrones.length;
+        
+        // 2) Remove old markers from map and from global array
+        (C.lastWaypoints || []).forEach(wp => ns.map.map.removeLayer(wp.marker));
+        
+        // Remove only waypoints from this specific circle, not all circle waypoints
+        ns.d.wayPointsDrones = ns.d.wayPointsDrones.filter(wp => 
+            !(wp.id === droneId && wp._isCircle && wp.circleIndex === index)
+        );
+
+        C.lastWaypoints = [];
+
+        for (let i = 0; i < N; i++) {
+
+            const bearing = 360 * i / N;
+            const c = turf.destination(
+                        turf.point([centreLL.lng, centreLL.lat]),
+                        radiusM, bearing, { units: 'meters' }
+                    ).geometry.coordinates;
+            const ll = L.latLng(c[1], c[0]);
+
+            const idx = i; // Will be renumbered by consolidation
+            const icon = ns.m.createWaypointIcon(`${droneId}.${idx}`, ns.m.getDroneColourCode(droneId));
+            const mk = L.marker(ll, { draggable: true, icon }).addTo(map);
+            mk.on('click', () => {
+                ns.v.activeCircle = { droneId, circleIndex: index, waypointIndex: i };
+                document.getElementById('droneSelect').value = droneId;
+                ns.m._updateCircleInputs(droneId, index);
+                ns.m._bindCircleDrag(droneId, index); // Enable dragging for the selected circle
+            });
+            const pitch = -Math.atan2(altDef - C.lookHeight, radiusM) * 180 / Math.PI;
+            
+            // Calculate heading to look toward center (bearing + 180°, normalized to 0-360°)
+            const heading = (bearing + 180) % 360;
+
+            const wp = {
+                id: droneId, marker: mk, wayline: null, _isCircle: true,
+                circleIndex: index, // Track which circle this waypoint belongs to
+                timestamp: Date.now(),
+                data: {
+                    lat: ll.lat, lng: ll.lng,
+                    altitude: altDef, speed: spdDef,
+                    camera: document.getElementById('cameraSelect').value,
+                    holdInput: +document.getElementById('holdInput').value
+                                || ns.c.DEFAULTHOLDTIME,
+                    gimbalPitch: pitch.toFixed(2),
+                    gimbalYaw: 0,
+                    heading: heading.toFixed(2),
+                    integrationWindow: +document.getElementById('integrationWindowInput').value
+                                || ns.c.defaultIntegrationWindow,
+                    minposeDistance: +document.getElementById('minposeDistanceInput').value
+                                || ns.c.defaultMinposeDistance,
+                    integration: document.getElementById('integrationButton')
+                                .getAttribute('data-state'),
+                    anomaly:     document.getElementById('anomalyButton')
+                                .getAttribute('data-state')
+                }
+            };
+
+            // Insert waypoint at exact position to maintain sequence
+            ns.d.wayPointsDrones.splice(startPosition + i, 0, wp);
+            
+            ns.m.waypointMarkerMethods(wp);
+            C.lastWaypoints.push(wp);
+        }
+
+        // Manually renumber all waypoints for this drone to maintain exact sequence
+        const droneWaypoints = ns.d.wayPointsDrones.filter(wp => wp.id === droneId);
+        droneWaypoints.forEach((wp, globalIndex) => {
+            // Update the waypoint icon with new numbering
+            const icon = ns.m.createWaypointIcon(`${droneId}.${globalIndex}`, ns.m.getDroneColourCode(droneId));
+            wp.marker.setIcon(icon);
+        });
+
+        // Update waylines if they are currently shown
+        if (ns.m.isShowWaylines()) {
+            ns.m.deleteWaylines();
+            ns.m.calculateWaylines();
+        }
+
+        ns.m._bindCircleDrag(droneId, index);                 // keep Alt‑drag alive
+        return C.lastWaypoints;
+    };
+
+
+    /* ────────────────────────────────────────────────────────────── *
+    * 4 ▸ ALT‑DRAG  (move whole circle + way‑points)                *
+    * ────────────────────────────────────────────────────────────── */
+    ns.m._bindCircleDrag = function (droneId, circleIndex = null) {
+
+        const map = ns.map.map,
+            circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return;
+        
+        // Get the specified circle or the latest one if no index provided
+        const index = circleIndex !== null ? circleIndex : circles.length - 1;
+        const C = circles[index];
+        if (!C || !C.circle) return;
+
+        const start = eDown => {
+            if (!eDown.originalEvent.altKey) return;
+            map.dragging.disable();
+
+            let last = eDown.latlng;
+
+            const move = eMove => {
+                const dLat = eMove.latlng.lat - last.lat,
+                    dLng = eMove.latlng.lng - last.lng;
+                ns.m.moveCircle(droneId, dLat, dLng, index);
+                last = eMove.latlng;
+            };
+            const stop = () => {
+                map.off('mousemove', move).off('mouseup', stop);
+                map.dragging.enable();
+                ns.m._updateCircleInputs(droneId, index);
+            };
+
+            map.on('mousemove', move).on('mouseup', stop);
+        };
+
+        C.circle.off('mousedown').on('mousedown', start);
+        (C.lastWaypoints || []).forEach(wp =>
+            wp.marker.off('mousedown').on('mousedown', start));
+    };
+
+    ns.m.moveCircle = function (droneId, dLat, dLng, circleIndex = null) {
+        const circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return;
+        
+        // Get the specified circle or the latest one if no index provided
+        const index = circleIndex !== null ? circleIndex : circles.length - 1;
+        const C = circles[index];
+        if (!C || !C.circle) return;
+
+        const ctr = C.circle.getLatLng();
+        C.circle.setLatLng([ctr.lat + dLat, ctr.lng + dLng]);
+
+        C.lastWaypoints.forEach(wp => {
+            const ll = wp.marker.getLatLng();
+            wp.marker.setLatLng([ll.lat + dLat, ll.lng + dLng]);
+            wp.data.lat = ll.lat + dLat;
+            wp.data.lng = ll.lng + dLng;
+        });
+
+        if (ns.m.isShowWaylines()) { ns.m.deleteWaylines(); ns.m.calculateWaylines(); }
+        ns.m.updateDroneAnimation();
+    };
+
+
+    /* ────────────────────────────────────────────────────────────── *
+    * 5 ▸ SIDEBAR  ↔  STATE SYNC                                    *
+    * ────────────────────────────────────────────────────────────── */
+    ns.m._updateCircleInputs = function (droneId, circleIndex = null) {
+        const circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return;
+        
+        // Get the specified circle or the latest one if no index provided
+        const index = circleIndex !== null ? circleIndex : circles.length - 1;
+        const C = circles[index];
+        if (!C || !C.circle) return;
+        const ctr = C.circle.getLatLng();
+
+        document.getElementById('circleLatInput').value      = ctr.lat.toFixed(8);
+        document.getElementById('circleLngInput').value      = ctr.lng.toFixed(8);
+        document.getElementById('circleRadiusInput').value   = C.circle.getRadius().toFixed(3);
+        document.getElementById('circleWpCountInput').value  = C.wpCount;
+        document.getElementById('circleLookHtInput').value   = C.lookHeight;
+    };
+
+    ns.m.updateCircleFromInputs = function (droneId, circleIndex = null) {
+        const circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return;
+        
+        // Get the specified circle or the latest one if no index provided
+        const index = circleIndex !== null ? circleIndex : circles.length - 1;
+        const C = circles[index];
+        if (!C || !C.circle) return;
+
+        // Check if the circle object has the required methods
+        if (typeof C.circle.setLatLng !== 'function' || typeof C.circle.setRadius !== 'function') {
+            console.error('Circle object is missing required methods for update:', C.circle);
+            return;
+        }
+
+        const lat   = +document.getElementById('circleLatInput').value,
+            lng   = +document.getElementById('circleLngInput').value,
+            rad   = +document.getElementById('circleRadiusInput').value,
+            N     = +document.getElementById('circleWpCountInput').value,
+            hLook = +document.getElementById('circleLookHtInput').value;
+
+        if ([lat, lng, rad, N].some(v => isNaN(v) || v <= 0) || N < 3) return;
+
+        C.circle.setLatLng([lat, lng]);
+        C.circle.setRadius(rad);
+        C.wpCount    = N;
+        C.lookHeight = hLook;
+
+        ns.m.generateCircleWaypoints(droneId, true, index);   // re‑use markers when possible
+        ns.m._bindCircleDrag(droneId, index);           // re‑attach drag
+    };
+
+    /* ────────────────────────────────────────────────────────────── *
+    * 6 ▸ REMOVE LATEST CIRCLE FOR A DRONE                           *
+    * ────────────────────────────────────────────────────────────── */
+    ns.m.getSelectedCircle = function (droneId) {
+        if (ns.v.activeCircle && ns.v.activeCircle.droneId === droneId) {
+            return ns.v.activeCircle.circleIndex;
+        }
+        return null; // Return null to use the latest circle
+    };
+
+    ns.m.selectCircle = function (droneId, circleIndex) {
+        ns.v.activeCircle = { droneId, circleIndex };
+        ns.m._updateCircleInputs(droneId, circleIndex);
+    };
+
+    ns.m.consolidateAndOrderWaypoints = function (droneId) {
+        // Store all waypoints for this drone with their timestamps to preserve chronological order
+        const allWaypoints = ns.d.wayPointsDrones.filter(wp => wp.id === droneId);
+        
+        // Remove all existing waypoints for this drone from the global array
+        ns.d.wayPointsDrones = ns.d.wayPointsDrones.filter(wp => wp.id !== droneId);
+        
+        // Clear all lastWaypoints arrays
+        const circles = ns.d.circles[droneId];
+        if (!circles) return;
+        
+        circles.forEach(circleData => {
+            if (circleData && circleData.lastWaypoints) {
+                circleData.lastWaypoints.forEach(wp => ns.map.map.removeLayer(wp.marker));
+                circleData.lastWaypoints = [];
+            }
+        });
+        
+        // Sort all waypoints by timestamp to preserve chronological order
+        allWaypoints.sort((a, b) => a.timestamp - b.timestamp);
+        
+        // Rebuild waypoints in chronological order
+        let globalIndex = 0;
+        
+        allWaypoints.forEach(wp => {
+            // Remove old marker from map
+            ns.map.map.removeLayer(wp.marker);
+            
+            // Create new marker with updated icon
+            const icon = ns.m.createWaypointIcon(`${droneId}.${globalIndex}`, ns.m.getDroneColourCode(droneId));
+            
+            if (wp._isCircle) {
+                // This is a circle waypoint - recreate it with the same data
+                const mk = L.marker([wp.data.lat, wp.data.lng], { draggable: true, icon }).addTo(ns.map.map);
+                
+                mk.on('click', () => {
+                    ns.v.activeCircle = { droneId, circleIndex: wp.circleIndex, waypointIndex: globalIndex };
+                    document.getElementById('droneSelect').value = droneId;
+                    ns.m._updateCircleInputs(droneId, wp.circleIndex);
+                    ns.m._bindCircleDrag(droneId, wp.circleIndex); // Enable dragging for the selected circle
+                });
+                
+                // Update the waypoint object
+                wp.marker = mk;
+                wp.timestamp = Date.now();
+                
+                // Re-add to global array and to the circle's lastWaypoints
+                ns.d.wayPointsDrones.push(wp);
+                ns.m.waypointMarkerMethods(wp);
+                
+                // Find the circle and add to its lastWaypoints
+                if (circles[wp.circleIndex]) {
+                    circles[wp.circleIndex].lastWaypoints.push(wp);
+                }
+            } else {
+                // This is a manual waypoint
+                const mk = L.marker([wp.data.lat, wp.data.lng], { draggable: true, icon }).addTo(ns.map.map);
+                
+                // Update the waypoint object
+                wp.marker = mk;
+                wp.timestamp = Date.now();
+                
+                // Re-add to global array
+                ns.d.wayPointsDrones.push(wp);
+                ns.m.waypointMarkerMethods(wp);
+            }
+            
+            globalIndex++;
+        });
+        
+        ns.m.reorderAllWaypoints();
+        if (ns.m.isShowWaylines()) { 
+            ns.m.deleteWaylines(); 
+            ns.m.calculateWaylines(); 
+        }
+        ns.m.updateDroneAnimation();
+    };
+
+    ns.m.removeLatestCircle = function (droneId) {
+        const circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return;
+
+        // Remove the latest circle
+        const latestCircle = circles.pop();
+        if (latestCircle && latestCircle.circle) {
+            ns.map.map.removeLayer(latestCircle.circle);
+            (latestCircle.lastWaypoints || []).forEach(wp => ns.map.map.removeLayer(wp.marker));
+        }
+        
+        // Reconsolidate waypoints to maintain global sequential numbering
+        ns.m.consolidateAndOrderWaypoints(droneId);
+    };
+
+    ns.m.removeAllCircles = function (droneId) {
+        const circles = ns.d.circles[droneId];
+        if (!circles || circles.length === 0) return;
+
+        // Remove all circles for this drone
+        circles.forEach(circleData => {
+            if (circleData && circleData.circle) {
+                ns.map.map.removeLayer(circleData.circle);
+                (circleData.lastWaypoints || []).forEach(wp => ns.map.map.removeLayer(wp.marker));
+            }
+        });
+        
+        // Clear the array
+        ns.d.circles[droneId] = [];
+        
+        // Remove all waypoints for this drone from global array
+        ns.d.wayPointsDrones = ns.d.wayPointsDrones.filter(wp => wp.id !== droneId);
+        ns.m.reorderAllWaypoints();
+        if (ns.m.isShowWaylines()) { 
+            ns.m.deleteWaylines(); 
+            ns.m.calculateWaylines(); 
+        }
+        ns.m.updateDroneAnimation();
+    };
+
+
+    /* live listeners */
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const flds = [
+            'circleLatInput', 'circleLngInput',
+            'circleRadiusInput', 'circleWpCountInput', 'circleLookHtInput'
+        ];
+        flds.forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                const dId = document.getElementById('droneSelect').value;
+                if (dId) {
+                    const circleIndex = ns.m.getSelectedCircle(dId);
+                    ns.m.updateCircleFromInputs(dId, circleIndex);
+                }
+            });
+        });
+
+        document.getElementById('droneSelect').addEventListener('change', () => {
+            const dId = document.getElementById('droneSelect').value;
+            const circleIndex = ns.m.getSelectedCircle(dId);
+            ns.m._updateCircleInputs(dId, circleIndex);
+        });
+    });
+
+
+    /* ────────────────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', ns.m.initCircleControls);
 
     // ────────────────────────────────────────────────────────
     // ↓ Replace your old toggle code with this ↓
