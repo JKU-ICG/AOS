@@ -51,7 +51,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 - 5/12/2025: **JKU and DLR support German police**: ...in searching for a tripple murderer. See [press release](https://www.jku.at/news-events/news/detail/news/jku-und-dlr-unterstuetzten-deutsche-polizei-bei-suche-nach-mordverdaechtigem/)  
-- 3/19/2025: **AOS with fixed-wing drones**: first succesful experiments with data recorded on [Quantum Systems' Vector](https://quantum-systems.com/vector/) and [DLR's MACS-Nano aerial camera system](https://www.dlr.de/de/os/ueber-uns/abteilungen/sicherheitsforschung-und-anwendung/macs-modular-camera-systems) with focus on wild-fire detection.  
+- 3/19/2025: **AOS with fixed-wing drones**: first succesful experiments with data recorded on [Quantum Systems' Vector](https://quantum-systems.com/vector/) and [DLR's MACS-Nano aerial camera system](https://www.dlr.de/de/os/ueber-uns/abteilungen/sicherheitsforschung-und-anwendung/macs-modular-camera-systems) with focus on wild-fire detection.
+- 8/30/2025: **DeepForrest Paper accepted for publication in Science PJ on Remote Sensing**: See [publications](#publications) 
 - 2/5/2025: **AOS for Forest Ecology**: See [publications](#publications)
 - 09/27/2024: **Stereoscopic Depth Perception Through Foliage** accepted for publication in Nature Scientific Reports.
 - 7/20/2024: **AOS Groundstation for controlling single and multiple drones available**: See [Source Code](https://github.com/JKU-ICG/AOS/tree/stable_release/AOS%20Groundstation)
