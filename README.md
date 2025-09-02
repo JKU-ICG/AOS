@@ -92,7 +92,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 ## Publications
 - Mohamed Youssef, Jian Peng, and Oliver Bimber, DeepForest: Sensing Into Self-Occluding Volumes of Vegetation 
-With Aerial Imaging, under review (2025)
+With Aerial Imaging, Science PJ Remote Sensing (2025)
   - [arXiv (pre-print)](https://arxiv.org/abs/2502.02171v1)
   - [Supplementary Videos](https://www.youtube.com/playlist?list=PLgGsWgs4hgaOlbi7J5Zn9YpqDLSeXmqBZ)
   - [Data: ](https://doi.org/10.5281/zenodo.14748447)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14748447.svg)](https://doi.org/10.5281/zenodo.14748447)
