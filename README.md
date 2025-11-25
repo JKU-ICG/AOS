@@ -91,6 +91,9 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
+- Lukas Brunner, Klaus Rundhammer, Gerald Czech, and Oliver Bimber, Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection]{Through-Foliage Surface Temperature Reconstruction for Early Wildfire Detection, under review (2025)
+  - [arXiv (pre-print)](https://arxiv.org/abs/2511.12572)
+  - [Data: ](https://doi.org/10.5281/zenodo.14748447)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.147484)
 - Mohamed Youssef, Jian Peng, and Oliver Bimber, DeepForest: Sensing Into Self-Occluding Volumes of Vegetation 
 With Aerial Imaging, Science PJ Remote Sensing (2025)
   - [Journal of Remote Sensing (open access and final version)](https://spj.science.org/doi/10.34133/remotesensing.0907)
