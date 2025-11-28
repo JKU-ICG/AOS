@@ -97,9 +97,9 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [Data:]( https://zenodo.org/records/17476499)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14748447.svg)](https://zenodo.org/records/17476499)
 - Rakesh John Amala Arokia Nathan, Matthias Gessner, Nurullah Özkan, Marius Bock, Mohamed Youssef, Maximilian Mews, Björn Piltz, Ralf Berger, and Oliver Bimber, An aerial color image anomaly dataset for search missions in complex forested terrain, under review (2025)
   - [arXiv (pre-print)](https://arxiv.org/abs/2507.15492)
-  - [Data:](https://zenodo.org/records/15848419)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14748447.svg)](https://zenodo.org/records/15848419)
   - [Online image viewer](https://weitefeld.cg.jku.at/)
   - [Online map](https://macs.dlr.de/weitefeld/)
+  - [Data:](https://zenodo.org/records/15848419)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15848419.svg)](https://zenodo.org/records/15848419)
 - Mohamed Youssef, Jian Peng, and Oliver Bimber, DeepForest: Sensing Into Self-Occluding Volumes of Vegetation 
 With Aerial Imaging, Science PJ Remote Sensing (2025)
   - [Journal of Remote Sensing (open access and final version)](https://spj.science.org/doi/10.34133/remotesensing.0907)
