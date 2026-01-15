@@ -50,6 +50,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Austrian Hail Insurance (HV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 11/20/2025: **AOS on ground robots**: See [publications](#publications) 
 - 11/27/2025: **[Behind-the-paper story](https://communities.springernature.com/posts/the-forest-is-no-longer-a-hiding-place-how-an-intelligent-drone-swarm-sees-through-the-canopy)** of new Nature Com. Eng. article on our AOS drone swarm.
 - 8/30/2025: **DeepForrest Paper accepted for publication in Science PJ on Remote Sensing**: See [publications](#publications) 
 - 5/12/2025: **JKU and DLR support German police**: ...in searching for a tripple murderer. See [press release](https://www.jku.at/news-events/news/detail/news/jku-und-dlr-unterstuetzten-deutsche-polizei-bei-suche-nach-mordverdaechtigem/)  
