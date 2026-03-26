@@ -50,6 +50,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Austrian Hail Insurance (HV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 03/25/2026: **Nature Sci Data** publiishes an aerial color image anomaly dataset for search missions in complex forested terrain (in cooperation with DLR Berlin). See [publications](#publications) 
 - 11/20/2025: **AOS on ground robots**: See [publications](#publications) 
 - 11/27/2025: **[Behind-the-paper story](https://communities.springernature.com/posts/the-forest-is-no-longer-a-hiding-place-how-an-intelligent-drone-swarm-sees-through-the-canopy)** of new Nature Com. Eng. article on our AOS drone swarm.
 - 8/30/2025: **DeepForrest Paper accepted for publication in Science PJ on Remote Sensing**: See [publications](#publications) 
@@ -99,7 +100,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Mohamed Youssef, Lukas Brunner, Klaus Rundhammer, Gerald Czech, and Oliver Bimber, Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection, under review (2025)
   - [arXiv (pre-print)](https://arxiv.org/abs/2511.12572)
   - [Data:]( https://zenodo.org/records/17476499)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14748447.svg)](https://zenodo.org/records/17476499)
-- Rakesh John Amala Arokia Nathan, Matthias Gessner, Nurullah Özkan, Marius Bock, Mohamed Youssef, Maximilian Mews, Björn Piltz, Ralf Berger, and Oliver Bimber, An aerial color image anomaly dataset for search missions in complex forested terrain, under review (2025)
+- Rakesh John Amala Arokia Nathan, Matthias Gessner, Nurullah Özkan, Marius Bock, Mohamed Youssef, Maximilian Mews, Björn Piltz, Ralf Berger, and Oliver Bimber, An aerial color image anomaly dataset for search missions in complex forested terrain, Nature Sci Data (2026)
+  - [Nature Scientific Data (open access and final version)](https://www.nature.com/articles/s41597-026-07101-w)
   - [arXiv (pre-print)](https://arxiv.org/abs/2507.15492)
   - [Online image viewer](https://weitefeld.cg.jku.at/)
   - [Online map](https://macs.dlr.de/weitefeld/)
