@@ -42,7 +42,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - State of Upper Austria (OÖ)
 - Nationalstiftung für Forschung, Technologie und Entwicklung (FTE)
 - Linz Institute of Technology (LIT)
-- German Aerospace Center (DLR)
+- German Aerospace Center (DLR), Oberpfaffenhofen
+- German Aerospace Center (DLR), Berlin
 - Upper Austrian Fire Brigade Association (OÖLFV)
 - Federal Office of Metrology and Surveying (BEV)
 - University of Cambridge (CAM)
@@ -50,7 +51,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Austrian Hail Insurance (HV)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 03/25/2026: **Nature Sci Data** publiishes an aerial color image anomaly dataset for search missions in complex forested terrain (in cooperation with DLR Berlin). See [publications](#publications) 
+- 03/25/2026: **Nature Sci Data** publishes an aerial color image anomaly dataset for search missions in complex forested terrain (in cooperation with DLR Berlin). See [publications](#publications) 
 - 11/20/2025: **AOS on ground robots**: See [publications](#publications) 
 - 11/27/2025: **[Behind-the-paper story](https://communities.springernature.com/posts/the-forest-is-no-longer-a-hiding-place-how-an-intelligent-drone-swarm-sees-through-the-canopy)** of new Nature Com. Eng. article on our AOS drone swarm.
 - 8/30/2025: **DeepForrest Paper accepted for publication in Science PJ on Remote Sensing**: See [publications](#publications) 
