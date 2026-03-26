@@ -49,6 +49,10 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - University of Cambridge (CAM)
 - Helmholtz-Centre for Environmental Research (UFZ)
 - Austrian Hail Insurance (HV)
+- École polytechnique fédérale de Lausanne (EPFL)
+- Free University of Bozen-Bolzano (UniBZ)
+- University of Sussesx (US)
+- University of Trento (UT)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
 - 03/25/2026: **Nature Sci Data** publishes an aerial color image anomaly dataset for search missions in complex forested terrain (in cooperation with DLR Berlin). See [publications](#publications) 
