@@ -55,6 +55,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - University of Trento (UT)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 6/1/2026: **Robot peering paper accepted for publication in Science Robotics**: See [publications](#publications)
 - 03/26/2026: **[International media coverage for Science's news release](https://sciencepj.altmetric.com/details/184457990/news)** on our paper "DeepForest: Sensing into Self-occluding Volumes of Vegetation with Aerial Imaging" (in cooperation with Helmholz Center for Environmental Research). See [publications](#publications) 
 - 03/25/2026: **Nature Sci Data** publishes an aerial color image anomaly dataset for search missions in complex forested terrain (in cooperation with DLR Berlin). See [publications](#publications) 
 - 11/20/2025: **AOS on ground robots**: See [publications](#publications) 
