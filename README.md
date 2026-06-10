@@ -101,7 +101,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
-- Oliver Bimber, Karl Dietrich von Ellenrieder, Michael Haller, Rakesh John Amala Arokia Nathan, Gianni Lunardi, Mohamed Youssef, Marco Camurri, Santos Miguel Orozco Soto, and Jeremy E. Niven, How Robot Dogs See the Unseeable: Improving Visual Interpretability via Peering for Exploratory Robots, under review (2026)
+- Oliver Bimber, Karl Dietrich von Ellenrieder, Michael Haller, Rakesh John Amala Arokia Nathan, Gianni Lunardi, Mohamed Youssef, Marco Camurri, Santos Miguel Orozco Soto, and Jeremy E. Niven, How Robot Dogs See the Unseeable: Improving Visual Interpretability via Peering for Exploratory Robots, to appear in Science Robotics  (2026)
   - [arXiv (pre-print)](https://arxiv.org/abs/2511.16262)
   - [Data:](https://zenodo.org/records/18093179)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18093179.svg)](https://zenodo.org/records/18093179)
 - Mohamed Youssef, Lukas Brunner, Klaus Rundhammer, Gerald Czech, and Oliver Bimber, Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection, under review (2025)
