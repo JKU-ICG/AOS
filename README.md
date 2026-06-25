@@ -55,7 +55,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - University of Trento (UT)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 6/25/2026: **Accepted for publication in Nature Communications AI & Computing**: Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection  See [publications](#publications)
+- 6/25/2026 - **Accepted for publication in Nature Communications AI & Computing**: Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection: See [publications](#publications)
 - 6/23/2026: **New paper on vision-reasoning-guided occlusion removal**: See [publications](#publications)
 - 6/1/2026: **Robot peering paper accepted for publication in Science Robotics**: See [publications](#publications)
 - 03/26/2026: **[International media coverage for Science's news release](https://sciencepj.altmetric.com/details/184457990/news)** on our paper "DeepForest: Sensing into Self-occluding Volumes of Vegetation with Aerial Imaging" (in cooperation with Helmholz Center for Environmental Research). See [publications](#publications) 
