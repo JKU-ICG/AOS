@@ -126,7 +126,7 @@ With Aerial Imaging, Science PJ Remote Sensing (2025)
 - Rakesh John Amala Arokia Nathan, Sigrid Strand, Daniel, Mehrwald, Dmitriy Shutin, Oliver Bimber, An Autonomous Drone Swarm for Detecting and Tracking Anomalies among Dense Vegetation,Nature Com. Eng. 4, 205 (2025).
   - [Nature Com. Eng. (open access and final version)](https://www.nature.com/articles/s44172-025-00546-8)
   - [arXiv (pre-print)](https://arxiv.org/abs/2407.10754)
-  - [Video Abstract](https://www.youtube.com/playlist?list=PLgGsWgs4hgaMXzo7QhSwNRctz9JTvh1JM)
+  - [Video Abstract](https://www.youtube.com/watch?v=GSQEB5nQJag&list=PLcNffkEhWMiA)
   - [Data: ](https://doi.org/10.5281/zenodo.12720784)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12720784.svg)](https://doi.org/10.5281/zenodo.12720784)
 - Rakesh John Amala Arokia Nathan, Sigrid Strand, Dmitriy Shutin, Oliver Bimber, Reciprocal Visibility for Guided Occlusion Removal With Drones, IEEE Geosci. Remote Sens. Lett. 21, 1 – 5 (2024).
   - [IEEE (open access and online version)](https://ieeexplore.ieee.org/document/10659026)
