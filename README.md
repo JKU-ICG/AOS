@@ -55,7 +55,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - University of Trento (UT)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
-- 8/4/2026 - **[First Decamouflaging Results](https://www.linkedin.com/posts/oliver-bimber-916432284_some-early-drone-decamouflaging-results-from-activity-7490647645481385984-viVo?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEUedaIBfMmLAjZa0C1CBl1CduJvxxfWKT8)** 
+- 8/4/2026 - **[First Decamouflaging Results](https://www.linkedin.com/posts/oliver-bimber-916432284_some-early-drone-decamouflaging-results-from-activity-7490647645481385984-viVo?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEUedaIBfMmLAjZa0C1CBl1CduJvxxfWKT8)** with AOS. 
 - 6/25/2026 - **Accepted for publication in Nature Communications AI & Computing**: Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection: See [publications](#publications)
 - 6/23/2026: **New paper on vision-reasoning-guided occlusion removal**: See [publications](#publications)
 - 6/1/2026: **Robot peering paper accepted for publication in Science Robotics**: See [publications](#publications)
