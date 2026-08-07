@@ -110,6 +110,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
   - [arXiv (pre-print)](https://arxiv.org/abs/2511.16262)
   - [Data:](https://zenodo.org/records/18093179)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18093179.svg)](https://zenodo.org/records/18093179)
 - Mohamed Youssef, Lukas Brunner, Klaus Rundhammer, Gerald Czech, and Oliver Bimber, Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection, to appear in Nature Communications AI & Computing (2026)
+  - [Nature Communications AI & Computing (open access and final version)](https://www.nature.com/articles/s44488-026-00012-0)
   - [arXiv (pre-print)](https://arxiv.org/abs/2511.12572)
   - [Data:]( https://zenodo.org/records/17476499)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14748447.svg)](https://zenodo.org/records/17476499)
 - Rakesh John Amala Arokia Nathan, Matthias Gessner, Nurullah Özkan, Marius Bock, Mohamed Youssef, Maximilian Mews, Björn Piltz, Ralf Berger, and Oliver Bimber, An aerial color image anomaly dataset for search missions in complex forested terrain, Nature Sci Data (2026)
