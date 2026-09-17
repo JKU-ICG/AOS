@@ -53,8 +53,11 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - Free University of Bozen-Bolzano (UniBZ)
 - University of Sussesx (US)
 - University of Trento (UT)
+- German Wildlife Foundation (DWS)
+- University of Natural Resources and Life Sciences Vienna (BOKU)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 8/17/2026 - **New Science Robotics paper is out**: How Robot Dogs See the Unseeable: Improving Visual Interpretability via Peering for Exploratory Robots: See [publications](#publications)
 - 8/4/2026 - **[First Decamouflaging Results](https://www.linkedin.com/posts/oliver-bimber-916432284_some-early-drone-decamouflaging-results-from-activity-7490647645481385984-viVo?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEUedaIBfMmLAjZa0C1CBl1CduJvxxfWKT8)** with AOS. 
 - 6/25/2026 - **Accepted for publication in Nature Communications AI & Computing**: Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection: See [publications](#publications)
 - 6/23/2026: **New paper on vision-reasoning-guided occlusion removal**: See [publications](#publications)
@@ -106,10 +109,11 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 ## Publications
 - Mohamed Youssef and Oliver Bimber, Vision-Reasoning-Guided Occlusion Removal from Light Fields, (2026)
   - [arXiv (pre-print)](https://arxiv.org/abs/2606.19985)
-- Oliver Bimber, Karl Dietrich von Ellenrieder, Michael Haller, Rakesh John Amala Arokia Nathan, Gianni Lunardi, Mohamed Youssef, Marco Camurri, Santos Miguel Orozco Soto, and Jeremy E. Niven, How Robot Dogs See the Unseeable: Improving Visual Interpretability via Peering for Exploratory Robots, to appear in Science Robotics (2026)
+- Oliver Bimber, Karl Dietrich von Ellenrieder, Michael Haller, Rakesh John Amala Arokia Nathan, Gianni Lunardi, Mohamed Youssef, Marco Camurri, Santos Miguel Orozco Soto, and Jeremy E. Niven, How Robot Dogs See the Unseeable: Improving Visual Interpretability via Peering for Exploratory Robots, Science Robotics (2026)
+  - [Science Robotics (final version)](https://www.science.org/doi/10.1126/scirobotics.aed8577)
   - [arXiv (pre-print)](https://arxiv.org/abs/2511.16262)
   - [Data:](https://zenodo.org/records/18093179)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18093179.svg)](https://zenodo.org/records/18093179)
-- Mohamed Youssef, Lukas Brunner, Klaus Rundhammer, Gerald Czech, and Oliver Bimber, Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection, to appear in Nature Communications AI & Computing (2026)
+- Mohamed Youssef, Lukas Brunner, Klaus Rundhammer, Gerald Czech, and Oliver Bimber, Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection, Nature Communications AI & Computing (2026)
   - [Nature Communications AI & Computing (open access and final version)](https://www.nature.com/articles/s44488-026-00012-0)
   - [arXiv (pre-print)](https://arxiv.org/abs/2511.12572)
   - [Data:]( https://zenodo.org/records/17476499)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14748447.svg)](https://zenodo.org/records/17476499)
