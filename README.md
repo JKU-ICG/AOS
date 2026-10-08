@@ -57,6 +57,7 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 - University of Natural Resources and Life Sciences Vienna (BOKU)
 
 ## News (see also [Press](https://www.jku.at/en/institute-of-computer-graphics/press-events/press))
+- 10/8/2026: **New paper on trACT: temporal revelation Airborne Camera Trap**: See [publications](#publications)
 - 8/17/2026 - **New Science Robotics paper is out**: How Robot Dogs See the Unseeable: Improving Visual Interpretability via Peering for Exploratory Robots: See [publications](#publications)
 - 8/4/2026 - **[First Decamouflaging Results](https://www.linkedin.com/posts/oliver-bimber-916432284_some-early-drone-decamouflaging-results-from-activity-7490647645481385984-viVo?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEUedaIBfMmLAjZa0C1CBl1CduJvxxfWKT8)** with AOS. 
 - 6/25/2026 - **Accepted for publication in Nature Communications AI & Computing**: Through-Foliage Surface-Temperature Reconstruction for early Wildfire Detection: See [publications](#publications)
