@@ -107,6 +107,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
+- Oliver Bimber, Rakesh John Amala Arokia Nathan, Mohamed Youssef, Vinayak Lal Bhatnagar, Ralf Berger, and Klaus Hackländer, trACT: temporal revelation Airborne Camera Trap, (2026)
+  - [arXiv (pre-print)](https://arxiv.org/abs/2610.09417)
 - Mohamed Youssef and Oliver Bimber, Vision-Reasoning-Guided Occlusion Removal from Light Fields, (2026)
   - [arXiv (pre-print)](https://arxiv.org/abs/2606.19985)
 - Oliver Bimber, Karl Dietrich von Ellenrieder, Michael Haller, Rakesh John Amala Arokia Nathan, Gianni Lunardi, Mohamed Youssef, Marco Camurri, Santos Miguel Orozco Soto, and Jeremy E. Niven, How Robot Dogs See the Unseeable: Improving Visual Interpretability via Peering for Exploratory Robots, Science Robotics (2026)
