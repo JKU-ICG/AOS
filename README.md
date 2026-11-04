@@ -108,6 +108,8 @@ Univ.-Prof. Dr. Ing. habil. Oliver Bimber
 
 
 ## Publications
+- Benjamin Bachmayr, Mohamed Youssef, Oliver Bimber, Predicting Void Points in Self-Occluding Forest Volumes, (2026)
+  - [arXiv (pre-print)](https://arxiv.org/abs/2611.04548)
 - Jakob Hinterholzer, Oliver Bimber, Mohamed Youssef, Event Cameras versus Frame Cameras for Synthetic-Aperture
 Imaging: A Simulation Study, (2026)
   - [arXiv (pre-print)](https://arxiv.org/pdf/2610.20309)
